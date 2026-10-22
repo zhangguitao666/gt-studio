@@ -1,0 +1,592 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-linked-trim.sqlite",
+    "sha256": "5d5a1ed5754933a7590f2902b9320c41dc0f845139057d9e4c31629e7c2b4228"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "marker_name": "REA_LINKED_TRIM",
+  "json_prefix": "{\"action\":",
+  "timeline_filter": null,
+  "selection_scope": "Marker bytes co-occur in decoded blob; exact JSON prefix and optional case.timeline filter select payloads. No native wrapper association is inferred.",
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "e282be91-f897-4b1b-91f5-248ff1062b64",
+      "column": "FieldsBlob",
+      "blob_sha256": "16e08fe5071fab3f8a672cae354c6e60b0959aa14e94ff2d409dbc24611e9be1",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2432,
+      "decoded_sha256": "031bfa64c99d96365b48d36e7905af9eb3694b21c295148d329e0c050949a9bd",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 579,
+          "sha256": "317b06c2ce1642e339211a8a610fb889c2e66783e109ae8279d51c1d14d8d2e3",
+          "case": {
+            "action": "linked_trim_end_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+          }
+        },
+        {
+          "decoded_offset": 640,
+          "bytes": 579,
+          "sha256": "317b06c2ce1642e339211a8a610fb889c2e66783e109ae8279d51c1d14d8d2e3",
+          "case": {
+            "action": "linked_trim_end_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_trim_end_prepare",
+        "items": [
+          {
+            "duration": 48,
+            "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 48,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "start": 86448
+              }
+            ],
+            "source_end": 60,
+            "source_start": 12,
+            "start": 86448
+          },
+          {
+            "duration": 48,
+            "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 48,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "start": 86448
+              }
+            ],
+            "source_end": 60,
+            "source_start": 12,
+            "start": 86448
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:03:00",
+        "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "e282be91-f897-4b1b-91f5-248ff1062b64",
+      "column": "FieldsBlob",
+      "blob_sha256": "16e08fe5071fab3f8a672cae354c6e60b0959aa14e94ff2d409dbc24611e9be1",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2432,
+      "decoded_sha256": "031bfa64c99d96365b48d36e7905af9eb3694b21c295148d329e0c050949a9bd",
+      "json_occurrences": [
+        {
+          "decoded_offset": 1245,
+          "bytes": 577,
+          "sha256": "53afc156780167703fd2b93c4194b3ff4fe73b10a95f28b04b9b1b82f823a0f9",
+          "case": {
+            "action": "linked_trim_end_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 36,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 24,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 36,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+          }
+        },
+        {
+          "decoded_offset": 1855,
+          "bytes": 577,
+          "sha256": "53afc156780167703fd2b93c4194b3ff4fe73b10a95f28b04b9b1b82f823a0f9",
+          "case": {
+            "action": "linked_trim_end_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 36,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 24,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 36,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_trim_end_after",
+        "items": [
+          {
+            "duration": 24,
+            "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 24,
+                "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+                "kind": "audio",
+                "start": 86448
+              }
+            ],
+            "source_end": 36,
+            "source_start": 12,
+            "start": 86448
+          },
+          {
+            "duration": 24,
+            "id": "876fd0ea-5932-40d6-87f8-168c75f71a87",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 24,
+                "id": "8b08aaf5-733c-4bb8-bfa5-2161bcc25ea1",
+                "kind": "video",
+                "start": 86448
+              }
+            ],
+            "source_end": 36,
+            "source_start": 12,
+            "start": 86448
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:03:00",
+        "timeline": "REA_LINKED_TRIM_END_20261022_120920"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "8d2c4d52-d80e-45d3-bc57-a328b8f8695e",
+      "column": "FieldsBlob",
+      "blob_sha256": "068766a4904b76a55332c51f57fe4c230d1229917f89ee5e5391707d09dfa6c2",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2452,
+      "decoded_sha256": "d538558554223aacfb04d2aa19d6ca8ded81a1369554c0d00b5b04dcab661b69",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 583,
+          "sha256": "35190e33a8b280c27afcd42aebcc15ec32cf15d324e2b8b2b90594525830f94b",
+          "case": {
+            "action": "linked_trim_start_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+          }
+        },
+        {
+          "decoded_offset": 646,
+          "bytes": 583,
+          "sha256": "35190e33a8b280c27afcd42aebcc15ec32cf15d324e2b8b2b90594525830f94b",
+          "case": {
+            "action": "linked_trim_start_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 12,
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_trim_start_prepare",
+        "items": [
+          {
+            "duration": 48,
+            "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 48,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "start": 86448
+              }
+            ],
+            "source_end": 60,
+            "source_start": 12,
+            "start": 86448
+          },
+          {
+            "duration": 48,
+            "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 48,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "start": 86448
+              }
+            ],
+            "source_end": 60,
+            "source_start": 12,
+            "start": 86448
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:03:00",
+        "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "8d2c4d52-d80e-45d3-bc57-a328b8f8695e",
+      "column": "FieldsBlob",
+      "blob_sha256": "068766a4904b76a55332c51f57fe4c230d1229917f89ee5e5391707d09dfa6c2",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2452,
+      "decoded_sha256": "d538558554223aacfb04d2aa19d6ca8ded81a1369554c0d00b5b04dcab661b69",
+      "json_occurrences": [
+        {
+          "decoded_offset": 1255,
+          "bytes": 581,
+          "sha256": "39e9c5baee01fd6c1e35bf8600e1402a94b0dd121d5648516426a98686c9266f",
+          "case": {
+            "action": "linked_trim_start_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                    "kind": "audio",
+                    "start": 86472
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 36,
+                "start": 86472
+              },
+              {
+                "duration": 24,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                    "kind": "video",
+                    "start": 86472
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 36,
+                "start": 86472
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+          }
+        },
+        {
+          "decoded_offset": 1871,
+          "bytes": 581,
+          "sha256": "39e9c5baee01fd6c1e35bf8600e1402a94b0dd121d5648516426a98686c9266f",
+          "case": {
+            "action": "linked_trim_start_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                    "kind": "audio",
+                    "start": 86472
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 36,
+                "start": 86472
+              },
+              {
+                "duration": 24,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                    "kind": "video",
+                    "start": 86472
+                  }
+                ],
+                "source_end": 60,
+                "source_start": 36,
+                "start": 86472
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:03:00",
+            "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_trim_start_after",
+        "items": [
+          {
+            "duration": 24,
+            "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 24,
+                "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+                "kind": "audio",
+                "start": 86472
+              }
+            ],
+            "source_end": 60,
+            "source_start": 36,
+            "start": 86472
+          },
+          {
+            "duration": 24,
+            "id": "be98ede8-3bc3-49e7-b694-0367a66dafe1",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 24,
+                "id": "ccc39ad9-4b7d-4d49-9e5e-c91ad32384ab",
+                "kind": "video",
+                "start": 86472
+              }
+            ],
+            "source_end": 60,
+            "source_start": 36,
+            "start": 86472
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:03:00",
+        "timeline": "REA_LINKED_TRIM_START_20261022_121042"
+      }
+    }
+  ],
+  "limitations": [
+    "Only payloads with marker 'REA_LINKED_TRIM' and JSON prefix '{\"action\":' are extracted.",
+    "Marker name establishes decoded-blob co-occurrence only, not association with a particular JSON payload or native marker.",
+    "Distinct exact payload hashes in one blob form separate records; optional timeline filter tests exact JSON case.timeline.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "Selected probe cases do not establish general feature or retiming parity."
+  ],
+  "full_resolve_parity": false
+}

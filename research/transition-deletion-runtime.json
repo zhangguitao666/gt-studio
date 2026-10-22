@@ -1,0 +1,703 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-transition-deletion.sqlite",
+    "sha256": "9347f3cd7d89311f0cb08790ad5f1fa8a36538a464be365e9bf060cd0134efde"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "marker_name": "REA_TRANSITION_DELETE",
+  "json_prefix": "{\"action\":",
+  "timeline_filter": "REA_TRANSITION_DELETE",
+  "selection_scope": "Marker bytes co-occur in decoded blob; exact JSON prefix and optional case.timeline filter select payloads. No native wrapper association is inferred.",
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "382a2a11-b2ba-48d1-a2f4-781a9de4b474",
+      "column": "FieldsBlob",
+      "blob_sha256": "7d1eb6f554db49b95d9e3cc87646c0b25d3fa448142412353bd84b865c75dc6d",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 11995,
+      "decoded_sha256": "ae842e4ee9785460504314d9f5b351b19e1ca89c9130a01a067286713d7cde1c",
+      "json_occurrences": [
+        {
+          "decoded_offset": 10332,
+          "bytes": 817,
+          "sha256": "0754080f90dd20d3b6c97b41e233c5d5e2a773e1d5d177cc6e0c24332ed3298d",
+          "case": {
+            "action": "transition",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_transition_false",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": false,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        },
+        {
+          "decoded_offset": 11178,
+          "bytes": 817,
+          "sha256": "0754080f90dd20d3b6c97b41e233c5d5e2a773e1d5d177cc6e0c24332ed3298d",
+          "case": {
+            "action": "transition",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_transition_false",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": false,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        }
+      ],
+      "case": {
+        "action": "transition",
+        "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_transition_false",
+        "after": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ],
+          "delete_return": true,
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ]
+        },
+        "before": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ],
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 12,
+              "kind": "transition",
+              "name": "交叉叠化",
+              "start": 86442
+            },
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ]
+        },
+        "completed": true,
+        "ripple": false,
+        "timeline": "REA_TRANSITION_DELETE"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "3cfa263a-0ff2-4a80-82be-659297524ed6",
+      "column": "FieldsBlob",
+      "blob_sha256": "20eee28df8d461f0aca04e8e786ad2c1ed1490ac07709c48f45fb4784bb7d65e",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 11719,
+      "decoded_sha256": "ae32a13ad18ae610e38827fcb1ec24d79f64dd9fdd6c4bcbd360265b9fb53402",
+      "json_occurrences": [
+        {
+          "decoded_offset": 10332,
+          "bytes": 679,
+          "sha256": "38c98abe155d8ca5ca4893ef52c7c8e77327aafe4d72833934f8678cd3cf7855",
+          "case": {
+            "action": "clip",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_true",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86400
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86400
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": true,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        },
+        {
+          "decoded_offset": 11040,
+          "bytes": 679,
+          "sha256": "38c98abe155d8ca5ca4893ef52c7c8e77327aafe4d72833934f8678cd3cf7855",
+          "case": {
+            "action": "clip",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_true",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86400
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86400
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": true,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        }
+      ],
+      "case": {
+        "action": "clip",
+        "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_true",
+        "after": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86400
+            }
+          ],
+          "delete_return": true,
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86400
+            }
+          ]
+        },
+        "before": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ],
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 12,
+              "kind": "transition",
+              "name": "交叉叠化",
+              "start": 86442
+            },
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ]
+        },
+        "completed": true,
+        "ripple": true,
+        "timeline": "REA_TRANSITION_DELETE"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "833f8b40-fe1a-421c-9838-76cf535f53d1",
+      "column": "FieldsBlob",
+      "blob_sha256": "c355c8266d64fb74167d04a0eb231df16ec6aa4149701a349dc67bf36891ec66",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 11847,
+      "decoded_sha256": "7561d364b0c0d4fabe45c244341b8428e3d25cc19be07865bd4d02382a695e71",
+      "json_occurrences": [
+        {
+          "decoded_offset": 10332,
+          "bytes": 743,
+          "sha256": "745b745819add24f46d9456ad7fae6f0143c2bba725d2b32eb069ff88ebabe43",
+          "case": {
+            "action": "clip",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_false",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": false,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        },
+        {
+          "decoded_offset": 11104,
+          "bytes": 743,
+          "sha256": "745b745819add24f46d9456ad7fae6f0143c2bba725d2b32eb069ff88ebabe43",
+          "case": {
+            "action": "clip",
+            "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_false",
+            "after": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "delete_return": true,
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": {
+              "audio": [
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 48,
+                  "kind": "audio",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ],
+              "video": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "red.mp4",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "name": "交叉叠化",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "name": "blue.mp4",
+                  "start": 86448
+                }
+              ]
+            },
+            "completed": true,
+            "ripple": false,
+            "timeline": "REA_TRANSITION_DELETE"
+          }
+        }
+      ],
+      "case": {
+        "action": "clip",
+        "actual_timeline": "REA_DISSOLVE_DELETE_20261021_152152_clip_false",
+        "after": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ],
+          "delete_return": true,
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ]
+        },
+        "before": {
+          "audio": [
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 48,
+              "kind": "audio",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ],
+          "video": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "red.mp4",
+              "start": 86400
+            },
+            {
+              "duration": 12,
+              "kind": "transition",
+              "name": "交叉叠化",
+              "start": 86442
+            },
+            {
+              "duration": 48,
+              "kind": "video",
+              "name": "blue.mp4",
+              "start": 86448
+            }
+          ]
+        },
+        "completed": true,
+        "ripple": false,
+        "timeline": "REA_TRANSITION_DELETE"
+      }
+    }
+  ],
+  "limitations": [
+    "Only payloads with marker 'REA_TRANSITION_DELETE' and JSON prefix '{\"action\":' are extracted.",
+    "Marker name establishes decoded-blob co-occurrence only, not association with a particular JSON payload or native marker.",
+    "Distinct exact payload hashes in one blob form separate records; optional timeline filter tests exact JSON case.timeline.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "Selected probe cases do not establish general feature or retiming parity."
+  ],
+  "full_resolve_parity": false
+}

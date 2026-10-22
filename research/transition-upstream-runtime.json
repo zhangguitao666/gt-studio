@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-transition-upstream.sqlite",
+    "sha256": "802ae07a1729d65f20c9d4fa0100d12baa93c7a14f5820cb0ccbfb6ad733e925"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "marker_name": "REA_TRANSITION_DELETE_UPSTREAM",
+  "json_prefix": "{\"action\":",
+  "timeline_filter": "REA_TRANSITION_DELETE_UPSTREAM",
+  "selection_scope": "Marker bytes co-occur in decoded blob; exact JSON prefix and optional case.timeline filter select payloads. No native wrapper association is inferred.",
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "43cf54ee-6793-4bef-b829-225910f48a1d",
+      "column": "FieldsBlob",
+      "blob_sha256": "e7972ead9fca686e63706d5bb20baf00c85ba9ec262ecb28f86333f38b9e47fa",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1021,
+      "decoded_sha256": "89a92fa3d09c26291fb7dd4497fef332ec4d7ae67adcc241c95ba997e4c49559",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 478,
+          "sha256": "0f6fd2c12c8382a54b9ef8d8c90dbfb571aaeec9df2b9cb3bda755e1431289b5",
+          "case": {
+            "action": "upstream_clip",
+            "after": {
+              "delete_return": true,
+              "items": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": [
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86400
+              },
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86448
+              },
+              {
+                "duration": 12,
+                "kind": "transition",
+                "start": 86490
+              },
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86496
+              }
+            ],
+            "completed": true,
+            "ripple": true,
+            "timeline": "REA_TRANSITION_DELETE_UPSTREAM"
+          }
+        },
+        {
+          "decoded_offset": 543,
+          "bytes": 478,
+          "sha256": "0f6fd2c12c8382a54b9ef8d8c90dbfb571aaeec9df2b9cb3bda755e1431289b5",
+          "case": {
+            "action": "upstream_clip",
+            "after": {
+              "delete_return": true,
+              "items": [
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "start": 86400
+                },
+                {
+                  "duration": 12,
+                  "kind": "transition",
+                  "start": 86442
+                },
+                {
+                  "duration": 48,
+                  "kind": "video",
+                  "start": 86448
+                }
+              ]
+            },
+            "before": [
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86400
+              },
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86448
+              },
+              {
+                "duration": 12,
+                "kind": "transition",
+                "start": 86490
+              },
+              {
+                "duration": 48,
+                "kind": "video",
+                "start": 86496
+              }
+            ],
+            "completed": true,
+            "ripple": true,
+            "timeline": "REA_TRANSITION_DELETE_UPSTREAM"
+          }
+        }
+      ],
+      "case": {
+        "action": "upstream_clip",
+        "after": {
+          "delete_return": true,
+          "items": [
+            {
+              "duration": 48,
+              "kind": "video",
+              "start": 86400
+            },
+            {
+              "duration": 12,
+              "kind": "transition",
+              "start": 86442
+            },
+            {
+              "duration": 48,
+              "kind": "video",
+              "start": 86448
+            }
+          ]
+        },
+        "before": [
+          {
+            "duration": 48,
+            "kind": "video",
+            "start": 86400
+          },
+          {
+            "duration": 48,
+            "kind": "video",
+            "start": 86448
+          },
+          {
+            "duration": 12,
+            "kind": "transition",
+            "start": 86490
+          },
+          {
+            "duration": 48,
+            "kind": "video",
+            "start": 86496
+          }
+        ],
+        "completed": true,
+        "ripple": true,
+        "timeline": "REA_TRANSITION_DELETE_UPSTREAM"
+      }
+    }
+  ],
+  "limitations": [
+    "Only payloads with marker 'REA_TRANSITION_DELETE_UPSTREAM' and JSON prefix '{\"action\":' are extracted.",
+    "Marker name establishes decoded-blob co-occurrence only, not association with a particular JSON payload or native marker.",
+    "Distinct exact payload hashes in one blob form separate records; optional timeline filter tests exact JSON case.timeline.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "Selected probe cases do not establish general feature or retiming parity."
+  ],
+  "full_resolve_parity": false
+}

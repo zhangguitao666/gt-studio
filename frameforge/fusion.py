@@ -1,0 +1,238 @@
+"""Independent, clip-local compositing graph and FFmpeg execution.
+
+Initial image-node subset; this is not the native Fusion engine. MediaIn uses
+the retimed clip on the project canvas. Coordinates use a bottom-left origin.
+"""
+import copy
+import math
+import uuid
+from collections import Counter
+
+
+CATALOG = {
+    'MediaIn': {'inputs': [], 'parameters': {}},
+    'MediaOut': {'inputs': ['Input'], 'parameters': {}},
+    'Background': {'inputs': [], 'parameters': {k: (v, 0, 1) for k, v in [('Red', 0), ('Green', 0), ('Blue', 0), ('Alpha', 1)]}},
+    'Transform': {'inputs': ['Input'], 'parameters': {'CenterX': (0.5, -10, 10), 'CenterY': (0.5, -10, 10), 'Size': (1, 0.01, 8), 'Angle': (0, -3600, 3600)}},
+    'Merge': {'inputs': ['Background', 'Foreground'], 'parameters': {'Blend': (1, 0, 1), 'CenterX': (0.5, -10, 10), 'CenterY': (0.5, -10, 10)}},
+}
+
+
+def make_node(kind, identity, name=None, parameters=None, position=None):
+    if kind not in CATALOG:
+        raise ValueError('Unsupported Fusion node type: ' + str(kind))
+    if parameters is not None and not isinstance(parameters, dict):
+        raise ValueError('Fusion parameters must be an object')
+    return {'id': identity, 'type': kind, 'name': identity if name is None else name,
+            'parameters': {**{k: v[0] for k, v in CATALOG[kind]['parameters'].items()}, **(parameters or {})},
+            'inputs': {}, 'position': {'x': 0, 'y': 0} if position is None else position}
+
+
+def default_graph():
+    source = make_node('MediaIn', 'MediaIn1', position={'x': 0, 'y': 0})
+    output = make_node('MediaOut', 'MediaOut1', position={'x': 320, 'y': 0})
+    output['inputs']['Input'] = source['id']
+    return {'version': 1, 'nodes': [source, output], 'output_node_id': output['id']}
+
+
+def finite(value, low, high):
+    return type(value) in (int, float) and math.isfinite(value) and low <= value <= high
+
+
+def validate_graph(graph):
+    if not isinstance(graph, dict) or set(graph) != {'version', 'nodes', 'output_node_id'} or type(graph['version']) is not int or graph['version'] != 1:
+        raise ValueError('Invalid Fusion graph format')
+    nodes = graph['nodes']
+    if not isinstance(nodes, list) or not 1 <= len(nodes) <= 64:
+        raise ValueError('Fusion graph requires 1..64 nodes')
+    by_id = {}
+    for node in nodes:
+        if not isinstance(node, dict) or set(node) != {'id', 'type', 'name', 'parameters', 'inputs', 'position'}:
+            raise ValueError('Invalid Fusion node fields')
+        identity = node['id']
+        if not isinstance(identity, str) or not identity.strip() or len(identity) > 128 or identity in by_id:
+            raise ValueError('Missing or duplicate Fusion node ID')
+        if node['type'] not in CATALOG:
+            raise ValueError('Unsupported Fusion node type')
+        if not isinstance(node['name'], str) or not node['name'].strip() or len(node['name']) > 256:
+            raise ValueError('Invalid Fusion node name')
+        spec = CATALOG[node['type']]
+        params = node['parameters']
+        if not isinstance(params, dict) or set(params) != set(spec['parameters']):
+            raise ValueError('Invalid Fusion parameters')
+        for key, (_, low, high) in spec['parameters'].items():
+            if not finite(params[key], low, high):
+                raise ValueError('Fusion parameter out of range: ' + key)
+        inputs = node['inputs']
+        if not isinstance(inputs, dict) or set(inputs) - set(spec['inputs']) or any(not isinstance(v, str) for v in inputs.values()):
+            raise ValueError('Invalid Fusion input ports')
+        pos = node['position']
+        if not isinstance(pos, dict) or set(pos) != {'x', 'y'} or any(not finite(v, -1e6, 1e6) for v in pos.values()):
+            raise ValueError('Invalid Fusion node position')
+        by_id[identity] = node
+    if sum(n['type'] == 'MediaOut' for n in nodes) != 1 or graph['output_node_id'] not in by_id or by_id[graph['output_node_id']]['type'] != 'MediaOut':
+        raise ValueError('Fusion graph needs exactly one designated MediaOut')
+    for node in nodes:
+        for source in node['inputs'].values():
+            if source not in by_id or by_id[source]['type'] == 'MediaOut':
+                raise ValueError('Missing Fusion source or source has no image output')
+    active, done = set(), set()
+    def visit(identity):
+        if identity in active:
+            raise ValueError('Fusion connections form a cycle')
+        if identity in done:
+            return
+        active.add(identity)
+        for source in by_id[identity]['inputs'].values():
+            visit(source)
+        active.remove(identity); done.add(identity)
+    for identity in by_id:
+        visit(identity)
+    return by_id
+
+
+def render_order(graph):
+    nodes = validate_graph(graph)
+    order, seen, errors = [], set(), []
+    def walk(identity):
+        if identity in seen:
+            return
+        seen.add(identity)
+        node = nodes[identity]
+        for port in CATALOG[node['type']]['inputs']:
+            if port not in node['inputs']:
+                errors.append(f'{node["name"]}.{port} is not connected')
+            else:
+                walk(node['inputs'][port])
+        order.append(node)
+    walk(graph['output_node_id'])
+    return order, errors
+
+
+def describe_graph(graph):
+    _, errors = render_order(graph)
+    return {'graph': copy.deepcopy(graph), 'render_ready': not errors, 'errors': errors,
+            'node_catalog': copy.deepcopy(CATALOG), 'native_equivalence_verified': False}
+
+
+class FusionActions:
+    def _fusion_clip(self, clip_id):
+        clip, track = self._clip(clip_id)
+        if track['kind'] != 'video':
+            raise ValueError('Fusion requires a video clip')
+        return clip
+
+    def get_fusion_graph(self, clip_id):
+        return describe_graph(self._fusion_clip(clip_id).get('fusion_graph', default_graph()))
+
+    def _edit_fusion(self, clip_id):
+        clip = self._fusion_clip(clip_id)
+        return clip.setdefault('fusion_graph', default_graph())
+
+    def add_fusion_node(self, clip_id, type, name=None, parameters=None, position=None):
+        if type == 'MediaOut':
+            raise ValueError('The output node already exists')
+        graph = self._edit_fusion(clip_id)
+        node = make_node(type, 'node_' + uuid.uuid4().hex[:12], name, parameters, position)
+        graph['nodes'].append(node)
+        validate_graph(graph)
+        return copy.deepcopy(node)
+
+    def update_fusion_node(self, clip_id, node_id, parameters=None, name=None, position=None):
+        graph = self._edit_fusion(clip_id)
+        node = next((n for n in graph['nodes'] if n['id'] == node_id), None)
+        if node is None:
+            raise ValueError('Fusion node does not exist')
+        if parameters is not None:
+            if not isinstance(parameters, dict):
+                raise ValueError('Fusion parameters must be an object')
+            node['parameters'].update(parameters)
+        if name is not None:
+            node['name'] = name
+        if position is not None:
+            node['position'] = position
+        validate_graph(graph)
+        return copy.deepcopy(node)
+
+    def connect_fusion_nodes(self, clip_id, target_node_id, input, source_node_id=None):
+        graph = self._edit_fusion(clip_id)
+        node = next((n for n in graph['nodes'] if n['id'] == target_node_id), None)
+        if node is None or input not in CATALOG[node['type']]['inputs']:
+            raise ValueError('Fusion input port does not exist')
+        if source_node_id is None:
+            node['inputs'].pop(input, None)
+        else:
+            node['inputs'][input] = source_node_id
+        validate_graph(graph)
+        return describe_graph(graph)
+
+    def delete_fusion_node(self, clip_id, node_id):
+        graph = self._edit_fusion(clip_id)
+        if node_id == graph['output_node_id']:
+            raise ValueError('Cannot delete the designated MediaOut')
+        if not any(n['id'] == node_id for n in graph['nodes']):
+            raise ValueError('Fusion node does not exist')
+        graph['nodes'] = [n for n in graph['nodes'] if n['id'] != node_id]
+        for node in graph['nodes']:
+            node['inputs'] = {k: v for k, v in node['inputs'].items() if v != node_id}
+        validate_graph(graph)
+        return describe_graph(graph)
+
+    def clear_fusion_graph(self, clip_id):
+        self._fusion_clip(clip_id).pop('fusion_graph', None)
+        return describe_graph(default_graph())
+
+
+def compile_graph(graph, selection, project, duration_frames, prefix):
+    """Return filter statements and an output label; generate only reachable nodes."""
+    order, errors = render_order(graph)
+    if errors:
+        raise ValueError('Incomplete Fusion graph: ' + '; '.join(errors))
+    if [n['type'] for n in order] == ['MediaIn', 'MediaOut']:
+        return None  # Bit-identical legacy path, including disconnected nodes.
+    width, height = project['width'], project['height']
+    rate = f'{project["fps"]["num"]}/{project["fps"]["den"]}'
+    duration = duration_frames * project['fps']['den'] / project['fps']['num']
+    uses = Counter(source for n in order for source in n['inputs'].values())
+    uses[graph['output_node_id']] = 1
+    labels, filters = {}, []
+    def take(identity):
+        return labels[identity].pop()
+    def canvas(label):
+        filters.append(f'color=c=black@0:s={width}x{height}:r={rate}:d={duration:.12f},format=gbrap16le[{label}]')
+    for index, node in enumerate(order):
+        out = f'{prefix}_f{index}'
+        params, kind = node['parameters'], node['type']
+        if kind == 'MediaIn':
+            filters.append(selection + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0[{out}]')
+        elif kind == 'Background':
+            raw = out + '_canvas'; canvas(raw)
+            filters.append(f'[{raw}]geq=r={params["Red"]*65535}:g={params["Green"]*65535}:b={params["Blue"]*65535}:a={params["Alpha"]*65535}[{out}]')
+        elif kind == 'Transform':
+            source = take(node['inputs']['Input'])
+            scaled = out + '_scaled'
+            sw, sh = max(2, round(width * params['Size']/2)*2), max(2, round(height * params['Size']/2)*2)
+            chain = f'[{source}]scale={sw}:{sh}'
+            if params['Angle']:
+                angle = -params['Angle'] * math.pi / 180
+                chain += f',rotate={angle}:ow=rotw({angle}):oh=roth({angle}):c=black@0'
+            filters.append(chain + f'[{scaled}]')
+            back = out + '_canvas'; canvas(back)
+            # The bundled FFmpeg auto/10-bit overlay darkens straight RGB when
+            # compositing onto transparent backgrounds. Explicit RGB preserves
+            # straight-alpha semantics, at an acknowledged 8-bit boundary.
+            filters.append(f'[{back}][{scaled}]overlay=x=(W-w)/2+{(params["CenterX"]-.5)*width}:y=(H-h)/2+{(.5-params["CenterY"])*height}:format=rgb:alpha=straight:shortest=1,format=gbrap16le[{out}]')
+        elif kind == 'Merge':
+            back, front = (take(node['inputs'][port]) for port in ('Background', 'Foreground'))
+            alpha = out + '_alpha'
+            filters.append(f'[{front}]colorchannelmixer=aa={params["Blend"]}[{alpha}]')
+            filters.append(f'[{back}][{alpha}]overlay=x={ (params["CenterX"]-.5)*width}:y={ (.5-params["CenterY"])*height}:format=rgb:alpha=straight:shortest=1,format=gbrap16le[{out}]')
+        else:  # MediaOut
+            filters.append(f'[{take(node["inputs"]["Input"])}]null[{out}]')
+        count = uses[node['id']]
+        if count > 1:
+            labels[node['id']] = [f'{out}_use{i}' for i in range(count)]
+            filters.append(f'[{out}]split={count}' + ''.join(f'[{label}]' for label in labels[node['id']]))
+        else:
+            labels[node['id']] = [out]
+    return filters, take(graph['output_node_id'])

@@ -1,0 +1,3361 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-freeze-all-v3.sqlite",
+    "sha256": "b3204ee82522293c4ab0a69bb9361e0ba1b648d06cdb12938c3a828f060e096b"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/lib/libzstd.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "cdf7be0c-72c9-4204-9ee7-5cfad909e229",
+      "column": "FieldsBlob",
+      "blob_sha256": "ba0001d2197d799fef963abcef06e5153c52d52c90ad225ab383c2a34857b18e",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1912,
+      "decoded_sha256": "f48724ea856f2b99f9647a4475c0e8a27b489bbd76a40cbe0ce45ef40f440667",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 929,
+          "sha256": "00aef6cd5ade09a82d9508f479af64e78692d459b6ff9b895552761ac9e82606",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 0,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:00",
+            "timeline": "REA_FREEZE_20261021_143709_0",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 983,
+          "bytes": 929,
+          "sha256": "00aef6cd5ade09a82d9508f479af64e78692d459b6ff9b895552761ac9e82606",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 0,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:00",
+            "timeline": "REA_FREEZE_20261021_143709_0",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 0,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 0,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 0,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:00:00",
+        "timeline": "REA_FREEZE_20261021_143709_0",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "ad740727-3161-41be-b29e-55d291c2a664",
+      "column": "FieldsBlob",
+      "blob_sha256": "65ffadbe81e64db1a1adc5d5964eda59a46eb1358cfd00080b949d6f103f93cc",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1922,
+      "decoded_sha256": "1f9b5ca2256581b40691f734649d92b8f1447b674b0303f8fd27eb03f2d678ad",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 934,
+          "sha256": "17759b5ba5c11c1b08a31915a1951227c51eb970ebf312e0920badeb6be1b5c2",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 12,
+                "finish": 86412,
+                "source_end": 12,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 12,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:12",
+            "timeline": "REA_FREEZE_20261021_143709_12",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 988,
+          "bytes": 934,
+          "sha256": "17759b5ba5c11c1b08a31915a1951227c51eb970ebf312e0920badeb6be1b5c2",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 12,
+                "finish": 86412,
+                "source_end": 12,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 12,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:12",
+            "timeline": "REA_FREEZE_20261021_143709_12",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 12,
+            "finish": 86412,
+            "source_end": 12,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 12,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:00:12",
+        "timeline": "REA_FREEZE_20261021_143709_12",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "dd1069c5-354b-43f7-baaa-b6ae33bc2592",
+      "column": "FieldsBlob",
+      "blob_sha256": "60bb455198622514ace29b21b74bc6aa514599fc2d2e01962da0e9d64e6cea1f",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1922,
+      "decoded_sha256": "9fd5272755d8ebba5df4b3f90a40affd1b032c904a600901542a8dde244626c2",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 934,
+          "sha256": "475cbec3eb6327f0b51ece7060e99238e8a6cd055b92956b1c71f1ab50f1c57d",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 46,
+                "finish": 86446,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 46,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:01:22",
+            "timeline": "REA_FREEZE_20261021_143709_46",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 988,
+          "bytes": 934,
+          "sha256": "475cbec3eb6327f0b51ece7060e99238e8a6cd055b92956b1c71f1ab50f1c57d",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 46,
+                "finish": 86446,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 46,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:01:22",
+            "timeline": "REA_FREEZE_20261021_143709_46",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 46,
+            "finish": 86446,
+            "source_end": 46,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 46,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:01:22",
+        "timeline": "REA_FREEZE_20261021_143709_46",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "57d70714-3cb3-4280-9056-76cb4449580d",
+      "column": "FieldsBlob",
+      "blob_sha256": "50825aba8b8fd619ddbf27f5137eeb179c335972f4ca096260fd9fcb7ab3b0e5",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2434,
+      "decoded_sha256": "d1c8c4537059c0c3e75d1ff18919f488881dd4caff9a916d9e88d6d4b58abf29",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 1190,
+          "sha256": "455ddb44abd4c0a564e963e59f1ef388124c5aed093e50a6cf9fe5e24e66c990",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 47,
+                  "finish": 86447,
+                  "source_end": 0,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 0,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:00",
+            "timeline": "REA_FREEZE_20261021_143926_0",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 1244,
+          "bytes": 1190,
+          "sha256": "455ddb44abd4c0a564e963e59f1ef388124c5aed093e50a6cf9fe5e24e66c990",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 47,
+                  "finish": 86447,
+                  "source_end": 0,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 0,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:00",
+            "timeline": "REA_FREEZE_20261021_143926_0",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "all": [
+            {
+              "duration": 47,
+              "finish": 86447,
+              "source_end": 0,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 0,
+                "PitchCorrection": true
+              },
+              "start": 86400
+            },
+            {
+              "duration": 47,
+              "finish": 86494,
+              "source_end": 47,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 100,
+                "PitchCorrection": true
+              },
+              "start": 86447
+            }
+          ],
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 0,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 0,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 0,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:00:00",
+        "timeline": "REA_FREEZE_20261021_143926_0",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "77faa9fe-47a9-4749-bd97-82089f59401a",
+      "column": "FieldsBlob",
+      "blob_sha256": "58843b67dfae5bbdd2b4412a758c08205e70c4265ecdd6d24f4a6341461f1e7c",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2704,
+      "decoded_sha256": "cf8661becb8fab8387cdd69be9830e17995a7eb1a69770be173cfd18c1a51b70",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 1325,
+          "sha256": "c1e2010fb588a17caadd5d962fcf3a7b1ed208810e5b32646caa7a679ca93eca",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 12,
+                  "finish": 86412,
+                  "source_end": 12,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 35,
+                  "finish": 86447,
+                  "source_end": 12,
+                  "source_start": 12,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86412
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 12,
+                "finish": 86412,
+                "source_end": 12,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 12,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:12",
+            "timeline": "REA_FREEZE_20261021_143926_12",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 1379,
+          "bytes": 1325,
+          "sha256": "c1e2010fb588a17caadd5d962fcf3a7b1ed208810e5b32646caa7a679ca93eca",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 12,
+                  "finish": 86412,
+                  "source_end": 12,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 35,
+                  "finish": 86447,
+                  "source_end": 12,
+                  "source_start": 12,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86412
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 12,
+                "finish": 86412,
+                "source_end": 12,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 12,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:00:12",
+            "timeline": "REA_FREEZE_20261021_143926_12",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "all": [
+            {
+              "duration": 12,
+              "finish": 86412,
+              "source_end": 12,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 100,
+                "PitchCorrection": true
+              },
+              "start": 86400
+            },
+            {
+              "duration": 35,
+              "finish": 86447,
+              "source_end": 12,
+              "source_start": 12,
+              "speed": {
+                "Percentage": 0,
+                "PitchCorrection": true
+              },
+              "start": 86412
+            },
+            {
+              "duration": 47,
+              "finish": 86494,
+              "source_end": 47,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 100,
+                "PitchCorrection": true
+              },
+              "start": 86447
+            }
+          ],
+          "first": {
+            "duration": 12,
+            "finish": 86412,
+            "source_end": 12,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 12,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:00:12",
+        "timeline": "REA_FREEZE_20261021_143926_12",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "aadfff9a-478f-4b88-aa87-aaf2216bd292",
+      "column": "FieldsBlob",
+      "blob_sha256": "c022db4bae8a02d50e3bc6de31facfe05257304a2610efc660cfb96fdcf9ea10",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2702,
+      "decoded_sha256": "d1b904d308732e7b434905bde957c9f1db4d49dc172016ccf8340c51c02008ff",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 1324,
+          "sha256": "3d3ccdeb6e60f768f5a019de5d06f41daa839e2417477bea857d90f60df9c485",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 46,
+                  "finish": 86446,
+                  "source_end": 46,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 1,
+                  "finish": 86447,
+                  "source_end": 46,
+                  "source_start": 46,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86446
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 46,
+                "finish": 86446,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 46,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:01:22",
+            "timeline": "REA_FREEZE_20261021_143926_46",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 1378,
+          "bytes": 1324,
+          "sha256": "3d3ccdeb6e60f768f5a019de5d06f41daa839e2417477bea857d90f60df9c485",
+          "case": {
+            "after": {
+              "all": [
+                {
+                  "duration": 46,
+                  "finish": 86446,
+                  "source_end": 46,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86400
+                },
+                {
+                  "duration": 1,
+                  "finish": 86447,
+                  "source_end": 46,
+                  "source_start": 46,
+                  "speed": {
+                    "Percentage": 0,
+                    "PitchCorrection": true
+                  },
+                  "start": 86446
+                },
+                {
+                  "duration": 47,
+                  "finish": 86494,
+                  "source_end": 47,
+                  "source_start": 0,
+                  "speed": {
+                    "Percentage": 100,
+                    "PitchCorrection": true
+                  },
+                  "start": 86447
+                }
+              ],
+              "first": {
+                "duration": 46,
+                "finish": 86446,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "seek_frame": 46,
+            "seek_result": true,
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timecode_before": "01:00:01:22",
+            "timeline": "REA_FREEZE_20261021_143926_46",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "all": [
+            {
+              "duration": 46,
+              "finish": 86446,
+              "source_end": 46,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 100,
+                "PitchCorrection": true
+              },
+              "start": 86400
+            },
+            {
+              "duration": 1,
+              "finish": 86447,
+              "source_end": 46,
+              "source_start": 46,
+              "speed": {
+                "Percentage": 0,
+                "PitchCorrection": true
+              },
+              "start": 86446
+            },
+            {
+              "duration": 47,
+              "finish": 86494,
+              "source_end": 47,
+              "source_start": 0,
+              "speed": {
+                "Percentage": 100,
+                "PitchCorrection": true
+              },
+              "start": 86447
+            }
+          ],
+          "first": {
+            "duration": 46,
+            "finish": 86446,
+            "source_end": 46,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "seek_frame": 46,
+        "seek_result": true,
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timecode_before": "01:00:01:22",
+        "timeline": "REA_FREEZE_20261021_143926_46",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "c4e1f154-7f8f-4ae3-90ef-f431225e47b8",
+      "column": "FieldsBlob",
+      "blob_sha256": "140a5e8bd4f5a8cec0ef0752c8ae8db0c50cc3aead983900aa13a21eab9d20f2",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1810,
+      "decoded_sha256": "a169f674e6d7f735a86591ecd5854455e296f411cf7b08d2f4aa478ba5cd3b53",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 878,
+          "sha256": "26e9e6f72dd33fe43fb8a27b39964fca50a84195f37d8c3ce0b8416e1f52472d",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 46,
+                "speed": {
+                  "Percentage": -100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": -100,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_-100_false",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 932,
+          "bytes": 878,
+          "sha256": "26e9e6f72dd33fe43fb8a27b39964fca50a84195f37d8c3ce0b8416e1f52472d",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 0,
+                "source_start": 46,
+                "speed": {
+                  "Percentage": -100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": -100,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_-100_false",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 0,
+            "source_start": 46,
+            "speed": {
+              "Percentage": -100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": -100,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_-100_false",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "c217d276-a547-4c1f-bb59-4697dd8194a6",
+      "column": "FieldsBlob",
+      "blob_sha256": "e6ecae005200f6bd77f595443a2004fbb9cc8cdf13ad5a565cd8b1feef5c069f",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1794,
+      "decoded_sha256": "7f9e78bbeb0093735ef8f8b8b966969421aebb92ba362b604c2e2e29df837f16",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 870,
+          "sha256": "9c37f493f4afddecd2947aefdf0a698abe1a25dab3dd5c765d9a61711bfdeb5a",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 46,
+                "source_start": 46,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_0_false",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 924,
+          "bytes": 870,
+          "sha256": "9c37f493f4afddecd2947aefdf0a698abe1a25dab3dd5c765d9a61711bfdeb5a",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 46,
+                "source_start": 46,
+                "speed": {
+                  "Percentage": 0,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 0,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_0_false",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 46,
+            "source_start": 46,
+            "speed": {
+              "Percentage": 0,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 0,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_0_false",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "ea38a3e6-1006-4230-9de7-5351a8dfc754",
+      "column": "FieldsBlob",
+      "blob_sha256": "a99802fcfede446f0ac9b90f152e03f339ff5d665b2225e1a6585f188d607360",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1804,
+      "decoded_sha256": "f984f1ab9781699919b6371538f48d1cee96ba36584d3defe0aa84222fdb3461",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 875,
+          "sha256": "cc70da9239586bcd0966d3c9fa479e20dcbdc9f6ba8a1d6202778971476f5582",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 100,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_100_false",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 929,
+          "bytes": 875,
+          "sha256": "cc70da9239586bcd0966d3c9fa479e20dcbdc9f6ba8a1d6202778971476f5582",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 100,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_100_false",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 100,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_100_false",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "d76977f1-450d-4951-8183-e0ed41e9c2b6",
+      "column": "FieldsBlob",
+      "blob_sha256": "ea04b90fc56887ab82ced729f706dad536aca410c961fad4d4fbb66df5da0348",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1804,
+      "decoded_sha256": "a27aa8b005577dc621e4d5b533b00998f40c0179a7dd3b471518d7a680762c93",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 875,
+          "sha256": "a62b9cf9736970d0357dd90c4e65ee8893d7f8086f32d4cc30c08725bf0c7115",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 36,
+                "finish": 86436,
+                "source_end": 70,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 200,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 200,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_200_false",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 929,
+          "bytes": 875,
+          "sha256": "a62b9cf9736970d0357dd90c4e65ee8893d7f8086f32d4cc30c08725bf0c7115",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 36,
+                "finish": 86436,
+                "source_end": 70,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 200,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 200,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_200_false",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 36,
+            "finish": 86436,
+            "source_end": 70,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 200,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 200,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_200_false",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "46de35bf-e796-446a-8745-5d273cb9967e",
+      "column": "FieldsBlob",
+      "blob_sha256": "3eaf66a61409d5ac6abb51765b03872da1f3ae7f7fcc7f74c3a6b8628228b6cc",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1800,
+      "decoded_sha256": "5396b07f3996fb56c10b19cc60a9de9fd2f066503c0ea04c6ce58361bd3d578e",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 873,
+          "sha256": "6a314e6b13ecaed65e5ada631f552e7f21f74563805e11486456219dad413ef4",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 23,
+                "finish": 86423,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 200,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86470,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86423
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 200,
+            "ripple": true,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_200_true",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 927,
+          "bytes": 873,
+          "sha256": "6a314e6b13ecaed65e5ada631f552e7f21f74563805e11486456219dad413ef4",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 23,
+                "finish": 86423,
+                "source_end": 46,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 200,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86470,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86423
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 200,
+            "ripple": true,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_200_true",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 23,
+            "finish": 86423,
+            "source_end": 46,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 200,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86470,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86423
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 200,
+        "ripple": true,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_200_true",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "c85e76c7-d8c8-4548-abf6-56bf6a43040a",
+      "column": "FieldsBlob",
+      "blob_sha256": "84a35933897d5965fb7913f613d8091de47c1e8d8316c58a025e7d5ae1ffe699",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1798,
+      "decoded_sha256": "973de9e1c539e518ffa7f560053b414d158cce1b197e1eecdae491a1926d775a",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 872,
+          "sha256": "d3467db29045286a47acce340f32a260cf1c81482e03028b00d3252d0e945b35",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 23,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 50,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 50,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_50_false",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 926,
+          "bytes": 872,
+          "sha256": "d3467db29045286a47acce340f32a260cf1c81482e03028b00d3252d0e945b35",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 23,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 50,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 50,
+            "ripple": false,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_50_false",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 23,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 50,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 50,
+        "ripple": false,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_50_false",
+        "timeline_rate": 24
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "399fbf97-f4a9-4ab1-b3d7-13920684d311",
+      "column": "FieldsBlob",
+      "blob_sha256": "5212804ca5b680b1e578b6a8d8c88b7991e73645274f47f3d4b70c9d9e987fe1",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 1794,
+      "decoded_sha256": "4037c86958b61f292eff2133d28bcd664729ca0ce9b4590e4ab323fb2483e012",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 870,
+          "sha256": "1b4f47b08661b2f0c8935f9975c8971b6c60a921f71a5d86828fb75cf58008b5",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 94,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 50,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86541,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86494
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 50,
+            "ripple": true,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_50_true",
+            "timeline_rate": 24
+          }
+        },
+        {
+          "decoded_offset": 924,
+          "bytes": 870,
+          "sha256": "1b4f47b08661b2f0c8935f9975c8971b6c60a921f71a5d86828fb75cf58008b5",
+          "case": {
+            "after": {
+              "first": {
+                "duration": 94,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 50,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86541,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86494
+              }
+            },
+            "before": {
+              "first": {
+                "duration": 47,
+                "finish": 86447,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86400
+              },
+              "second": {
+                "duration": 47,
+                "finish": 86494,
+                "source_end": 47,
+                "source_start": 0,
+                "speed": {
+                  "Percentage": 100,
+                  "PitchCorrection": true
+                },
+                "start": 86447
+              }
+            },
+            "completed": true,
+            "first_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "percentage": 50,
+            "ripple": true,
+            "second_append": {
+              "returned_nil": false,
+              "success": true,
+              "value": 1
+            },
+            "set_speed": {
+              "returned_nil": false,
+              "success": true,
+              "value": true
+            },
+            "timeline": "REA_SPEED_20261021_143001_50_true",
+            "timeline_rate": 24
+          }
+        }
+      ],
+      "case": {
+        "after": {
+          "first": {
+            "duration": 94,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 50,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86541,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86494
+          }
+        },
+        "before": {
+          "first": {
+            "duration": 47,
+            "finish": 86447,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86400
+          },
+          "second": {
+            "duration": 47,
+            "finish": 86494,
+            "source_end": 47,
+            "source_start": 0,
+            "speed": {
+              "Percentage": 100,
+              "PitchCorrection": true
+            },
+            "start": 86447
+          }
+        },
+        "completed": true,
+        "first_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "percentage": 50,
+        "ripple": true,
+        "second_append": {
+          "returned_nil": false,
+          "success": true,
+          "value": 1
+        },
+        "set_speed": {
+          "returned_nil": false,
+          "success": true,
+          "value": true
+        },
+        "timeline": "REA_SPEED_20261021_143001_50_true",
+        "timeline_rate": 24
+      }
+    }
+  ],
+  "limitations": [
+    "Only our REA_RETIME_EVIDENCE payloads are extracted.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "These seven cases do not establish general retiming parity."
+  ],
+  "full_resolve_parity": false
+}

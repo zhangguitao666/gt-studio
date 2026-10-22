@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-linked-split.sqlite",
+    "sha256": "4c7fff47476cb35ef27d668817dd6193a568612fcd56171015a39eaa1fb3b626"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "marker_name": "REA_LINKED_SPLIT",
+  "json_prefix": "{\"action\":",
+  "timeline_filter": null,
+  "selection_scope": "Marker bytes co-occur in decoded blob; exact JSON prefix and optional case.timeline filter select payloads. No native wrapper association is inferred.",
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "a699d26c-711c-4dd9-ab71-51f67ac7c860",
+      "column": "FieldsBlob",
+      "blob_sha256": "d047d887ac47d710dabd458179458044c0ad51cd7ed78d70710ef1725925e4f1",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2882,
+      "decoded_sha256": "65873d93f7ab32be09a22fe562ceb5f5b5e8ed9d13ce5600abe8de93b6f25fad",
+      "json_occurrences": [
+        {
+          "decoded_offset": 1094,
+          "bytes": 879,
+          "sha256": "a644b5c3d9bac5fe7c326dbb1bcaa05539841303911103ffebe8418fa6f3b7ad",
+          "case": {
+            "action": "linked_split_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                    "kind": "audio",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 24,
+                "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+                    "kind": "audio",
+                    "start": 86424
+                  }
+                ],
+                "start": 86424
+              },
+              {
+                "duration": 24,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                    "kind": "video",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 24,
+                "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+                    "kind": "video",
+                    "start": 86424
+                  }
+                ],
+                "start": 86424
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:01:00",
+            "timeline": "REA_LINKED_SPLIT_20261022_114808"
+          }
+        },
+        {
+          "decoded_offset": 2003,
+          "bytes": 879,
+          "sha256": "a644b5c3d9bac5fe7c326dbb1bcaa05539841303911103ffebe8418fa6f3b7ad",
+          "case": {
+            "action": "linked_split_after",
+            "items": [
+              {
+                "duration": 24,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                    "kind": "audio",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 24,
+                "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+                    "kind": "audio",
+                    "start": 86424
+                  }
+                ],
+                "start": 86424
+              },
+              {
+                "duration": 24,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                    "kind": "video",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 24,
+                "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 24,
+                    "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+                    "kind": "video",
+                    "start": 86424
+                  }
+                ],
+                "start": 86424
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:01:00",
+            "timeline": "REA_LINKED_SPLIT_20261022_114808"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_split_after",
+        "items": [
+          {
+            "duration": 24,
+            "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 24,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "start": 86400
+              }
+            ],
+            "start": 86400
+          },
+          {
+            "duration": 24,
+            "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 24,
+                "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+                "kind": "audio",
+                "start": 86424
+              }
+            ],
+            "start": 86424
+          },
+          {
+            "duration": 24,
+            "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 24,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "start": 86400
+              }
+            ],
+            "start": 86400
+          },
+          {
+            "duration": 24,
+            "id": "4c474dd2-e76b-4c0e-8080-748f0d287c27",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 24,
+                "id": "60a60a5f-38e5-49f5-8339-3760874eb326",
+                "kind": "video",
+                "start": 86424
+              }
+            ],
+            "start": 86424
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:01:00",
+        "timeline": "REA_LINKED_SPLIT_20261022_114808"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "a699d26c-711c-4dd9-ab71-51f67ac7c860",
+      "column": "FieldsBlob",
+      "blob_sha256": "d047d887ac47d710dabd458179458044c0ad51cd7ed78d70710ef1725925e4f1",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2882,
+      "decoded_sha256": "65873d93f7ab32be09a22fe562ceb5f5b5e8ed9d13ce5600abe8de93b6f25fad",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 505,
+          "sha256": "f9c152c0541436253551c980084f92c8203dbf4d51c6abfbec02d74cae75380b",
+          "case": {
+            "action": "linked_split_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                    "kind": "audio",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 48,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                    "kind": "video",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:01:00",
+            "timeline": "REA_LINKED_SPLIT_20261022_114808"
+          }
+        },
+        {
+          "decoded_offset": 563,
+          "bytes": 505,
+          "sha256": "f9c152c0541436253551c980084f92c8203dbf4d51c6abfbec02d74cae75380b",
+          "case": {
+            "action": "linked_split_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                    "kind": "audio",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              },
+              {
+                "duration": 48,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                    "kind": "video",
+                    "start": 86400
+                  }
+                ],
+                "start": 86400
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:01:00",
+            "timeline": "REA_LINKED_SPLIT_20261022_114808"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_split_prepare",
+        "items": [
+          {
+            "duration": 48,
+            "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 48,
+                "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+                "kind": "audio",
+                "start": 86400
+              }
+            ],
+            "start": 86400
+          },
+          {
+            "duration": 48,
+            "id": "329e3b02-5c05-451f-bd37-16a2596f9baa",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 48,
+                "id": "3004adec-69a1-453e-92e4-e31fb1bddb1d",
+                "kind": "video",
+                "start": 86400
+              }
+            ],
+            "start": 86400
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:01:00",
+        "timeline": "REA_LINKED_SPLIT_20261022_114808"
+      }
+    }
+  ],
+  "limitations": [
+    "Only payloads with marker 'REA_LINKED_SPLIT' and JSON prefix '{\"action\":' are extracted.",
+    "Marker name establishes decoded-blob co-occurrence only, not association with a particular JSON payload or native marker.",
+    "Distinct exact payload hashes in one blob form separate records; optional timeline filter tests exact JSON case.timeline.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "Selected probe cases do not establish general feature or retiming parity."
+  ],
+  "full_resolve_parity": false
+}

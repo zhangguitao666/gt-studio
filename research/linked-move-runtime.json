@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "evidence_type": "derived_from_saved_native_probe_markers",
+  "snapshot": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/research/evidence/reference-linked-move.sqlite",
+    "sha256": "a64df762f926e208b1298ba2e6cbde0aa48338aed5e358807512ab11fff2e133"
+  },
+  "decoder": {
+    "path": "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib",
+    "sha256": "602d50cbe6fad0f0da6d1b73284ae3f75316015aea482ebd55614b6df2406b43",
+    "per_blob_output_limit_bytes": 1048576
+  },
+  "marker_name": "REA_LINKED_MOVE",
+  "json_prefix": "{\"action\":",
+  "timeline_filter": null,
+  "selection_scope": "Marker bytes co-occur in decoded blob; exact JSON prefix and optional case.timeline filter select payloads. No native wrapper association is inferred.",
+  "records": [
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "68cf1b16-a7fe-4d9f-b6fc-a2d709f97c02",
+      "column": "FieldsBlob",
+      "blob_sha256": "d2b25d1daa211b06ef75eb55d3ebf838431de52ab1fb6e5a1f7872204496a818",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2120,
+      "decoded_sha256": "136baa8fb74365de7baae6ba36cc8f13a6fb127d2a487e680f8ed53cea6833d4",
+      "json_occurrences": [
+        {
+          "decoded_offset": 27,
+          "bytes": 503,
+          "sha256": "2f677e9ed8e886aa413b612e48f3269744f6beb178e93d7b4a38f46c5cb005aa",
+          "case": {
+            "action": "linked_move_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:02:00",
+            "timeline": "REA_LINKED_MOVE_20261022_120000"
+          }
+        },
+        {
+          "decoded_offset": 560,
+          "bytes": 503,
+          "sha256": "2f677e9ed8e886aa413b612e48f3269744f6beb178e93d7b4a38f46c5cb005aa",
+          "case": {
+            "action": "linked_move_prepare",
+            "items": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                    "kind": "audio",
+                    "start": 86448
+                  }
+                ],
+                "start": 86448
+              },
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                    "kind": "video",
+                    "start": 86448
+                  }
+                ],
+                "start": 86448
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:02:00",
+            "timeline": "REA_LINKED_MOVE_20261022_120000"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_move_prepare",
+        "items": [
+          {
+            "duration": 48,
+            "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "start": 86448
+              }
+            ],
+            "start": 86448
+          },
+          {
+            "duration": 48,
+            "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "start": 86448
+              }
+            ],
+            "start": 86448
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:02:00",
+        "timeline": "REA_LINKED_MOVE_20261022_120000"
+      }
+    },
+    {
+      "table": "BtLockableBlob",
+      "primary_key": "68cf1b16-a7fe-4d9f-b6fc-a2d709f97c02",
+      "column": "FieldsBlob",
+      "blob_sha256": "d2b25d1daa211b06ef75eb55d3ebf838431de52ab1fb6e5a1f7872204496a818",
+      "zstd_magic_offset": 46,
+      "decoded_bytes": 2120,
+      "decoded_sha256": "136baa8fb74365de7baae6ba36cc8f13a6fb127d2a487e680f8ed53cea6833d4",
+      "json_occurrences": [
+        {
+          "decoded_offset": 1089,
+          "bytes": 501,
+          "sha256": "3da0186301ed5ea8257cca5f7be5dfa3b06bdff3ade5fe177e7e56eeb0adc256",
+          "case": {
+            "action": "linked_move_after",
+            "items": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                    "kind": "audio",
+                    "start": 86449
+                  }
+                ],
+                "start": 86449
+              },
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                    "kind": "video",
+                    "start": 86449
+                  }
+                ],
+                "start": 86449
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:02:00",
+            "timeline": "REA_LINKED_MOVE_20261022_120000"
+          }
+        },
+        {
+          "decoded_offset": 1619,
+          "bytes": 501,
+          "sha256": "3da0186301ed5ea8257cca5f7be5dfa3b06bdff3ade5fe177e7e56eeb0adc256",
+          "case": {
+            "action": "linked_move_after",
+            "items": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                    "kind": "audio",
+                    "start": 86449
+                  }
+                ],
+                "start": 86449
+              },
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "links": [
+                  {
+                    "duration": 48,
+                    "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                    "kind": "video",
+                    "start": 86449
+                  }
+                ],
+                "start": 86449
+              }
+            ],
+            "origin": 86400,
+            "timecode": "01:00:02:00",
+            "timeline": "REA_LINKED_MOVE_20261022_120000"
+          }
+        }
+      ],
+      "case": {
+        "action": "linked_move_after",
+        "items": [
+          {
+            "duration": 48,
+            "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+            "kind": "video",
+            "links": [
+              {
+                "duration": 48,
+                "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+                "kind": "audio",
+                "start": 86449
+              }
+            ],
+            "start": 86449
+          },
+          {
+            "duration": 48,
+            "id": "cc38c5a7-346f-4e00-a632-4b5d1ddea120",
+            "kind": "audio",
+            "links": [
+              {
+                "duration": 48,
+                "id": "9aa4ce9b-5a08-49c9-a5cf-695ace0fedba",
+                "kind": "video",
+                "start": 86449
+              }
+            ],
+            "start": 86449
+          }
+        ],
+        "origin": 86400,
+        "timecode": "01:00:02:00",
+        "timeline": "REA_LINKED_MOVE_20261022_120000"
+      }
+    }
+  ],
+  "limitations": [
+    "Only payloads with marker 'REA_LINKED_MOVE' and JSON prefix '{\"action\":' are extracted.",
+    "Marker name establishes decoded-blob co-occurrence only, not association with a particular JSON payload or native marker.",
+    "Distinct exact payload hashes in one blob form separate records; optional timeline filter tests exact JSON case.timeline.",
+    "No native wrapper field meanings are inferred.",
+    "Probe readbacks do not prove decoded render or audio equivalence.",
+    "Selected probe cases do not establish general feature or retiming parity."
+  ],
+  "full_resolve_parity": false
+}

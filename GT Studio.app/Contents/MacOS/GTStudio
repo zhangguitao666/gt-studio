@@ -1,0 +1,4 @@
+#!/bin/zsh
+APP_ROOT="${0:A:h:h:h:h}"
+cd "$APP_ROOT"
+exec "$APP_ROOT/.venv/bin/python" "$APP_ROOT/gt_studio.py" ui

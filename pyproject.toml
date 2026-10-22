@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gt-studio"
+version = "0.1.0"
+description = "Independent desktop video editor reconstruction with shared MCP control"
+requires-python = ">=3.12"
+dependencies = ["PySide6==6.12.0", "imageio-ffmpeg==0.6.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+gt-studio = "frameforge.__main__:main"
+frameforge = "frameforge.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["frameforge*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
