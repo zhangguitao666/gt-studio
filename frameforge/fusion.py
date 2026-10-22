@@ -5,6 +5,10 @@ the retimed clip on the project canvas. Coordinates use a bottom-left origin.
 """
 import copy
 import math
+import os
+from pathlib import Path
+import subprocess
+import tempfile
 import uuid
 from collections import Counter
 
@@ -182,13 +186,62 @@ class FusionActions:
         self._fusion_clip(clip_id).pop('fusion_graph', None)
         return describe_graph(default_graph())
 
+    def render_fusion_frame(self, clip_id, output, node_id=None, frame=0):
+        """Export a node checkpoint before clip grade and timeline compositing."""
+        from .engine import ffmpeg_executable, clip_duration
+        clip = copy.deepcopy(self._fusion_clip(clip_id))
+        project = copy.deepcopy(self._require())
+        self._frame(frame)
+        if frame >= clip_duration(clip):
+            raise ValueError('Fusion frame is outside the clip duration')
+        graph = copy.deepcopy(clip.get('fusion_graph', default_graph()))
+        nodes = validate_graph(graph)
+        node_id = node_id or graph['output_node_id']
+        if node_id not in nodes:
+            raise ValueError('Fusion node does not exist')
+        if node_id != graph['output_node_id']:
+            nodes[graph['output_node_id']]['inputs']['Input'] = node_id
+        order, errors = render_order(graph)
+        if errors:
+            raise ValueError('Incomplete Fusion checkpoint: ' + '; '.join(errors))
+        destination = Path(output).expanduser().resolve()
+        if destination.suffix.lower() != '.png':
+            raise ValueError('Fusion checkpoint output must be .png')
+        if destination == Path(project['path']).resolve() or any(destination == Path(m['path']).resolve() for m in project['media']):
+            raise ValueError('Output must not overwrite project or source media')
+        cmd = [ffmpeg_executable(), '-v', 'error', '-y', '-filter_complex_threads', '1']
+        if any(node['type'] == 'MediaIn' for node in order):
+            media = self._media(clip['media_id'])
+            if media.get('still'):
+                cmd += ['-loop', '1', '-framerate', f'{project["fps"]["num"]}/{project["fps"]["den"]}']
+            cmd += ['-i', media['path']]
+        filters, label = compile_graph(graph, '[0:v]' + self._video_selection(clip, project), project,
+                                       clip_duration(clip), 'checkpoint', force_output=True)
+        filters.append(f'[{label}]trim=start_frame={frame}:end_frame={frame+1},setpts=PTS-STARTPTS,format=rgba64be[checkpoint_output]')
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        handle, temporary = tempfile.mkstemp(prefix='.gt-node-', suffix='.png', dir=destination.parent)
+        os.close(handle)
+        try:
+            result = subprocess.run(cmd + ['-filter_complex', ';'.join(filters), '-map', '[checkpoint_output]',
+                                          '-frames:v', '1', '-pix_fmt', 'rgba64be', '-update', '1', temporary], capture_output=True, text=True)
+            if result.returncode:
+                raise ValueError('Fusion checkpoint render failed: ' + result.stderr[-4000:])
+            os.replace(temporary, destination)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+        return {'output': str(destination), 'clip_id': clip_id, 'node_id': node_id, 'frame': frame,
+                'width': project['width'], 'height': project['height'], 'format': 'png', 'channels': 'RGBA16',
+                'scope': 'node output before clip grade, transforms, opacity and timeline compositing',
+                'bytes': destination.stat().st_size, 'native_equivalence_verified': False}
 
-def compile_graph(graph, selection, project, duration_frames, prefix):
+
+def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False):
     """Return filter statements and an output label; generate only reachable nodes."""
     order, errors = render_order(graph)
     if errors:
         raise ValueError('Incomplete Fusion graph: ' + '; '.join(errors))
-    if [n['type'] for n in order] == ['MediaIn', 'MediaOut']:
+    if not force_output and [n['type'] for n in order] == ['MediaIn', 'MediaOut']:
         return None  # Bit-identical legacy path, including disconnected nodes.
     width, height = project['width'], project['height']
     rate = f'{project["fps"]["num"]}/{project["fps"]["den"]}'

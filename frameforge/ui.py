@@ -600,7 +600,7 @@ class EditorWindow(QMainWindow):
         from .fusion_ui import FusionPanel
         self.lower_pages = QStackedWidget()
         self.lower_pages.addWidget(lower)
-        self.fusion_panel = FusionPanel(self.rpc, lambda clip_id: self.select_clip(clip_id, preview=False))
+        self.fusion_panel = FusionPanel(self.rpc, lambda clip_id: self.select_clip(clip_id, preview=False), lambda: self.current_frame)
         self.lower_pages.addWidget(self.fusion_panel)
         vertical.addWidget(self.lower_pages)
         vertical.setSizes([540, 280])

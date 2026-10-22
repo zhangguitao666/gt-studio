@@ -6,7 +6,8 @@ from PySide6.QtCore import Qt, QPointF
 from PySide6.QtGui import QColor, QPen, QPainterPath
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
     QLabel, QPushButton, QComboBox, QLineEdit, QFormLayout, QDoubleSpinBox,
-    QGraphicsView, QGraphicsScene, QGraphicsRectItem, QGraphicsSimpleTextItem, QScrollArea, QLayout)
+    QGraphicsView, QGraphicsScene, QGraphicsRectItem, QGraphicsSimpleTextItem, QScrollArea, QLayout, QFileDialog)
+from pathlib import Path
 
 from .fusion import CATALOG, default_graph, render_order
 
@@ -39,9 +40,11 @@ class NodeItem(QGraphicsRectItem):
 
 
 class FusionPanel(QWidget):
-    def __init__(self, rpc, select_clip):
+    def __init__(self, rpc, select_clip, frame_provider=None):
         super().__init__()
         self.rpc, self.select_clip_callback = rpc, select_clip
+        self.frame_provider = frame_provider or (lambda: 0)
+        self.clip_start, self.clip_duration = 0, 1
         self.clip_id, self.selected_id, self.signature = None, None, None
         self.graph, self.items, self.edges = default_graph(), {}, []
         self.locked, self.reloading = False, False
@@ -75,6 +78,7 @@ class FusionPanel(QWidget):
         self.connect_button = QPushButton('Connect'); self.connect_button.clicked.connect(self.connect); form_outer.addWidget(self.connect_button)
         self.disconnect_button = QPushButton('Disconnect'); self.disconnect_button.clicked.connect(lambda: self.send('connect_fusion_nodes', {'target_node_id': self.selected_id, 'input': self.input_choice.currentText()}) if self.input_choice.count() else None); form_outer.addWidget(self.disconnect_button)
         self.delete_button = QPushButton('Delete node'); self.delete_button.clicked.connect(lambda: self.send('delete_fusion_node', {'node_id': self.selected_id}) if self.selected_id else None); form_outer.addWidget(self.delete_button)
+        self.save_frame_button = QPushButton('Save selected node PNG…'); self.save_frame_button.clicked.connect(self.save_node_frame); form_outer.addWidget(self.save_frame_button)
         form_outer.addStretch()
         form_outer.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         side = QScrollArea(); side.setWidgetResizable(True); side.setWidget(controls)
@@ -95,6 +99,9 @@ class FusionPanel(QWidget):
             self.clip_choice.addItem(f'{track["name"]} · {clip["start_frame"]} · {clip["id"]}', clip['id'])
         current = next(((c, t) for c, t in videos if c['id'] == selection), None)
         self.clip_id = current[0]['id'] if current else None
+        if current:
+            self.clip_start = current[0]['start_frame']
+            self.clip_duration = current[0].get('duration_frames', current[0]['out_frame']-current[0]['in_frame'])
         self.clip_choice.setCurrentIndex(max(0, self.clip_choice.findData(self.clip_id)))
         self.clip_choice.blockSignals(False)
         graph = current[0].get('fusion_graph', default_graph()) if current else default_graph()
@@ -163,6 +170,16 @@ class FusionPanel(QWidget):
         editable = bool(node and self.clip_id and not self.locked)
         for widget in (self.name_edit, self.apply_button, self.connect_button, self.disconnect_button, *self.parameters.values()): widget.setEnabled(editable)
         self.delete_button.setEnabled(editable and node['type'] != 'MediaOut')
+        self.save_frame_button.setEnabled(bool(node and self.clip_id))
+
+    def save_node_frame(self):
+        if not self.clip_id or not self.selected_id: return
+        path, _ = QFileDialog.getSaveFileName(self, 'Save node output with alpha', str(Path.home()/'Pictures'/'GT Studio node.png'), 'PNG image (*.png)')
+        if not path: return
+        if not Path(path).suffix: path += '.png'
+        local = int(self.frame_provider())-self.clip_start
+        if not 0 <= local < self.clip_duration: local=0
+        self.rpc('render_fusion_frame', {'clip_id':self.clip_id,'node_id':self.selected_id,'frame':local,'output':path})
 
     def sync_input_source(self):
         node = next((n for n in self.graph['nodes'] if n['id'] == self.selected_id), None)

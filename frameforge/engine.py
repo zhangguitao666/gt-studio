@@ -115,7 +115,7 @@ def ffmpeg_executable():
 
 class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
     ACTIONS = ('list_actions', 'create_project', 'open_project', 'save_project',
-               'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'add_fusion_node', 'update_fusion_node', 'connect_fusion_nodes', 'delete_fusion_node', 'clear_fusion_graph', 'import_media', 'create_timeline',
+               'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'render_fusion_frame', 'add_fusion_node', 'update_fusion_node', 'connect_fusion_nodes', 'delete_fusion_node', 'clear_fusion_graph', 'import_media', 'create_timeline',
                'set_active_timeline', 'add_track', 'set_track_state', 'append_clip', 'detach_audio', 'link_clips', 'unlink_clips', 'split_clip',
                'trim_clip', 'trim_clip_edge', 'set_clip_speed', 'move_clip', 'delete_clip', 'ripple_delete', 'set_clip_properties',
                'add_marker', 'add_transition', 'delete_transition', 'set_project_settings', 'import_subtitles', 'add_subtitle', 'update_subtitle', 'delete_subtitle', 'export_subtitles', 'set_subtitle_style', 'render', 'undo', 'redo')
@@ -133,7 +133,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         params = params or {}
         if not isinstance(params, dict):
             raise ValueError('Action parameters must be an object')
-        readonly = {'list_actions', 'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'render', 'save_project', 'undo', 'redo', 'open_project', 'create_project'}
+        readonly = {'list_actions', 'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'render_fusion_frame', 'render', 'save_project', 'undo', 'redo', 'open_project', 'create_project'}
         before = copy.deepcopy(self.project)
         undo_before, redo_before = list(self._undo), list(self._redo)
         try:
@@ -147,7 +147,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                             new_transitions = [t for current in self.project['timelines'] for t in current.get('transitions', []) if t['track_id'] == track['id']]
                             if track['id'] not in current_tracks or current_tracks[track['id']]['clips'] != track['clips'] or old_transitions != new_transitions:
                                 raise ValueError('Track is locked: ' + track['name'])
-            if action not in {'get_state','list_actions','probe_media','inspect_fusion_settings','get_fusion_graph','render','save_project','undo','redo'} and self.project is not None:
+            if action not in {'get_state','list_actions','probe_media','inspect_fusion_settings','get_fusion_graph','render_fusion_frame','render','save_project','undo','redo'} and self.project is not None:
                 self._validate_links()
                 for timeline in self.project['timelines']:
                     self._validate_transition_timeline(timeline)
@@ -944,8 +944,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
             self._transition_segment(clips[transition['right_clip_id']], transition)
         return records
 
-    def _video_filters(self, source, clip, p, label, *, full_canvas=False):
-        props = {**PROPERTY_DEFAULTS, **clip['properties']}
+    def _video_selection(self, clip, p):
         rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
         fps = p['fps']['num']/p['fps']['den']
         length = clip_duration(clip)/fps
@@ -960,6 +959,14 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
             reverse_filter = ',reverse' if backwards else ''
             selection = f'fps={rate},trim=start_frame={floor_low}:end_frame={ceil_high}{reverse_filter},settb=expr=1/1000000000,setpts=(N-{phase.numerator}/{phase.denominator})/({speed.numerator}/{speed.denominator})/({rate})/TB,fps={rate}:round=up:start_time=0,tpad=stop_mode=clone:stop_duration={length}'
         selection += f',trim=end_frame={clip_duration(clip)},setpts=round(N/({rate})/TB)'
+        return selection
+
+    def _video_filters(self, source, clip, p, label, *, full_canvas=False):
+        props = {**PROPERTY_DEFAULTS, **clip['properties']}
+        rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
+        fps = p['fps']['num']/p['fps']['den']
+        length = clip_duration(clip)/fps
+        selection = self._video_selection(clip, p)
         transformed = any(props[key] != PROPERTY_DEFAULTS[key] for key in ('scale','x','y','rotation'))
         padding = 'black@0' if transformed else 'black'
         width = max(2,round(p['width']*props['scale']/2)*2)

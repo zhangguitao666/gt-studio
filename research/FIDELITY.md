@@ -148,3 +148,12 @@ RGBA16 clip intermediates and10-bit YUV422 main compositing reduce MSE30.25%–3
 ## Fusion 五节点执行阶段
 
 已加入可持久化、可经MCP和Qt画布编辑的MediaIn/MediaOut/Background/Transform/Merge子集，并导出验证48帧、共享节点分支和音频路径不变。Transform/Merge经过8位RGB合成边界，原版节点绑定、采样与所有算法尚未运行对照，不属于已证明原版等效的功能。原版设置文件仍仅只读检查，不自动执行。212项回归及真实窗口参数回显/写回、第0帧暂停预览证据仅覆盖FUSION-NODES.md所列范围，完整目标仍未达到。
+
+
+## 首轮原版 Fusion 运行对照
+
+24个选定原版导出任务实际完成，六个同尺寸案例经GT Studio MCP重建并比较全部48帧。几何位置基本对应；半透明背景RGB MAE42.666667、半混合6.317713，仍有实质差距。独立RGBA检查点及透明下层对照是下一步，尚不具备直接替换Alpha约定或声称节点等效的证据。ProRes4444两个AlphaMode在本批导出的包/解码帧相同，其余格式语义未知。见FUSION-REFERENCE.md及对应运行/媒体收据。
+
+## 独立节点 RGBA 检查点
+
+已实现render_fusion_frame与Fusion页节点PNG保存入口，52个公开MCP工具，完整224项独立回归通过。六案例首帧RGBA16检查点显示背景/变换/共享分支内部接近原版带Alpha导出，但主时间线半透明输出仍显著变暗；Merge本身已经存在明显色差。原版参照仍是编码导出而非内部缓冲，Transform/Merge仍有8位处理边界，未据此更改Alpha算法。真实窗口与MCP保存同一节点/帧的PNG逐字节相同，工程未变。见FUSION-CHECKPOINTS.md。后续仍需透明/不透明下层和参数梯度对照、算法校准及其余完整功能。

@@ -6,7 +6,7 @@ GT Studio 已加入片段局部节点图、Fusion 画布、共享 MCP 编辑和�
 
 节点图保存在视频片段的 fusion_graph 字段。旧项目无需迁移或自动写入，读取缺省图返回 MediaIn1→MediaOut1。节点 ID 仅在单个片段内生效，因此分割可复制独立图。分离音频时不会把图带入音频片段。
 
-新增六个公开 MCP 工具，合计 51 个：
+节点图编辑提供六个公开 MCP 工具，另有节点检查点导出；当前合计 52 个公开工具：
 
 | 工具 | 行为 |
 | --- | --- |
@@ -16,6 +16,7 @@ GT Studio 已加入片段局部节点图、Fusion 画布、共享 MCP 编辑和�
 | connect_fusion_nodes | 连接来源 Output；省略 source_node_id 即断开 |
 | delete_fusion_node | 删除节点并断开消费者，保留指定 MediaOut |
 | clear_fusion_graph | 移除图，恢复直接媒体路径 |
+| render_fusion_frame | 指定节点及片段内帧，导出进入片段/时间线处理之前的 RGBA16 PNG |
 
 编辑通过原有事务和撤销机制；锁定轨道拒绝图变化。拒绝重复 ID、未知类型/参数、无效端口、缺失来源、循环及损坏的保存文件，失败整组回滚。图最多 64 个节点。编辑状态可以包含未连完整的节点，但视频渲染要求输出可达路径完整；未使用的节点不参与计算。渲染失败不覆盖已有导出。
 
@@ -43,4 +44,14 @@ verify_fusion_nodes.py 使用已配置的 MCP 启动器与私有服务，实际�
 
 用户手动解锁后，原生 CUA 验收已确认：MCP 切换 Fusion 页面、选中片段和节点、MCP CenterX=.6 回显、原生键盘输入并 Apply 将 .75 写回共享状态，播放/定位后可见合成。初次加载暂停预览黑屏问题也由真实窗口发现：Qt 的 Stopped 状态只加载元数据，不提交视频帧。现改为 LoadedMedia 后暂停解码，不短暂播放音频；冷启动后第 0 帧可见，且 MCP 请求历史没有播放命令。证据见 fusion-native-window-verification.json、fusion-native-final.png、fusion-native-paused-start.png。离屏截图另存 fusion-canvas-offscreen.png，不与真实窗口证据混淆。
 
-仍需：原版节点运行/采样输出对照、设置文件导入与宏绑定、关键帧和表达式、更多 2D/3D 节点、蒙版、GPU/插件、缓存/性能及完整交互。当前五节点目录、可执行导出和通过测试，均不是完整 Resolve 一致性的证明。
+仍需：扩充原版节点采样对照并校准已知差异、设置文件导入与宏绑定、关键帧和表达式、更多 2D/3D 节点、蒙版、GPU/插件、缓存/性能及完整交互。当前五节点目录、可执行导出和通过测试，均不是完整 Resolve 一致性的证明。
+
+## 原版运行对照更新
+
+已新增六组同尺寸原版输出及十二个带Alpha导出，24个选定原版任务均读回完成。测量暴露半透明输出、Merge颜色和音频残差，当前五节点仍不等效；详细结果及下一步校准见 [FUSION-REFERENCE.md](FUSION-REFERENCE.md)。
+
+## 节点检查点更新
+
+`render_fusion_frame` 的 frame 从0开始，按片段变速后的局部时间解释；省略 node_id 则取 MediaOut。它只计算所选节点可达分支，不经过片段调色、位置、透明度、轨道和字幕。生成器独立分支即使源媒体离线也可导出；锁定轨道允许导出，工程和撤销历史不变。失败保留既有输出，禁止覆盖源媒体和工程。
+
+Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同。新增12项回归，完整224项通过。PNG是16位存储；Transform/Merge仍有8位处理边界，不能将检查点格式等同于全16位合成。六案例测量和后续校准范围见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)。

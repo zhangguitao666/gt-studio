@@ -14,7 +14,7 @@ from test_transitions import colored_sources
 from test_ui import wait_for
 
 
-def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sources):
+def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sources, monkeypatch):
     e, clip_id = real_project(tmp_path, colored_sources)
     controller = Controller(tmp_path/'service'); controller.engine = e
     server = EditorServer(('127.0.0.1', 0), controller)
@@ -75,6 +75,16 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
         wait_for(app, lambda: panel.locked)
         assert not panel.add_button.isEnabled() and not panel.clear_button.isEnabled()
         assert not panel.items[bg['id']].flags() & panel.items[bg['id']].GraphicsItemFlag.ItemIsMovable
+        # Export is available on a locked track, and does not change the graph.
+        panel.scene.clearSelection();panel.items[bg['id']].setSelected(True)
+        before=rpc(url,'get_state')
+        image=tmp_path/'locked-node.png'
+        from frameforge import fusion_ui
+        monkeypatch.setattr(fusion_ui.QFileDialog,'getSaveFileName',lambda *args:(str(image),'PNG image (*.png)'))
+        assert panel.save_frame_button.isEnabled()
+        panel.save_frame_button.click()
+        wait_for(app,lambda:image.exists() and image.stat().st_size>0)
+        assert rpc(url,'get_state')==before
         assert not errors
     finally:
         window.poll_timer.stop(); window.render_timer.stop(); window.transport_timer.stop()

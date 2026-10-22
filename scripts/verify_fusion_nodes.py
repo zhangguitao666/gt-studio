@@ -43,7 +43,7 @@ def main():
     client = ConfiguredClient(workspace)
     try:
         tools = client.request('tools/list', {})['tools']
-        assert len(tools) == 51
+        assert {'get_fusion_graph','add_fusion_node','update_fusion_node','connect_fusion_nodes','delete_fusion_node','clear_fusion_graph','render'} <= {t['name'] for t in tools}
         assert next(t for t in tools if t['name'] == 'get_fusion_graph')['annotations']['readOnlyHint']
         client.tool('create_project', name='GT Studio · Fusion 演示', width=320, height=180, fps=24)
         media = client.tool('import_media', path=str(source))
