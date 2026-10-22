@@ -143,3 +143,8 @@ Persistent enabled/locked flags,stream-specific output masks and transactional c
 ## Measured image precision update
 
 RGBA16 clip intermediates and10-bit YUV422 main compositing reduce MSE30.25%–32.00% across ten retained native fixtures under the existing normalization. RGB/PCM and source-identity limitations remain explicit in COLOR-PRECISION.md. Transparent canvases use planar16-bit RGB after fixing an observed alpha-negotiation failure. Five new media tests plus preview-session invalidation bring the full suite to172passed;44configuredMCPtools. Active-filter/alpha precision,full color management,HDR/ACES,tags and actual-window parity remain open.
+
+
+## Fusion 五节点执行阶段
+
+已加入可持久化、可经MCP和Qt画布编辑的MediaIn/MediaOut/Background/Transform/Merge子集，并导出验证48帧、共享节点分支和音频路径不变。Transform/Merge经过8位RGB合成边界，原版节点绑定、采样与所有算法尚未运行对照，不属于已证明原版等效的功能。原版设置文件仍仅只读检查，不自动执行。212项回归及真实窗口参数回显/写回、第0帧暂停预览证据仅覆盖FUSION-NODES.md所列范围，完整目标仍未达到。

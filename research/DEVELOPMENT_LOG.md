@@ -185,3 +185,15 @@ verify_linked_retime.py通过真实stdio MCP重放已有十组记录，先校验
 新增 inspect_fusion_settings 共享控制及只读 MCP 注解，实际配置启动器验证45个公开工具、四个原版文件83节点/133连接/4个未解析跨作用域引用，并拒绝可执行输入且项目不变。新增17项专项；完整189 passed。随后保存并恢复现有高精度演示，重载共享后端，生产HTTP入口实测原版Gradient并核对项目不变；重启重置内存撤销栈，桌面进程未重开。
 
 本阶段只建立文件导入依据，没有节点执行、时间线导入或Fusion页面编辑/渲染。完整节点引擎及原版像素对照仍需继续，真实窗口待手动解锁验收；完整目标未完成。记录FUSION-SETTINGS.md、fusion-settings-verification.json、fusion-live-service-verification.json和test-results-fusion.xml。
+
+## 五节点图执行、画布与解锁后的真实窗口验收
+
+新增片段局部 fusion_graph 及五种节点 MediaIn/MediaOut/Background/Transform/Merge。缺省图只读合成、不改旧工程；支持节点增加、修改、连接、删除、重置六个MCP工具，共51个公开工具。结构校验覆盖循环、端口、参数、来源、保存文件损坏和64节点限制，失败保留项目与历史；输出可达子图必须完整，未使用节点不计算。图随视频分割独立复制，分离音频排除图。编译器显式处理共享图像分支，进入真实FFmpeg导出；恒等图沿用原路径。
+
+实际透明变换像素暴露FFmpeg自动高位叠加使蓝色变暗；最小诊断记录auto的16位蓝通道16248，而显式RGB约65281。Transform/Merge因此明确使用8位RGB边界，未冒称高精度或原版等效。实际MCP演示导出48帧，三个采样时刻符合预定透明合成；PCM与直接路径逐字节相同，清空后的RGB/PCM亦精确相同，分支复用、失败保留旧文件及重开工程均通过。
+
+Fusion页面新增画布、布局拖动、参数、连线和编辑按钮，Qt→HTTP实际控件/鼠标事件测试通过。离屏视觉检查发现参数区压缩，修为可滚动侧栏和合理布局伸展，并同步当前输入的来源选择。完整初轮212项通过后修复了退出时scene已销毁仍处理选择信号的报错。
+
+用户确认手动解锁，CUA重开真实GT Studio，并以MCP切换Fusion、选片段和节点，确认CenterX=.6外部修改回显，原生键盘输入/Apply将.75写回。坐标交互使用真实截图，部分AX点击不一致；滚轮改变未提交数字后恢复并核对最终状态。真实窗口还发现停止态新预览黑屏，Qt探针证实Stopped只加载元数据，Loaded后pause才产生有效视频帧；改为加载后暂停解码而不短暂播放音频。新增有效QVideoFrame及像素断言，23项UI回归通过；清空服务请求历史后重启，未发送playing命令，第0帧合成画面可见。最终完整212项再次通过。
+
+旧高精度演示已保存；当前桌面演示另存GT Studio Fusion Desktop Demo.json，与可复跑验证工程分开，避免桌面参数修改污染验收媒体收据。新服务/窗口已加载当前代码。记录fusion-node-verification.json、fusion-native-window-verification.json、fusion-alpha-diagnostic.json和原生截图。原版运行窗口及专用参考工程已可访问，但节点原版算法/像素尚未对照；设置导入、关键帧、更多节点及其余完整功能仍未完成。

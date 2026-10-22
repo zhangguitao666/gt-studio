@@ -58,7 +58,7 @@ tool_timeout_sec = 450
 
 > 用 GT Studio 新建项目，导入 `/绝对路径/视频.mp4`，加入时间线，在第 48 帧分割，将后半段饱和度设为 0，然后导出到 `/绝对路径/结果.mp4`。
 
-当前公开 45 个 MCP 工具。`add_transition` 使用 `clip_id`、`position="start"/"end"`、`duration_frames`、`alignment="left"/"center"/"right"` 添加 Cross Dissolve；`delete_transition` 使用 `transition_id` 删除。两个相邻片段必须保留足够的源素材余量，否则添加失败且项目保持不变。当前未实现其他转场；会破坏已有转场的结构编辑需要先删除该转场。
+当前公开 51 个 MCP 工具。`add_transition` 使用 `clip_id`、`position="start"/"end"`、`duration_frames`、`alignment="left"/"center"/"right"` 添加 Cross Dissolve；`delete_transition` 使用 `transition_id` 删除。两个相邻片段必须保留足够的源素材余量，否则添加失败且项目保持不变。当前未实现其他转场；会破坏已有转场的结构编辑需要先删除该转场。
 
 工具的 `get_capabilities` 返回当前实现边界。变速使用 `set_clip_speed`：`percentage=50` 为半速，`-100` 为倒放，`0` 为定格；显式链接成员同步接收速度和音高选项；`ripple=true` 改变成员时长并移动各成员轨道的后续片段；关闭波纹时尽量保留时间线时长，源素材边界可能使其缩短。`pitch_correction` 控制音高修正。定格可传 `freeze_frame` 指定时间线帧；位于片段中间时保留前缀运动片段并定格尾段；关联成员按同一相对偏移定格，前后两侧分别链接。不传时优先使用位于片段内的共享播放头，否则从片段起点定格。字幕使用 `add_subtitle`、`import_subtitles`、`export_subtitles` 等工具。`set_page`、`set_playhead`、`set_playback` 控制已打开的桌面窗口；`get_transport` 区分已请求状态、桌面实际回报状态及是否连接，窗口关闭时命令保持待处理。`get_state` 返回实时项目，时间轴位置以项目帧率计，`out_frame` 不包含末端帧。`split_clip.frame` 是时间线上的绝对帧位置。`submit_render` 返回任务 ID，使用 `get_render_job` 查询。
 
@@ -100,7 +100,7 @@ MCP 操作的是 GT Studio 自己的项目与引擎。它没有借用安装版 R
 
 ## 后续仍需实现和对照验证
 
-Fusion 节点合成、完整调色/ACES/HDR/追踪/降噪、Fairlight DSP/总线/插件、AI 模型、RAW/完整编解码矩阵、完整字幕/标题系统、高级剪辑与变速曲线、数据库及协作、硬件与性能、完整交互及显示一致性。实际功能范围还需要结合本机运行行为、手册和专项素材逐项补齐。
+完整 Fusion 节点引擎（目前已有五节点子集）、完整调色/ACES/HDR/追踪/降噪、Fairlight DSP/总线/插件、AI 模型、RAW/完整编解码矩阵、完整字幕/标题系统、高级剪辑与变速曲线、数据库及协作、硬件与性能、完整交互及显示一致性。实际功能范围还需要结合本机运行行为、手册和专项素材逐项补齐。
 
 产品名称为 **GT Studio**。内部 `frameforge` Python 模块、旧命令入口及现有 MCP 注册键保留兼容；MCP 初始化显示 GT Studio，资源使用 `gt-studio://`，同时接受旧资源 URI。
 
@@ -114,8 +114,10 @@ Fusion 节点合成、完整调色/ACES/HDR/追踪/降噪、Fairlight DSP/总线
 - 关联移动：[LINKED-MOVE-REFERENCE.md](research/LINKED-MOVE-REFERENCE.md)。
 - 关联时间线边界裁剪：[LINKED-TRIM-REFERENCE.md](research/LINKED-TRIM-REFERENCE.md)。
 
-45个公开MCP工具。服务重连使用会话标识，窗口可在服务重启后重新接受低序号请求。上述专项仅证明报告中列出的操作、素材和输出，完整Resolve一致性仍未达到。
+51个公开MCP工具。服务重连使用会话标识，窗口可在服务重启后重新接受低序号请求。上述专项仅证明报告中列出的操作、素材和输出，完整Resolve一致性仍未达到。
 
-当前完整测试189项通过，45个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。新界面及预览重连修复需重开应用加载，真实窗口验收仍待补做。
+当前完整测试212项通过，51个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。本轮已重开应用；Fusion 页面、MCP 参数回显/界面写回及暂停第0帧已完成真实窗口验收，其余专项窗口检查仍需补齐。
 
 Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes", offset=0, limit=25)` 已实测本机三个模板及一个示例合成，共83个活动节点/133条显式连接；它只读结构，不导入或执行节点。详见 [FUSION-SETTINGS.md](research/FUSION-SETTINGS.md)。
+
+可编辑节点图已接入 Fusion 页面及导出：`get_fusion_graph`、`add_fusion_node`、`update_fusion_node`、`connect_fusion_nodes`、`delete_fusion_node`、`clear_fusion_graph`。当前五节点为 MediaIn、MediaOut、Background、Transform、Merge；Transform/Merge 有8位RGB合成边界，原版算法等效尚未验证。见 [FUSION-NODES.md](research/FUSION-NODES.md)。桌面演示单独保存到 `workspace/GT Studio Fusion Desktop Demo.json`，可复跑 MCP 验证使用独立工程和媒体。
