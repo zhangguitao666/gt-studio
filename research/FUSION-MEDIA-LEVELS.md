@@ -22,7 +22,7 @@
 
 导入时记录编码与像素格式；旧工程在渲染时只读探测缺失信息，离线节点分支仍保持原错误保护。Auto对本次已验证QTRLE采用Video解释，其他格式继续使用解码器解释，不推断所有原版Auto规则已覆盖。RGB Video映射使用本组8位素材的16/235黑白电平，并在节点图内保留负值和超白值；非RGB显式Full/Video使用解码范围覆盖，其完整原版矩阵仍需专项对照。
 
-五节点运算改用float32关联RGBA，Merge保留超白/负值，Transform使用全画布逆映射双线性采样。避免默认swscale浮点RGB转整数产生串色；RGB用zscale量化、Alpha独立提取，再用16位mergeplanes合并。曾尝试alphamerge会协商为8位，已淘汰。源缩放/pad及时间线/PNG导出仍有整数边界，不能据此声称完整HDR等效；PNG仍是关联RGBA16且会裁掉超出0..1的数值。
+五节点运算改用float32关联RGBA，Merge保留超白/负值，Transform使用全画布逆映射双线性采样。避免默认swscale浮点RGB转整数产生串色；RGB用zscale量化、Alpha独立映射为RGB后也经zimg量化，再用16位mergeplanes合并。曾尝试alphamerge会协商为8位，已淘汰。源缩放/pad及时间线/PNG导出仍有整数边界，不能据此声称完整HDR等效；PNG仍是关联RGBA16且会裁掉超出0..1的数值。
 
 ## 验证
 
@@ -31,3 +31,7 @@
 已配置stdio MCP在私有服务重放15组，全部12帧参与比较：10组RGB逐字节相同，其余5组MAE不超过0.666667、MSE不超过1.333333（0..255尺度）。报告`fusion-media-levels-comparison-float32.json`，精简夹具`tests/fixtures/fusion-media-levels.json`保留自有素材测量与摘要。
 
 旧六组48帧重新对照：Background、fanout和媒体恒等全序列RGB相同；Merge MAE由3.386092降至0.051766，MSE由44.760979降至0.894886，中心样点203/0/111相同。旋转MAE0.082462、缩放MAE0.085567，仍有边缘残差；PCM MSE3866.6410625仍未消除。报告`fusion-native-media-comparison-media-levels.json`。旧报告保留，不覆盖历史测量，也不把静态导出视作原版内部缓冲。
+
+首次Linux完整测试265通过、2失败，精确诊断显示Alpha=.5实际输出33516而非32768，RGB正常。问题位于FFmpeg灰度浮点量化的范围解释；改为Alpha映射到独立RGB平面并经zimg量化，保留原断言上限，新增0/.25/.75/1的PNG Alpha精确量化检查。旧失败报告保留，远程验证以最新提交Actions为准。
+
+Alpha量化修正后本机完整271项通过，0失败、0跳过，49.55秒；当前Linux结果以相应提交CI为准。

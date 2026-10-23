@@ -265,10 +265,10 @@ def premultiplied_over(background, foreground, output, *, floating=False):
 
 
 def float_to_rgba16(source, output):
-    """Quantize RGB with zimg; retain alpha separately from zscale's RGB conversion."""
+    """Quantize color and alpha through zimg RGB planes, avoiding gray-range remaps."""
     return [f'[{source}]format=gbrapf32le,split=2[{output}_rgb_source][{output}_alpha_source]',
             f'[{output}_rgb_source]zscale=dither=none,format=gbrap16le,extractplanes=r+g+b[{output}_r][{output}_g][{output}_b]',
-            f'[{output}_alpha_source]format=gbrapf32le,alphaextract,format=gray16le[{output}_alpha]',
+            f'[{output}_alpha_source]format=gbrapf32le,geq=r=\'alpha(X,Y)\':g=\'alpha(X,Y)\':b=\'alpha(X,Y)\':a=1,zscale=dither=none,format=gbrap16le,extractplanes=r[{output}_alpha]',
             f'[{output}_g][{output}_b][{output}_r][{output}_alpha]mergeplanes=0x00102030:format=gbrap16le[{output}]']
 
 

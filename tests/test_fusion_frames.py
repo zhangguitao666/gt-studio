@@ -87,3 +87,14 @@ def test_media_in_frame_obeys_source_mapping_after_retime(tmp_path,speed,frame,s
     # Source/format negotiation can quantize the opaque endpoint by a few
     # 16-bit levels; it must remain opaque to at least 12-bit precision.
     assert green<=16 and blue<=16 and alpha>=65520
+
+
+@pytest.mark.parametrize('alpha',[0,.25,.75,1])
+def test_checkpoint_alpha_quantization_preserves_declared_full_range(tmp_path,alpha):
+    e,clip=model(tmp_path)
+    node=add(e,clip,'Background',Red=.125,Green=.375,Blue=.625,Alpha=alpha)
+    output=tmp_path/'alpha.png'
+    e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':node,'output':str(output)})
+    actual=sample(rgba(output))
+    assert actual[:3]==pytest.approx((8192,24576,40959),abs=1),f'RGBA16={actual}'
+    assert actual[3]==round(alpha*65535),f'alpha={alpha}, RGBA16={actual}'
