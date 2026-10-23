@@ -22,3 +22,5 @@ GitHub仓库为 [zhangguitao666/gt-studio](https://github.com/zhangguitao666/gt-
 Qt测试将意外错误框捕获为测试失败并保留原错误文字，使无人值守运行可以结束并报告问题；产品错误框行为未更改。工作流始终尝试上传JUnit XML。安装失败、编码器差异或失败检查都不能算作通过，实际结论以 [Actions任务及其报告](https://github.com/zhangguitao666/gt-studio/actions) 为准。
 
 本机Mac上关联Alpha版本完整241项通过；增加错误框捕获后再次241项通过，随后有界字节诊断所在的分割用例单独通过。以上是独立产品回归，均不代表完整Resolve一致性。原版像素对照与现存差异仍见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
+
+固定8.1首轮完整报告为240通过、1失败，字幕和关联分割检查均通过，剩余为混合Fusion/普通媒体叠化。后续修正统一了这种混合两侧的关联画布，并增加反向组合；原像素上限和帧数条件保持。完整本机测试为242项，远程结果继续以对应提交的Actions报告为准。Ubuntu6.1.1结果作为版本差异保留，未冒充其兼容性问题已全部解决。

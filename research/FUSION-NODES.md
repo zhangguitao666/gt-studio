@@ -54,4 +54,6 @@ verify_fusion_nodes.py 使用已配置的 MCP 启动器与私有服务，实际�
 
 `render_fusion_frame` 的 frame 从0开始，按片段变速后的局部时间解释；省略 node_id 则取 MediaOut。它只计算所选节点可达分支，不经过片段调色、位置、透明度、轨道和字幕。生成器独立分支即使源媒体离线也可导出；锁定轨道允许导出，工程和撤销历史不变。失败保留既有输出，禁止覆盖源媒体和工程。
 
-Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。检查点阶段真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同，新增12项回归，当时完整224项通过。此后预乘修正新增17项，当前241项通过。PNG保存16位关联样本，普通查看器可能按直通Alpha显示；不能把查看器观感等同于数值。历史六案例检查点测量见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)，当前算法与受控校准见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
+Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。检查点阶段真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同，新增12项回归，当时完整224项通过。此后预乘修正新增17项，当前242项通过。PNG保存16位关联样本，普通查看器可能按直通Alpha显示；不能把查看器观感等同于数值。历史六案例检查点测量见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)，当前算法与受控校准见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
+
+Linux完整构建对照进一步发现混合叠化的普通媒体一侧仍走旧透明overlay画布；现将涉及Fusion的两侧统一为直接定位的关联画布，并在混合前确定两侧类型，补齐Fusion位于左/右两侧的回归。普通媒体对普通媒体的既有叠化路径不变。当前242项本机回归通过；远程结果见Actions。

@@ -56,20 +56,22 @@ def test_opacity_and_fades_scale_associated_rgb_even_when_alpha_is_zero(tmp_path
         assert pixel(raw, 16, 16, frame) == pytest.approx((0, 0, blue_value), abs=6)
 
 
-@pytest.mark.parametrize('graph_on_right', [False, True])
-def test_cross_dissolve_preserves_glowing_rgb_and_mixed_legacy_side(tmp_path, colored_sources, graph_on_right):
+@pytest.mark.parametrize('graph_on_left,graph_on_right', [(True,False), (False,True), (True,True)])
+def test_cross_dissolve_preserves_glowing_rgb_and_mixed_legacy_side(tmp_path, colored_sources, graph_on_left, graph_on_right):
     e, left = real_project(tmp_path, colored_sources)
     e.dispatch('trim_clip', {'clip_id': left, 'in_frame': 12, 'out_frame': 36})
     media = e.dispatch('import_media', {'path': str(colored_sources[1])})
     right = e.dispatch('append_clip', {'media_id': media['id'], 'in_frame': 12, 'out_frame': 36})['id']
-    red = add(e, left, 'Background', Red=1, Alpha=0); connect(e, left, 'MediaOut1', 'Input', red)
+    if graph_on_left:
+        red = add(e, left, 'Background', Red=1, Alpha=0); connect(e, left, 'MediaOut1', 'Input', red)
     if graph_on_right:
         blue = add(e, right, 'Background', Blue=1, Alpha=0); connect(e, right, 'MediaOut1', 'Input', blue)
     e.dispatch('add_transition', {'clip_id': left, 'duration_frames': 12})
     output = tmp_path/'dissolve.mov'; e.dispatch('render', {'output': str(output)})
     raw = pixels(output); assert len(raw) == 48*32*32*3
     for frame, expected in ((17,(253,0,0)), (18,(244,0,10)), (24,(117,0,136)), (29,(10,0,244)), (30,(0,0,253))):
-        assert pixel(raw, 16, 16, frame) == pytest.approx(expected, abs=7)
+        actual = pixel(raw, 16, 16, frame)
+        assert actual == pytest.approx(expected, abs=7), f'frame={frame}, actual={actual}, expected={expected}, graph_sides={(graph_on_left,graph_on_right)}'
 
 
 def test_transform_and_merge_retain_more_than_eight_bit_channel_precision(tmp_path, colored_sources):

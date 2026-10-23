@@ -961,7 +961,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         selection += f',trim=end_frame={clip_duration(clip)},setpts=round(N/({rate})/TB)'
         return selection
 
-    def _video_filters(self, source, clip, p, label, *, full_canvas=False):
+    def _video_filters(self, source, clip, p, label, *, full_canvas=False, associated_canvas=False):
         props = {**PROPERTY_DEFAULTS, **clip['properties']}
         rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
         fps = p['fps']['num']/p['fps']['den']
@@ -1026,7 +1026,9 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if not full_canvas:
             return graph_filters + [chain+f',setpts=PTS+round({clip["start_frame"]}/({rate})/TB)[{label}]']
         raw, canvas = label+'_raw',label+'_canvas'
-        if associated:
+        if associated or associated_canvas:
+            if not associated:
+                chain += ',format=gbrap16le,premultiply=inplace=1'
             return graph_filters + [chain+f'[{raw}]'] + place_image(raw, label, p['width'], p['height'], props['x'], props['y'])
         return graph_filters + [chain+f'[{raw}]',f'color=c=black@0:s={p["width"]}x{p["height"]}:r={rate}:d={length},format=gbrap16le[{canvas}]',f'[{canvas}][{raw}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=auto:eof_action=pass,format=gbrap16le,premultiply=inplace=1[{label}]']
 
@@ -1136,14 +1138,13 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     if transition['track_id'] != track['id']:
                         continue
                     segment_labels=[]
-                    associated_transition = False
-                    for side in ('left','right'):
-                        original, _ = self._clip(transition[side+'_clip_id'])
-                        associated_transition |= has_processing(original.get('fusion_graph'))
+                    originals = [self._clip(transition[side+'_clip_id'])[0] for side in ('left','right')]
+                    associated_transition = any(has_processing(original.get('fusion_graph')) for original in originals)
+                    for side, original in zip(('left','right'), originals):
                         segment=self._transition_segment(original,transition)
                         input_index=input_indices[original['id']]
                         segment_label=transition['id']+'_'+side
-                        filters.extend(self._video_filters(input_index,segment,p,segment_label,full_canvas=True))
+                        filters.extend(self._video_filters(input_index,segment,p,segment_label,full_canvas=True,associated_canvas=associated_transition))
                         segment_labels.append(segment_label)
                     dissolved=transition['id']+'_dissolved'
                     weight=f'(N-0.5)/{transition["duration_frames"]}'
