@@ -46,7 +46,7 @@ jobs:
               target.write('FRAMEFORGE_FFMPEG=' + selected + '\n')
           PY
       - name: Run tests
-        run: python -m pytest -vv -o faulthandler_timeout=60 --junitxml=test-output/results.xml
+        run: python -m pytest -vv --assert=plain -o faulthandler_timeout=60 --junitxml=test-output/results.xml
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
