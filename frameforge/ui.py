@@ -61,7 +61,13 @@ def duration(clip):
     return max(1, int(clip.get('out_frame', 1)) - int(clip.get('in_frame', 0)))
 
 
-def requires_timeline_preview(clip):
+def requires_timeline_preview(clip, media=None):
+    if media:
+        if media.get('video') and ('video_codec' not in media or 'pixel_format' not in media):
+            return True
+        from .media_levels import level_filters
+        if any(level_filters(media)):
+            return True
     if clip.get('fusion_graph'):
         return True
     if clip.get('speed_percentage', 100) != 100:
@@ -474,6 +480,11 @@ class EditorWindow(QMainWindow):
         self.selection_label.setWordWrap(True)
         il.addWidget(self.selection_label)
         form = QFormLayout()
+        self.media_data_level = QComboBox()
+        self.media_data_level.addItems(['Auto', 'Full', 'Video'])
+        self.media_data_level.setToolTip('Source setting shared by every use of this media.')
+        form.addRow('Source data level (all uses)', self.media_data_level)
+        form.addRow('', self.button('Apply source data level', self.apply_media_data_level))
         self.clip_start = QSpinBox()
         self.clip_in = QSpinBox()
         self.clip_out = QSpinBox()
@@ -897,6 +908,7 @@ class EditorWindow(QMainWindow):
             self.selection_label.setText('Select a timeline clip')
             return
         media = next((m for m in values((self.state or {}).get('media')) if m['id'] == clip.get('media_id')), {})
+        self.media_data_level.setCurrentText(media.get('data_level', 'Auto'))
         self.selection_label.setText(clip.get('name') or media.get('name', clip_id))
         self.clip_start.setValue(int(clip.get('start_frame', 0)))
         self.clip_in.setValue(int(clip.get('in_frame', 0)))
@@ -909,8 +921,13 @@ class EditorWindow(QMainWindow):
             widget.setValue(int(value) if isinstance(widget, QSpinBox) else float(value))
         if preview:
             self.seek_frame(int(clip.get('start_frame', 0)))
-        elif requires_timeline_preview(clip) and self.playback_mode == 'source':
+        elif requires_timeline_preview(clip, media) and self.playback_mode == 'source':
             self.seek_frame(self.current_frame)
+
+    def apply_media_data_level(self):
+        clip = self.selected_clip()
+        if clip:
+            self.rpc('set_media_data_level', {'media_id':clip['media_id'], 'mode':self.media_data_level.currentText()})
 
     def preview_media(self, media_id):
         media = next((m for m in values((self.state or {}).get('media')) if m['id'] == media_id), None)
@@ -972,7 +989,8 @@ class EditorWindow(QMainWindow):
         candidates = [c for c in clips_of(self.state) if int(c.get('start_frame', 0)) <= frame < int(c.get('start_frame', 0)) + duration(c)]
         clip = next((c for c in candidates if c['id'] == self.selection), candidates[-1] if candidates else None)
         if clip:
-            if requires_timeline_preview(clip):
+            media = next((m for m in values((self.state or {}).get('media')) if m['id'] == clip.get('media_id')), {})
+            if requires_timeline_preview(clip, media):
                 if self.preview_signature == self.state_signature and self.preview_path:
                     self.activate_preview(self.preview_path)
                 else:
@@ -980,7 +998,7 @@ class EditorWindow(QMainWindow):
                     self.playback_mode = 'retime_wait'
                     self.loaded_path = None
                     self.player.setSource(QUrl())
-                    self.preview_hint.setText('Speed, reverse and freeze require a rendered timeline preview. Building the current edit…')
+                    self.preview_hint.setText('Source levels and effects require a rendered timeline preview. Building the current edit…')
                     self.build_preview()
                 return
             media = next((m for m in values((self.state or {}).get('media')) if m['id'] == clip.get('media_id')), {})
@@ -1016,7 +1034,8 @@ class EditorWindow(QMainWindow):
             self.play_button.setText('▶ Play')
         else:
             clip = self.selected_clip()
-            if self.playback_mode == 'retime_wait' or (clip and requires_timeline_preview(clip) and self.playback_mode != 'timeline'):
+            media = next((m for m in values((self.state or {}).get('media')) if clip and m['id'] == clip.get('media_id')), {})
+            if self.playback_mode == 'retime_wait' or (clip and requires_timeline_preview(clip, media) and self.playback_mode != 'timeline'):
                 self.pending_transport_play = True
                 self.seek_frame(self.current_frame)
                 if self.playback_mode != 'timeline':

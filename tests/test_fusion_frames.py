@@ -39,7 +39,7 @@ def test_selected_branch_can_render_when_the_main_output_is_incomplete(tmp_path)
     connect(e,clip,'MediaOut1','Input')
     image=tmp_path/'branch.png'
     e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':bg,'output':str(image)})
-    assert sample(rgba(image))==(0,0,65535,32767)
+    assert sample(rgba(image))==(0,0,65535,32768)
     before=image.read_bytes()
     with pytest.raises(ValueError,match='Incomplete'):
         e.dispatch('render_fusion_frame',{'clip_id':clip,'output':str(image)})

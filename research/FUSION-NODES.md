@@ -6,7 +6,7 @@ GT Studio 已加入片段局部节点图、Fusion 画布、共享 MCP 编辑和�
 
 节点图保存在视频片段的 fusion_graph 字段。旧项目无需迁移或自动写入，读取缺省图返回 MediaIn1→MediaOut1。节点 ID 仅在单个片段内生效，因此分割可复制独立图。分离音频时不会把图带入音频片段。
 
-节点图编辑提供六个公开 MCP 工具，另有节点检查点导出；当前合计 52 个公开工具：
+节点图编辑提供六个公开 MCP 工具，另有节点检查点导出；当前合计 53 个公开工具：
 
 | 工具 | 行为 |
 | --- | --- |
@@ -57,3 +57,5 @@ verify_fusion_nodes.py 使用已配置的 MCP 启动器与私有服务，实际�
 Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。检查点阶段真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同，新增12项回归，当时完整224项通过。此后预乘修正新增17项，当前242项通过。PNG保存16位关联样本，普通查看器可能按直通Alpha显示；不能把查看器观感等同于数值。历史六案例检查点测量见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)，当前算法与受控校准见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
 
 Linux完整构建对照进一步发现混合叠化的普通媒体一侧仍走旧透明overlay画布；现将涉及Fusion的两侧统一为直接定位的关联画布，并在混合前确定两侧类型，补齐Fusion位于左/右两侧的回归。普通媒体对普通媒体的既有叠化路径不变。当前242项本机回归通过；远程结果见Actions。
+
+媒体电平后续阶段已使用float32节点运算及逆映射变换，添加共享媒体电平设置。源缩放和时间线/PNG仍有整数边界，具体证据与限制见 [FUSION-MEDIA-LEVELS.md](FUSION-MEDIA-LEVELS.md)。

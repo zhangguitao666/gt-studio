@@ -146,7 +146,8 @@ def test_actual_transform_merge_and_bottom_left_coordinates(tmp_path, colored_so
     for frame in (0, 5, 11):
         # Native generator evidence uses associated over: Blend scales RGB
         # once, while alpha controls the surviving background contribution.
-        assert pixel(raw, 24, 8, frame) == pytest.approx((191, 0, 128), abs=6)
+        # Native Auto QTRLE uses Video levels, including negative blue before Merge.
+        assert pixel(raw, 24, 8, frame) == pytest.approx((203, 0, 111), abs=6)
         assert pixel(raw, 8, 8, frame) == pytest.approx((253, 0, 0), abs=6)
         assert pixel(raw, 24, 24, frame) == pytest.approx((253, 0, 0), abs=6)
 

@@ -180,6 +180,8 @@ def test_dissolve_uses_moving_source_handles_not_repeated_edge_frames(tmp_path):
         assert made.returncode==0,made.stderr.decode()
         paths.append(path)
     e,media,left,right=editing_pair(tmp_path,paths)
+    for item in e.project['media']:
+        e.dispatch('set_media_data_level', {'media_id':item['id'], 'mode':'Full'})
     e.dispatch('add_transition',{'clip_id':left['id']})
     output=tmp_path/'moving-handles.mov'
     e.dispatch('render',{'output':str(output)})

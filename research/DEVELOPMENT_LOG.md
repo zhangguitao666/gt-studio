@@ -247,3 +247,7 @@ e5b5fad远程240通过、2失败，原画布修正未解决窗口前后残留。
 e9f026a远程246通过、2失败且边界像素未变，保留帧时钟假设未获验证的事实。发现普通片段在段外仍用旧YUV overlay，现含启用Fusion的时间线统一使用显式预乘/定位/关联RGBA合成，普通片段之间的叠化也一致；无Fusion路径保持。新增透明Fusion上轨加双普通片段叠化，现共249个测试，远程结论按新提交CI记录。
 
 统一时间线关联合成补丁本机完整249通过、0失败、0跳过，44.36秒；六组48帧原版RGB误差与上轮一致，独立报告`fusion-native-media-comparison-timeline-associated.json`保留。
+
+## MediaIn电平与float32节点
+
+原版15个任务全部Complete，Auto/Video五档一致、Full不同，确认本组RGB24 QTRLE电平解释是MediaIn Merge色差的重要原因。新增共享媒体电平操作、MCP/检查器、持久化与撤销；节点用float32与逆映射采样，RGB/Alpha分别量化避免swscale串色及alphamerge协商8位。15个MCP重放10组全序列相同，六组48帧中媒体恒等已相同、Merge MSE从44.760979降到0.894886，边缘与PCM残差保留。新增17个引擎/原版与1个UI测试；旧帧编号检查选择显式Full以保持RGB编号不变，未放宽断言。完整目标仍未完成。

@@ -59,7 +59,7 @@ from fractions import Fraction
 from .subtitles import SubtitleActions, subtitle_migrate_validate, build_subtitle_filters
 from .transitions import TransitionActions, validate_transitions, window_at_cut
 from .linking import LinkingActions
-from .fusion import FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over
+from .fusion import FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over, float_to_rgba16
 
 PROPERTY_DEFAULTS = {"exposure": 0.0, "contrast": 1.0, "saturation": 1.0, "gamma": 1.0, "volume": 1.0, "opacity": 1.0, "scale": 1.0, "x": 0.0, "y": 0.0, "rotation": 0.0, "fade_in_frames": 0, "fade_out_frames": 0}
 
@@ -115,7 +115,7 @@ def ffmpeg_executable():
 
 class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
     ACTIONS = ('list_actions', 'create_project', 'open_project', 'save_project',
-               'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'render_fusion_frame', 'add_fusion_node', 'update_fusion_node', 'connect_fusion_nodes', 'delete_fusion_node', 'clear_fusion_graph', 'import_media', 'create_timeline',
+               'get_state', 'probe_media', 'inspect_fusion_settings', 'get_fusion_graph', 'render_fusion_frame', 'add_fusion_node', 'update_fusion_node', 'connect_fusion_nodes', 'delete_fusion_node', 'clear_fusion_graph', 'import_media', 'set_media_data_level', 'create_timeline',
                'set_active_timeline', 'add_track', 'set_track_state', 'append_clip', 'detach_audio', 'link_clips', 'unlink_clips', 'split_clip',
                'trim_clip', 'trim_clip_edge', 'set_clip_speed', 'move_clip', 'delete_clip', 'ripple_delete', 'set_clip_properties',
                'add_marker', 'add_transition', 'delete_transition', 'set_project_settings', 'import_subtitles', 'add_subtitle', 'update_subtitle', 'delete_subtitle', 'export_subtitles', 'set_subtitle_style', 'render', 'undo', 'redo')
@@ -300,6 +300,12 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     raise ValueError('Invalid still image flag')
                 if not isinstance(media.get('video'), bool) or not isinstance(media.get('audio'), bool):
                     raise ValueError('Invalid media stream flags')
+                from .media_levels import MODES
+                if media.get('data_level', 'Auto') not in MODES:
+                    raise ValueError('Invalid media data level')
+                for field in ('video_codec', 'pixel_format'):
+                    if field in media and not isinstance(media[field], str):
+                        raise ValueError('Invalid media ' + field)
             for t in p['timelines']:
                 check_id(t)
                 subtitle_migrate_validate(t)
@@ -359,7 +365,25 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if still:
             seconds = 5.0
         dimensions = re.search(r'Video:.*?\b(\d{2,6})x(\d{2,6})\b', log)
-        return {'path': str(target), 'name': target.name, 'duration_seconds': seconds, 'still': still, 'video': video, 'audio': audio, 'audio_channels': audio_channels, 'audio_layout': audio_layout, 'width': int(dimensions[1]) if dimensions else 0, 'height': int(dimensions[2]) if dimensions else 0}
+        codec = re.search(r'Video:\s*([\w]+)', log)
+        pixel_format = re.search(r'Video:.*?,\s*((?:rgb|bgr|gbr|argb|abgr|yuv|yuva|gray|ya)[\w]*)', log)
+        return {'path': str(target), 'name': target.name, 'duration_seconds': seconds, 'still': still, 'video': video, 'audio': audio, 'audio_channels': audio_channels, 'audio_layout': audio_layout, 'width': int(dimensions[1]) if dimensions else 0, 'height': int(dimensions[2]) if dimensions else 0,
+                'video_codec': codec[1] if codec else '', 'pixel_format': pixel_format[1] if pixel_format else '', 'data_level': 'Auto'}
+
+    def _media_level_info(self, media):
+        if ('video_codec' in media and 'pixel_format' in media) or not Path(media['path']).is_file():
+            return media
+        return {**self.probe_media(media['path']), **media}
+
+    def set_media_data_level(self, media_id, mode):
+        from .media_levels import MODES
+        if mode not in MODES:
+            raise ValueError('Data level must be Auto, Full or Video')
+        media = self._media(media_id)
+        if not media['video']:
+            raise ValueError('Data level requires video media')
+        media['data_level'] = mode
+        return copy.deepcopy(media)
 
     def import_media(self, path):
         p = self._require()
@@ -973,11 +997,12 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         height = max(2,round(p['height']*props['scale']/2)*2)
         graph_filters = []
         associated = has_processing(clip.get('fusion_graph'))
+        media = self._media_level_info(next(m for m in p['media'] if m['id'] == clip['media_id']))
         if associated:
             padding = 'black@0'
         input_chain = f'[{source}:v]{selection}'
         if 'fusion_graph' in clip:
-            compiled = compile_graph(clip['fusion_graph'], input_chain, p, clip_duration(clip), label)
+            compiled = compile_graph(clip['fusion_graph'], input_chain, p, clip_duration(clip), label, media=media)
             if compiled is not None:
                 graph_filters, node_output = compiled
                 input_chain = f'[{node_output}]'
@@ -987,11 +1012,20 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 chain = input_chain + f',scale={p["width"]}:{p["height"]}:force_original_aspect_ratio=decrease,setsar=1'
         else:
             chain = input_chain + f',scale={p["width"]}:{p["height"]}:force_original_aspect_ratio=decrease,setsar=1'
+        if not associated:
+            from .media_levels import level_filters
+            before, after = level_filters(media)
+            chain = input_chain + before + f',scale={p["width"]}:{p["height"]}:force_original_aspect_ratio=decrease,setsar=1' + (',format=gbrapf32le' + after if after else '')
+        if associated or before or after:
+            float_label, integer_label = label+'_float_output', label+'_integer_output'
+            graph_filters.append(chain+f'[{float_label}]')
+            graph_filters.extend(float_to_rgba16(float_label, integer_label))
+            chain = f'[{integer_label}]null'
         if any(props[key] != PROPERTY_DEFAULTS[key] for key in ('contrast', 'saturation', 'gamma')):
             chain += f',eq=brightness=0:contrast={props["contrast"]}:saturation={props["saturation"]}:gamma={props["gamma"]}'
         if props['exposure']:
             chain += f',lutrgb=r=val*{2**props["exposure"]}:g=val*{2**props["exposure"]}:b=val*{2**props["exposure"]}'
-        chain += f',format=rgba64le,pad={p["width"]}:{p["height"]}:(ow-iw)/2:(oh-ih)/2:color={padding},scale={width}:{height}'
+        chain += f',format=gbrap16le,format=rgba64le,pad={p["width"]}:{p["height"]}:(ow-iw)/2:(oh-ih)/2:color={padding},scale={width}:{height}'
         if props['rotation']:
             angle=props['rotation']*math.pi/180
             chain += f',rotate={angle}:ow=rotw({angle}):oh=roth({angle}):c=black@0'

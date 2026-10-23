@@ -210,14 +210,17 @@ class FusionActions:
         if destination == Path(project['path']).resolve() or any(destination == Path(m['path']).resolve() for m in project['media']):
             raise ValueError('Output must not overwrite project or source media')
         cmd = [ffmpeg_executable(), '-v', 'error', '-y', '-filter_complex_threads', '1']
+        media = None
         if any(node['type'] == 'MediaIn' for node in order):
             media = self._media(clip['media_id'])
+            media = self._media_level_info(media)
             if media.get('still'):
                 cmd += ['-loop', '1', '-framerate', f'{project["fps"]["num"]}/{project["fps"]["den"]}']
             cmd += ['-i', media['path']]
         filters, label = compile_graph(graph, '[0:v]' + self._video_selection(clip, project), project,
-                                       clip_duration(clip), 'checkpoint', force_output=True)
-        filters.append(f'[{label}]trim=start_frame={frame}:end_frame={frame+1},setpts=PTS-STARTPTS,format=rgba64be[checkpoint_output]')
+                                       clip_duration(clip), 'checkpoint', force_output=True, media=media)
+        filters.extend(float_to_rgba16(label, 'checkpoint_integer'))
+        filters.append(f'[checkpoint_integer]trim=start_frame={frame}:end_frame={frame+1},setpts=PTS-STARTPTS,format=rgba64be[checkpoint_output]')
         destination.parent.mkdir(parents=True, exist_ok=True)
         handle, temporary = tempfile.mkstemp(prefix='.gt-node-', suffix='.png', dir=destination.parent)
         os.close(handle)
@@ -250,17 +253,37 @@ def place_image(source, output, width, height, x=0, y=0):
             f'crop=w={width}:h={height}:x=(iw-{width})/2-({x}):y=(ih-{height})/2-({y}):exact=1[{output}]']
 
 
-def premultiplied_over(background, foreground, output):
+def premultiplied_over(background, foreground, output, *, floating=False):
     """RGBA16 associated over; RGB may exceed alpha (native generator glow)."""
     front, mask, back, weighted = (output+'_'+suffix for suffix in ('front','mask','back','weighted'))
-    return [f'[{foreground}]format=gbrap16le,split=2[{front}][{mask}_source]',
+    fmt, peak = ('gbrapf32le', 1) if floating else ('gbrap16le', 65535)
+    return [f'[{foreground}]format={fmt},split=2[{front}][{mask}_source]',
             f'[{mask}_source]geq=r=\'alpha(X,Y)\':g=\'alpha(X,Y)\':b=\'alpha(X,Y)\':a=\'alpha(X,Y)\'[{mask}]',
-            f'[{background}]format=gbrap16le[{back}]',
-            f'[{back}][{mask}]blend=all_expr=\'A*(1-B/65535)\'[{weighted}]',
+            f'[{background}]format={fmt}[{back}]',
+            f'[{back}][{mask}]blend=all_expr=\'A*(1-B/{peak})\'[{weighted}]',
             f'[{weighted}][{front}]blend=all_mode=addition[{output}]']
 
 
-def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False):
+def float_to_rgba16(source, output):
+    """Quantize RGB with zimg; retain alpha separately from zscale's RGB conversion."""
+    return [f'[{source}]format=gbrapf32le,split=2[{output}_rgb_source][{output}_alpha_source]',
+            f'[{output}_rgb_source]zscale=dither=none,format=gbrap16le,extractplanes=r+g+b[{output}_r][{output}_g][{output}_b]',
+            f'[{output}_alpha_source]format=gbrapf32le,alphaextract,format=gray16le[{output}_alpha]',
+            f'[{output}_g][{output}_b][{output}_r][{output}_alpha]mergeplanes=0x00102030:format=gbrap16le[{output}]']
+
+
+def transform_float_image(source, output, width, height, x=0, y=0, size=1, angle=0):
+    """Sample a project-size float canvas without integer pad/rotate boundaries."""
+    theta = angle*math.pi/180
+    cx, cy = (width-1)/2+x, (height-1)/2+y
+    sx = f'(({math.cos(theta)}*(X-({cx}))-{math.sin(theta)}*(Y-({cy})))/({size})+{(width-1)/2})'
+    sy = f'(({math.sin(theta)}*(X-({cx}))+{math.cos(theta)}*(Y-({cy})))/({size})+{(height-1)/2})'
+    inside = f'gte({sx},0)*lt({sx},{width})*gte({sy},0)*lt({sy},{height})'
+    expressions = ':'.join(f"{c}='if({inside},{sample}({sx},{sy}),0)'" for c,sample in (('r','r'),('g','g'),('b','b'),('a','alpha')))
+    return [f'[{source}]format=gbrapf32le,geq={expressions}:interpolation=bilinear[{output}]']
+
+
+def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False, media=None):
     """Return filter statements and an output label; generate only reachable nodes."""
     order, errors = render_order(graph)
     if errors:
@@ -276,33 +299,28 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
     def take(identity):
         return labels[identity].pop()
     def canvas(label):
-        filters.append(f'color=c=black@0:s={width}x{height}:r={rate}:d={duration:.12f},format=gbrap16le[{label}]')
+        filters.append(f'color=c=black@0:s={width}x{height}:r={rate}:d={duration:.12f},format=gbrapf32le[{label}]')
     for index, node in enumerate(order):
         out = f'{prefix}_f{index}'
         params, kind = node['parameters'], node['type']
         if kind == 'MediaIn':
-            filters.append(selection + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0,premultiply=inplace=1[{out}]')
+            from .media_levels import level_filters
+            before, after = level_filters(media or {})
+            filters.append(selection + before + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0,format=gbrapf32le' + after + f',premultiply=inplace=1[{out}]')
         elif kind == 'Background':
             raw = out + '_canvas'; canvas(raw)
-            filters.append(f'[{raw}]geq=r={params["Red"]*65535}:g={params["Green"]*65535}:b={params["Blue"]*65535}:a={params["Alpha"]*65535}[{out}]')
+            filters.append(f'[{raw}]geq=r={params["Red"]}:g={params["Green"]}:b={params["Blue"]}:a={params["Alpha"]}[{out}]')
         elif kind == 'Transform':
             source = take(node['inputs']['Input'])
-            scaled = out + '_scaled'
-            sw, sh = max(2, round(width * params['Size']/2)*2), max(2, round(height * params['Size']/2)*2)
-            chain = f'[{source}]scale={sw}:{sh}'
-            if params['Angle']:
-                angle = -params['Angle'] * math.pi / 180
-                chain += f',rotate={angle}:ow=rotw({angle}):oh=roth({angle}):c=black@0'
-            filters.append(chain + f'[{scaled}]')
-            filters.extend(place_image(scaled, out, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
+            filters.extend(transform_float_image(source, out, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height, params['Size'], params['Angle']))
         elif kind == 'Merge':
             back, front = (take(node['inputs'][port]) for port in ('Background', 'Foreground'))
             alpha = out + '_alpha'
             blend = params['Blend']
             filters.append(f'[{front}]geq=r=\'r(X,Y)*{blend}\':g=\'g(X,Y)*{blend}\':b=\'b(X,Y)*{blend}\':a=\'alpha(X,Y)*{blend}\'[{alpha}]')
             positioned = out + '_positioned'
-            filters.extend(place_image(alpha, positioned, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
-            filters.extend(premultiplied_over(back, positioned, out))
+            filters.extend(transform_float_image(alpha, positioned, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
+            filters.extend(premultiplied_over(back, positioned, out, floating=True))
         else:  # MediaOut
             filters.append(f'[{take(node["inputs"]["Input"])}]null[{out}]')
         count = uses[node['id']]

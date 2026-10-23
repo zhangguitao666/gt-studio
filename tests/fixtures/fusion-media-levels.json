@@ -1,0 +1,218 @@
+{
+  "scope": "15 static native 640x360/24fps/12frame ProRes HQ export cases, not internal float buffers",
+  "native_version": "21.1.1.10",
+  "source": "own untaged RGB24 QTRLE red source",
+  "rea_evidence_id": "ev_91fe636e0957049629ccb190b2fc10496f8a2cf341d8d33051849b048ae3692d",
+  "cases": [
+    {
+      "id": "auto_b0",
+      "mode": "Auto",
+      "blend": 0,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        252,
+        0,
+        0
+      ],
+      "native_decoded_sha256": "0ee3dd8b29056cc65b91c4238651fd374c1b0f205f8385bfb85b59dca85f42f9",
+      "native_file_sha256": "afd47e7e3ee6dc29243397879d6425faf0c59c0d6f62c019c2fe1e93f49d0cf9",
+      "frames": 12
+    },
+    {
+      "id": "auto_b0p25",
+      "mode": "Auto",
+      "blend": 0.25,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        238,
+        0,
+        45
+      ],
+      "native_decoded_sha256": "aed293209932e53e92b71a253af633aeac47e16cba2d322a139624cc1480547c",
+      "native_file_sha256": "e90c44bf103413c8fee446541b1ec7b2e2fb2e4e6bab792abcb682ff7c4f5647",
+      "frames": 12
+    },
+    {
+      "id": "auto_b0p5",
+      "mode": "Auto",
+      "blend": 0.5,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        203,
+        0,
+        111
+      ],
+      "native_decoded_sha256": "cf0c9ea6ec6d32811cb845461bb0843df2d1babd1f58e01ac43d05339483c3eb",
+      "native_file_sha256": "67b9f9192187c616625c16a49d1b2dc2461a8b243bbf7cc81dbd0ab715dc9057",
+      "frames": 12
+    },
+    {
+      "id": "auto_b0p75",
+      "mode": "Auto",
+      "blend": 0.75,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        168,
+        0,
+        176
+      ],
+      "native_decoded_sha256": "b6a23633c6fe9cf2914199cf9d0bdaece1d51e0f98ac006de3628695bdd6b069",
+      "native_file_sha256": "c49663f9a0fd8ff76a43f3bfcac3c5ed13493bfd569bff59bf0665772776b580",
+      "frames": 12
+    },
+    {
+      "id": "auto_b1",
+      "mode": "Auto",
+      "blend": 1,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        134,
+        0,
+        243
+      ],
+      "native_decoded_sha256": "5a6bc2a7b8dea03e8c4874c6fc5df2e3c1d52dd4b967aa4dbc4638da0ed2926f",
+      "native_file_sha256": "25a8c6ea9c3f823a059e82a95534cca604af069c4108c736d0ef912096948ed9",
+      "frames": 12
+    },
+    {
+      "id": "full_b0",
+      "mode": "Full",
+      "blend": 0,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        249,
+        0,
+        0
+      ],
+      "native_decoded_sha256": "fa6aeac2f012d1bb1c4a0232bf107e7033958b916bcc61da20038169077e3cc4",
+      "native_file_sha256": "ec6024999b9a191cfcfe0d128364244ab61505334e9c2f6b54eb993ed0c7f998",
+      "frames": 12
+    },
+    {
+      "id": "full_b0p25",
+      "mode": "Full",
+      "blend": 0.25,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        217,
+        0,
+        61
+      ],
+      "native_decoded_sha256": "4883db5b75772ea507a86690e03df1d0dd50a7cab844e7693e98d791d646780f",
+      "native_file_sha256": "e7bf9e8c1fc6cfe85d20e5dc4c75ba3736d81418814a9db53ffca697f0a84f60",
+      "frames": 12
+    },
+    {
+      "id": "full_b0p5",
+      "mode": "Full",
+      "blend": 0.5,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        186,
+        0,
+        126
+      ],
+      "native_decoded_sha256": "95387d1eebdedca6cfa48380f44fbf0d0e236812e0622667482dc7a386a061dd",
+      "native_file_sha256": "cb4e2f037792a7e0722c50337233c9a78f732f628627725b62589d4a9eeaaed7",
+      "frames": 12
+    },
+    {
+      "id": "full_b0p75",
+      "mode": "Full",
+      "blend": 0.75,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        154,
+        0,
+        188
+      ],
+      "native_decoded_sha256": "01a3b35b80c24aa22f92a5182fe4a0fc59f02d55d8e7bac30e64456f2595e80c",
+      "native_file_sha256": "c6f7a453c915f69b7ee1032314c8bb55081f49f0b8c0aa6791d68d1c49f8aa97",
+      "frames": 12
+    },
+    {
+      "id": "full_b1",
+      "mode": "Full",
+      "blend": 1,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        124,
+        0,
+        252
+      ],
+      "native_decoded_sha256": "8a05b5f5086f79312192a0f237a736ff847d4848f6ff3332a66637702038a069",
+      "native_file_sha256": "2c0b9c337c5e6e079c7da4cc24d497b20d186870b803b7b2790555417d83a7a7",
+      "frames": 12
+    },
+    {
+      "id": "video_b0",
+      "mode": "Video",
+      "blend": 0,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        252,
+        0,
+        0
+      ],
+      "native_decoded_sha256": "0ee3dd8b29056cc65b91c4238651fd374c1b0f205f8385bfb85b59dca85f42f9",
+      "native_file_sha256": "09d669a4c7279e2d987b6c67fe078c0f1e4046962ff74b0f0c1b9d15727c792a",
+      "frames": 12
+    },
+    {
+      "id": "video_b0p25",
+      "mode": "Video",
+      "blend": 0.25,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        238,
+        0,
+        45
+      ],
+      "native_decoded_sha256": "aed293209932e53e92b71a253af633aeac47e16cba2d322a139624cc1480547c",
+      "native_file_sha256": "9589a64a7477ef3d036c8555f92e3766d5c6c0c975420ff998c191ca1874e8d9",
+      "frames": 12
+    },
+    {
+      "id": "video_b0p5",
+      "mode": "Video",
+      "blend": 0.5,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        203,
+        0,
+        111
+      ],
+      "native_decoded_sha256": "cf0c9ea6ec6d32811cb845461bb0843df2d1babd1f58e01ac43d05339483c3eb",
+      "native_file_sha256": "e0f6a395bb1b6e6d5e31f5cf5ba93d87a88fc6b1488e0d7e031b931e019296d8",
+      "frames": 12
+    },
+    {
+      "id": "video_b0p75",
+      "mode": "Video",
+      "blend": 0.75,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        168,
+        0,
+        176
+      ],
+      "native_decoded_sha256": "b6a23633c6fe9cf2914199cf9d0bdaece1d51e0f98ac006de3628695bdd6b069",
+      "native_file_sha256": "a55b9e91ab0697d080b278246204a50206531c61d38158233c1d2d8972fa22df",
+      "frames": 12
+    },
+    {
+      "id": "video_b1",
+      "mode": "Video",
+      "blend": 1,
+      "alpha": 0.5,
+      "native_rgb_center": [
+        134,
+        0,
+        243
+      ],
+      "native_decoded_sha256": "5a6bc2a7b8dea03e8c4874c6fc5df2e3c1d52dd4b967aa4dbc4638da0ed2926f",
+      "native_file_sha256": "ac1f52ff0c9a2e633bfd01bfb44165283da7c9172ae7bb585b4fc28b97000464",
+      "frames": 12
+    }
+  ]
+}

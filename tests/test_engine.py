@@ -339,6 +339,8 @@ def test_actual_retime_frame_sequence(tmp_path, percentage, indices):
     e = Engine(tmp_path)
     e.dispatch('create_project', {'width': 160, 'height': 90})
     m = e.dispatch('import_media', {'path': str(source)})
+    # Frame labels are full-range RGB values, independent of Auto decoding.
+    e.dispatch('set_media_data_level', {'media_id': m['id'], 'mode': 'Full'})
     c = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 8})
     speed = e.dispatch('set_clip_speed', {'clip_id': c['id'], 'percentage': percentage, 'ripple': True})
     assert speed['duration_frames'] == len(indices)
@@ -440,6 +442,8 @@ def test_retime_extremes_freeze_selection_and_trim_duration(tmp_path):
     e = Engine(tmp_path)
     e.dispatch('create_project', {'width': 160, 'height': 90})
     m = e.dispatch('import_media', {'path': str(source)})
+    # Frame labels are full-range RGB values, independent of Auto decoding.
+    e.dispatch('set_media_data_level', {'media_id': m['id'], 'mode': 'Full'})
     c = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 8})
     e.dispatch('set_clip_speed', {'clip_id': c['id'], 'percentage': .01, 'ripple': True})
     assert e._clip(c['id'])[0]['duration_frames'] == 80000
@@ -467,6 +471,8 @@ def test_reference_v2_observed_speed_durations_and_real_frames(tmp_path, percent
     e = Engine(tmp_path)
     e.dispatch('create_project', {'width': 160, 'height': 90})
     m = e.dispatch('import_media', {'path': str(source)})
+    # Frame labels are full-range RGB values, independent of Auto decoding.
+    e.dispatch('set_media_data_level', {'media_id': m['id'], 'mode': 'Full'})
     first = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 47})
     second = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 47})
     changed = e.dispatch('set_clip_speed', {'clip_id': first['id'], 'percentage': percentage, 'ripple': ripple})
@@ -504,6 +510,8 @@ def test_reference_v3_freeze_at_playhead_splits_tail_and_renders(tmp_path, freez
     e = Engine(tmp_path)
     e.dispatch('create_project', {'width': 160, 'height': 90})
     m = e.dispatch('import_media', {'path': str(source)})
+    # Frame labels are full-range RGB values, independent of Auto decoding.
+    e.dispatch('set_media_data_level', {'media_id': m['id'], 'mode': 'Full'})
     first = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 47})
     second = e.dispatch('append_clip', {'media_id': m['id'], 'out_frame': 47})
     before = e.get_state()

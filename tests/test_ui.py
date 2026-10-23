@@ -906,3 +906,37 @@ def test_completed_preview_is_rebuilt_after_renderer_session_changes(tmp_path,li
         window.poll_timer.stop();window.transport_timer.stop();window.render_timer.stop()
         window.close();window.deleteLater();app.processEvents()
         server.shutdown();server.server_close();thread.join(timeout=3)
+
+
+def test_source_data_level_ui_http_shared_media_roundtrip(tmp_path):
+    from PySide6.QtGui import QImage, QColor
+    from PySide6.QtWidgets import QPushButton
+    app=QApplication.instance() or QApplication([])
+    image=QImage(32,32,QImage.Format.Format_RGB32);image.fill(QColor(128,32,16))
+    source=tmp_path/'source.png';assert image.save(str(source))
+    controller=Controller(tmp_path/'service')
+    controller.dispatch('create_project',{'name':'Shared source levels','width':32,'height':32})
+    media=controller.dispatch('import_media',{'path':str(source)})
+    first=controller.dispatch('append_clip',{'media_id':media['id'],'out_frame':6})
+    controller.dispatch('append_clip',{'media_id':media['id'],'out_frame':6})
+    server=EditorServer(('127.0.0.1',0),controller)
+    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    url=f'http://127.0.0.1:{server.server_port}';window=EditorWindow(url)
+    try:
+        wait_for(app,lambda:bool(window.state))
+        window.select_clip(first['id'],preview=False)
+        assert window.media_data_level.currentText()=='Auto'
+        window.media_data_level.setCurrentText('Video')
+        next(b for b in window.findChildren(QPushButton) if b.text()=='Apply source data level').click()
+        wait_for(app,lambda:controller.engine._media(media['id']).get('data_level')=='Video')
+        wait_for(app,lambda:window.state['media'][0]['data_level']=='Video')
+        assert len({c['media_id'] for c in clips_of(window.state)})==1
+        rpc(url,'set_media_data_level',{'media_id':media['id'],'mode':'Full'})
+        window.client.poll();wait_for(app,lambda:window.media_data_level.currentText()=='Full')
+        rpc(url,'undo');window.client.poll()
+        wait_for(app,lambda:window.media_data_level.currentText()=='Video')
+        wait_for(app,lambda:not any(j['status'] in ('queued','running') for j in controller.jobs.values()),seconds=15)
+    finally:
+        window.poll_timer.stop();window.transport_timer.stop();window.render_timer.stop()
+        window.close();window.deleteLater();app.processEvents()
+        server.shutdown();server.server_close();thread.join(timeout=3)
