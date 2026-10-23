@@ -19,5 +19,8 @@ frameforge = "frameforge.__main__:main"
 [tool.setuptools.packages.find]
 include = ["frameforge*"]
 
+[tool.setuptools.package-data]
+frameforge = ["assets/*.png"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

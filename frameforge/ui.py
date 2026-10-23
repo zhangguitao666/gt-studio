@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QTimer, QUrl, Signal, QRectF
-from PySide6.QtGui import QColor, QPainter, QPen, QFont, QAction, QKeySequence
+from PySide6.QtGui import QColor, QPainter, QPen, QFont, QAction, QKeySequence, QIcon
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QPushButton, QVBoxLayout,
@@ -1361,6 +1361,7 @@ class EditorWindow(QMainWindow):
 def start_ui(url='http://127.0.0.1:18771'):
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName('GT Studio')
+    app.setWindowIcon(QIcon(str(Path(__file__).parent/'assets'/'gt-studio.png')))
     app.setStyle('Fusion')
     app.setStyleSheet(STYLE)
     window = EditorWindow(url)
