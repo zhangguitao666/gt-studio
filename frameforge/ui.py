@@ -1172,7 +1172,7 @@ class EditorWindow(QMainWindow):
     def render(self):
         path, selected_filter = QFileDialog.getSaveFileName(
             self, 'Export timeline', str(Path.home() / 'Movies' / 'GT Studio-export'),
-            'MP4 H.264 / AAC (*.mp4);;MOV ProRes HQ / PCM (*.mov);;WAV PCM audio (*.wav)')
+            'MP4 H.264 / AAC (*.mp4);;MOV ProRes HQ / PCM24 (*.mov);;WAV PCM16 audio (*.wav)')
         if path:
             suffix = Path(path).suffix.lower().lstrip('.')
             selected_format = 'mov' if '*.mov' in selected_filter else 'wav' if '*.wav' in selected_filter else 'mp4'
@@ -1372,7 +1372,7 @@ class EditorWindow(QMainWindow):
             'Fusion': 'FUSION  /  MediaIn, MediaOut, Background, Transform and Merge · clip-local graph · native equivalence unverified.',
             'Color': 'COLOR  /  Basic exposure, contrast, saturation and gamma apply on export. Advanced grading is not implemented.',
             'Fairlight': 'FAIRLIGHT  /  Per-clip volume applies on export. Mixer, buses and plug-ins are not implemented.',
-            'Deliver': 'DELIVER  /  Export MP4 H.264 / AAC, MOV ProRes HQ / PCM, or WAV PCM audio.',
+            'Deliver': 'DELIVER  /  Export MP4 H.264 / AAC, MOV ProRes HQ / PCM24, or WAV PCM16 audio.',
         }
         self.notice.setText(descriptions[page])
 

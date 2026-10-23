@@ -31,11 +31,13 @@ def test_linked_edge_trim_matches_native_and_retains_source_payload(linked_proje
     frame_bytes=160*90*3
     if edge=='end':
         assert rgb(rendered)==rgb(baseline)[:72*frame_bytes]
-        assert pcm(outputwav)==pcm(basewav)[:72*2000*4]
+        from test_audio_boundaries import assert_native_edges_pcm16
+        assert_native_edges_pcm16(pcm(basewav)[:72*2000*4],pcm(outputwav),tail=True)
     else:
         assert len(rgb(rendered))==96*frame_bytes
         assert rgb(rendered)[72*frame_bytes:]==rgb(baseline)[72*frame_bytes:]
-        assert pcm(outputwav)[72*2000*4:]==pcm(basewav)[72*2000*4:]
+        from test_audio_boundaries import assert_native_edges_pcm16
+        assert_native_edges_pcm16(pcm(basewav)[72*2000*4:],pcm(outputwav)[72*2000*4:],head=True)
         assert not any(pcm(outputwav)[:72*2000*4])
 
 

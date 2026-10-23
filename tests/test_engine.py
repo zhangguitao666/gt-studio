@@ -300,7 +300,7 @@ def test_render_actual_prores_mov_and_pcm_wave(tmp_path, media):
     assert result['format'] == 'mov'
     info = subprocess.run([ffmpeg_executable(), '-hide_banner', '-i', str(mov)], capture_output=True, text=True)
     assert 'Video: prores' in info.stderr
-    assert 'Audio: pcm_s16le' in info.stderr
+    assert 'Audio: pcm_s24le' in info.stderr
     assert pixel(mov, .5)[0] > 220
     wav = tmp_path / 'sound.wav'
     e.dispatch('render', {'output': str(wav), 'format': 'wav'})
@@ -599,7 +599,8 @@ def test_audio_channel_mapping_and_limiter_preserve_unity_pcm(tmp_path, channels
         expected = array.array('h', (value for sample in original for value in (sample, sample)))
     else:
         expected = original
-    assert max(abs(a-b) for a,b in zip(expected,rendered)) <= 1
+    from test_audio_boundaries import assert_native_edges_pcm16
+    expected=assert_native_edges_pcm16(expected.tobytes(),rendered.tobytes(),head=True,tail=True,body_tolerance=1)
     original_energy = sum(value*value for value in expected)
     rendered_energy = sum(value*value for value in rendered)
     assert rendered_energy / original_energy == pytest.approx(1, abs=.0005)

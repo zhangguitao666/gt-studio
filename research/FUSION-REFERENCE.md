@@ -53,3 +53,5 @@ REA 在此证明快照身份、结构和受限行检查；节点语义来自原�
 运行 scripts/compare_native_fusion.py 可重建六组独立结果；改算法后应传 --run-name NAME，将新工程、媒体和报告保存到独立位置，保留当前基线。scripts/measure_native_fusion_alpha.py 复核原版 Alpha 媒体、逐帧身份和像素。
 
 后续优先建立独立节点 RGBA 检查点，并增加透明/不透明下层、Blend/Alpha 梯度的受控案例，将节点计算、时间线底图、预乘约定、色彩处理和编码残差分开验证。不能仅给 MediaOut 硬编码“忽略 Alpha”来匹配纯蓝样本。当前生产代码未据不充分原因修改，原有 212 项测试和 51 工具不构成原版一致性证明。完整功能目标仍未完成。
+
+后续音频边缘与MOV PCM24校准已消除本页六组案例的PCM差异；原MSE数值保留为历史测量。新证据、八组独立音频案例和明确限制见 [AUDIO-BOUNDARIES.md](AUDIO-BOUNDARIES.md)。

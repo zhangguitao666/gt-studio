@@ -81,7 +81,8 @@ def test_split_matches_native_links_and_preserves_all_decoded_frames(linked_proj
     assert len(normalized_items(e))==2
     assert all(item['start']==0 and item['duration']==24 for item in normalized_items(e))
     prefix=tmp_path/'prefix.wav';e.dispatch('render',{'output':str(prefix)})
-    assert pcm(prefix)==pcm(basewav)[:24*2000*4]
+    from test_audio_boundaries import assert_native_edges_pcm16
+    assert_native_edges_pcm16(pcm(basewav)[:24*2000*4],pcm(prefix),tail=True)
 
 
 @pytest.mark.parametrize('speed,frame',[(50,37),(-100,17),(150,11),(0,19)])

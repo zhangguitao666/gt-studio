@@ -22,7 +22,7 @@ Transforms scale around the canvas center, then rotate clockwise and translate b
 x/y pixels; opacity and fades reveal lower layers. Ripple deletion affects the
 selected track, or each member track of an explicitly linked clip group. Video tracks composite in array order (later tracks on top); clip source audio
 mixes across all tracks. Still images default to five seconds and loop during
-rendering. MP4 uses H.264/AAC, MOV uses ProRes HQ/PCM, and WAV exports PCM audio.
+rendering. MP4 uses H.264/AAC, MOV uses ProRes HQ/24-bit PCM, and WAV exports 16-bit PCM audio.
 Identity clip processing retains16-bit RGBA intermediates and main compositing
 uses10-bit YUV422 before final encoding. Transparent canvases use planar16-bit
 RGB; some active filters and alpha negotiation still have lower precision. This
@@ -1103,6 +1103,8 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         video_label = 'base'
         audio_labels = ['silence']
         input_indices = {}
+        from .audio_edges import automatic_edges
+        audio_edges = automatic_edges(clips, {m['id']:m for m in p['media']})
         associated_timeline = any(track['kind'] == 'video' and track.get('enabled', True) and has_processing(clip.get('fusion_graph')) for track, clip in clips)
         for index, (track, clip) in enumerate(clips):
             media = next(m for m in p['media'] if m['id'] == clip['media_id'])
@@ -1166,11 +1168,18 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     channels = self.probe_media(media['path']).get('audio_channels')
                 channel_mapping = 'pan=stereo|c0=c0|c1=c0' if channels == 1 else 'aformat=channel_layouts=stereo'
                 chain += f',aresample={p["sample_rate"]},{channel_mapping},apad,atrim=duration={length:.12f},volume={props["volume"]}'
+                samples = round(Fraction(clip_duration(clip)*p['fps']['den']*p['sample_rate'],p['fps']['num']))
+                ramp = max(1,round(Fraction(3*p['sample_rate'],2000)))
+                head, tail = audio_edges[clip['id']]
                 if props['fade_in_frames']:
                     chain += f',afade=t=in:st=0:d={props["fade_in_frames"] / fps}'
+                elif head:
+                    chain += f',afade=t=in:start_sample=0:nb_samples={ramp}:curve=tri'
                 if props['fade_out_frames']:
                     fade_length = props['fade_out_frames'] / fps
                     chain += f',afade=t=out:st={max(0, length-fade_length)}:d={fade_length}'
+                elif tail:
+                    chain += f',afade=t=out:start_sample={max(0,samples-ramp)}:nb_samples={ramp}:curve=tri'
                 filters.append(chain + f',adelay={delay}S|{delay}S[{a}]')
                 audio_labels.append(a)
             if output_format != 'wav' and track.get('enabled', True) and (index+1 == len(clips) or clips[index+1][0]['id'] != track['id']):
@@ -1198,7 +1207,16 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     else:
                         filters.append(f'[{video_label}][{dissolved}]overlay=format=yuv422p10:eof_action=pass:enable=\'gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]})\'[{merged}]')
                     video_label=merged
-        filters.append(''.join('[' + x + ']' for x in audio_labels) + f'amix=inputs={len(audio_labels)}:duration=longest:normalize=0,alimiter=limit=0.95:level=0:latency=1[aout]')
+        audio_mix = ''.join('[' + x + ']' for x in audio_labels) + f'amix=inputs={len(audio_labels)}:duration=longest:normalize=0,alimiter=limit=0.95:level=0:latency=1'
+        if output_format == 'mov':
+            # PCM24 packing drops the low S32 byte. Quantize to the target grid
+            # first. Native overlap samples use nearest, ties to even.
+            expressions=[]
+            for channel in (0,1):
+                value=f'val({channel})*8388608'
+                expressions.append(f'if(eq(mod(abs({value}),1),0.5),2*round(({value})/2),round({value}))/8388608')
+            audio_mix += ",aeval=exprs='"+'|'.join(expressions)+"':channel_layout=stereo"
+        filters.append(audio_mix+'[aout]')
         subtitle_temp = None
         if output_format != 'wav' and timeline['subtitles']:
             subtitle_temp = tempfile.TemporaryDirectory(prefix='frameforge-subtitles-')
@@ -1219,7 +1237,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if output_format == 'mp4':
             cmd += ['-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-movflags', '+faststart']
         elif output_format == 'mov':
-            cmd += ['-c:v', 'prores_ks', '-profile:v', '3', '-pix_fmt', 'yuv422p10le', '-c:a', 'pcm_s16le', '-movflags', '+faststart']
+            cmd += ['-c:v', 'prores_ks', '-profile:v', '3', '-pix_fmt', 'yuv422p10le', '-c:a', 'pcm_s24le', '-movflags', '+faststart']
         else:
             cmd += ['-c:a', 'pcm_s16le']
         cmd.append(temporary)

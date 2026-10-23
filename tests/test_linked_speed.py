@@ -42,7 +42,8 @@ def test_linked_interior_freeze_partitions_groups_and_mutes_only_tails(linked_pr
         assert peer['speed_percentage']==0 and peer['in_frame']==30 and peer['start_frame']==18
     rendered=tmp_path/'after.wav';e.dispatch('render',{'output':str(rendered)})
     data=pcm(rendered)
-    assert data[:18*2000*4]==pcm(baseline)[:18*2000*4]
+    from test_audio_boundaries import assert_native_edges_pcm16
+    assert_native_edges_pcm16(pcm(baseline)[:18*2000*4],data[:18*2000*4],tail=True)
     assert not any(data[18*2000*4:])
     e.dispatch('ripple_delete',{'clip_id':tail['id']})
     assert len(e._timeline()['tracks'][0]['clips'])==1
