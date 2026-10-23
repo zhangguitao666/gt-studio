@@ -1,0 +1,24 @@
+# CI 运行库与失败诊断
+
+GitHub仓库为 [zhangguitao666/gt-studio](https://github.com/zhangguitao666/gt-studio)，工作流对main推送及PR执行完整测试。数据库、原版二进制、机器专属报告和媒体按既有忽略规则留在本地；实现、测试、探针和研究说明进入版本控制。
+
+## 已观察到的问题
+
+原先Linux工作流强制使用imageio-ffmpeg0.6.0提供的FFmpeg7.0.2。实际滤镜清单确认该构建没有drawtext，三项字幕渲染检查失败；字幕Qt检查随后进入真实错误框，因无人点击而等待至15分钟任务上限。日志任务 `39881039109` 的60秒线程栈定位到 `show_error → render_status → test_subtitle_panel_edits_srt_and_rendered_tail`。为取回已产生的诊断日志，该任务被主动结束；算法提交的原始验证任务继续运行至工作流上限。
+
+尝试Ubuntu24.04的FFmpeg6.1.1后，所需滤镜存在，但颜色、变速、透明叠化及关联分割检查暴露版本差异。未将这些检查跳过，也未放宽像素/字节相等条件。另一次长等待来自pytest在CI中对多兆字节失败数组调用difflib生成完整差异，线程栈定位到关联分割的RGB比较。
+
+## 当前配置
+
+所有检查统一使用同一份完整FFmpeg构建，不按测试挑选编码器。构建来源为 [FFmpeg下载页列出的BtbN Linux构建](https://ffmpeg.org/download.html)：
+
+- 固定发布标签：`autobuild-2026-10-22-13-06`。
+- 固定文件：`ffmpeg-n8.1.3-23-g5c4f5744cd-linux64-gpl-8.1.tar.xz`。
+- SHA256：`1aa0c5526768bf4db3e62cba954169e3e0be38327c9cbbb6c5675794df6c03df`。
+- 安装步骤核验摘要，仅提取所需可执行文件，核验drawtext、overlay、geq、blend、premultiply和unpremultiply，并记录版本。缺失即失败。
+
+使用 `pytest -vv --assert=plain -o faulthandler_timeout=60` 记录测试名和线程栈。plain只关闭pytest断言改写，Python断言条件及全部检查继续执行。关联分割的完整RGB相等条件改用失败时输出长度、首个差异帧/字节、误差统计和摘要，避免昂贵的整段差异排版。
+
+Qt测试将意外错误框捕获为测试失败并保留原错误文字，使无人值守运行可以结束并报告问题；产品错误框行为未更改。工作流始终尝试上传JUnit XML。安装失败、编码器差异或失败检查都不能算作通过，实际结论以 [Actions任务及其报告](https://github.com/zhangguitao666/gt-studio/actions) 为准。
+
+本机Mac上关联Alpha版本完整241项通过；增加错误框捕获后再次241项通过，随后有界字节诊断所在的分割用例单独通过。以上是独立产品回归，均不代表完整Resolve一致性。原版像素对照与现存差异仍见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。

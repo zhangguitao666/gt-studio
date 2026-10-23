@@ -127,3 +127,5 @@ Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes
 节点检查点可使用 `render_fusion_frame(clip_id, output, node_id?, frame=0)` 导出 RGBA16 PNG；Fusion 页面选中节点后点击 **Save selected node PNG…**，按钮位于节点面板底部。GUI 使用当前播放头对应的片段内帧，播放头不在该片段内则保存第0帧。真实窗口与已配置MCP保存的PNG已逐字节核对相同。六组检查点对照把时间线半透明变暗与Merge节点色差进一步分开，见 [FUSION-CHECKPOINTS.md](research/FUSION-CHECKPOINTS.md)。
 
 关联Alpha合成修正已按原版26个导出任务校准：13个受控案例中9组全序列RGB逐字节相同，原先半透明背景/共享分支48帧也完全相同；MediaIn颜色与几何边缘仍有残差。当前241项回归通过，详见 [FUSION-ASSOCIATED-ALPHA.md](research/FUSION-ASSOCIATED-ALPHA.md)。代码持续推送到 [GitHub](https://github.com/zhangguitao666/gt-studio)。
+
+Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜、意外错误框和巨大字节差异的诊断说明见 [CI-VALIDATION.md](research/CI-VALIDATION.md)。远程结果以 [GitHub Actions](https://github.com/zhangguitao666/gt-studio/actions) 为准，本机测试通过不代替远程结果或原版全功能验收。
