@@ -232,8 +232,32 @@ class FusionActions:
                 os.unlink(temporary)
         return {'output': str(destination), 'clip_id': clip_id, 'node_id': node_id, 'frame': frame,
                 'width': project['width'], 'height': project['height'], 'format': 'png', 'channels': 'RGBA16',
+                'alpha_association': 'associated node samples; PNG viewers may assume straight alpha',
                 'scope': 'node output before clip grade, transforms, opacity and timeline compositing',
                 'bytes': destination.stat().st_size, 'native_equivalence_verified': False}
+
+
+def has_processing(graph):
+    if graph is None:
+        return False
+    order, errors = render_order(graph)
+    return bool(errors) or [node['type'] for node in order] != ['MediaIn', 'MediaOut']
+
+
+def place_image(source, output, width, height, x=0, y=0):
+    """Place on a transparent canvas without multiplying or discarding RGB at A=0."""
+    return [f'[{source}]format=gbrap16le,pad=w=\'max(iw,{width})+{2*math.ceil(abs(x))}\':h=\'max(ih,{height})+{2*math.ceil(abs(y))}\':x=(ow-iw)/2:y=(oh-ih)/2:color=black@0,'
+            f'crop=w={width}:h={height}:x=(iw-{width})/2-({x}):y=(ih-{height})/2-({y}):exact=1[{output}]']
+
+
+def premultiplied_over(background, foreground, output):
+    """RGBA16 associated over; RGB may exceed alpha (native generator glow)."""
+    front, mask, back, weighted = (output+'_'+suffix for suffix in ('front','mask','back','weighted'))
+    return [f'[{foreground}]format=gbrap16le,split=2[{front}][{mask}_source]',
+            f'[{mask}_source]geq=r=\'alpha(X,Y)\':g=\'alpha(X,Y)\':b=\'alpha(X,Y)\':a=\'alpha(X,Y)\'[{mask}]',
+            f'[{background}]format=gbrap16le[{back}]',
+            f'[{back}][{mask}]blend=all_expr=\'A*(1-B/65535)\'[{weighted}]',
+            f'[{weighted}][{front}]blend=all_mode=addition[{output}]']
 
 
 def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False):
@@ -257,7 +281,7 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
         out = f'{prefix}_f{index}'
         params, kind = node['parameters'], node['type']
         if kind == 'MediaIn':
-            filters.append(selection + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0[{out}]')
+            filters.append(selection + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0,premultiply=inplace=1[{out}]')
         elif kind == 'Background':
             raw = out + '_canvas'; canvas(raw)
             filters.append(f'[{raw}]geq=r={params["Red"]*65535}:g={params["Green"]*65535}:b={params["Blue"]*65535}:a={params["Alpha"]*65535}[{out}]')
@@ -270,16 +294,15 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
                 angle = -params['Angle'] * math.pi / 180
                 chain += f',rotate={angle}:ow=rotw({angle}):oh=roth({angle}):c=black@0'
             filters.append(chain + f'[{scaled}]')
-            back = out + '_canvas'; canvas(back)
-            # The bundled FFmpeg auto/10-bit overlay darkens straight RGB when
-            # compositing onto transparent backgrounds. Explicit RGB preserves
-            # straight-alpha semantics, at an acknowledged 8-bit boundary.
-            filters.append(f'[{back}][{scaled}]overlay=x=(W-w)/2+{(params["CenterX"]-.5)*width}:y=(H-h)/2+{(.5-params["CenterY"])*height}:format=rgb:alpha=straight:shortest=1,format=gbrap16le[{out}]')
+            filters.extend(place_image(scaled, out, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
         elif kind == 'Merge':
             back, front = (take(node['inputs'][port]) for port in ('Background', 'Foreground'))
             alpha = out + '_alpha'
-            filters.append(f'[{front}]colorchannelmixer=aa={params["Blend"]}[{alpha}]')
-            filters.append(f'[{back}][{alpha}]overlay=x={ (params["CenterX"]-.5)*width}:y={ (.5-params["CenterY"])*height}:format=rgb:alpha=straight:shortest=1,format=gbrap16le[{out}]')
+            blend = params['Blend']
+            filters.append(f'[{front}]geq=r=\'r(X,Y)*{blend}\':g=\'g(X,Y)*{blend}\':b=\'b(X,Y)*{blend}\':a=\'alpha(X,Y)*{blend}\'[{alpha}]')
+            positioned = out + '_positioned'
+            filters.extend(place_image(alpha, positioned, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
+            filters.extend(premultiplied_over(back, positioned, out))
         else:  # MediaOut
             filters.append(f'[{take(node["inputs"]["Input"])}]null[{out}]')
         count = uses[node['id']]

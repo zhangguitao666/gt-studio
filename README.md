@@ -116,12 +116,14 @@ MCP 操作的是 GT Studio 自己的项目与引擎。它没有借用安装版 R
 
 52个公开MCP工具。服务重连使用会话标识，窗口可在服务重启后重新接受低序号请求。上述专项仅证明报告中列出的操作、素材和输出，完整Resolve一致性仍未达到。
 
-当前完整测试224项通过，52个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。Fusion 页面、MCP 参数回显/界面写回及暂停第0帧已完成真实窗口验收，其余专项窗口检查仍需补齐。
+当前完整测试241项通过，52个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。Fusion 页面、MCP 参数回显/界面写回及暂停第0帧已完成真实窗口验收，其余专项窗口检查仍需补齐。
 
 Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes", offset=0, limit=25)` 已实测本机三个模板及一个示例合成，共83个活动节点/133条显式连接；它只读结构，不导入或执行节点。详见 [FUSION-SETTINGS.md](research/FUSION-SETTINGS.md)。
 
-可编辑节点图已接入 Fusion 页面及导出：`get_fusion_graph`、`add_fusion_node`、`update_fusion_node`、`connect_fusion_nodes`、`delete_fusion_node`、`clear_fusion_graph`。当前五节点为 MediaIn、MediaOut、Background、Transform、Merge；Transform/Merge 有8位RGB合成边界，原版算法等效尚未验证。见 [FUSION-NODES.md](research/FUSION-NODES.md)。桌面演示单独保存到 `workspace/GT Studio Fusion Desktop Demo.json`，可复跑 MCP 验证使用独立工程和媒体。
+可编辑节点图已接入 Fusion 页面及导出：`get_fusion_graph`、`add_fusion_node`、`update_fusion_node`、`connect_fusion_nodes`、`delete_fusion_node`、`clear_fusion_graph`。当前五节点为 MediaIn、MediaOut、Background、Transform、Merge；Transform/Merge 使用16位整数关联合成并在0..1饱和裁切，完整原版算法等效尚未验证。见 [FUSION-NODES.md](research/FUSION-NODES.md)。桌面演示单独保存到 `workspace/GT Studio Fusion Desktop Demo.json`，可复跑 MCP 验证使用独立工程和媒体。
 
-原版Fusion运行对照已建立：六组640×360/24fps/48帧案例以及十二个带Alpha导出。当前透明输出和Merge存在显著差距，参见 [FUSION-REFERENCE.md](research/FUSION-REFERENCE.md)。224项测试是独立行为回归，不代表原版功能一致。
+原版Fusion运行对照已建立：六组640×360/24fps/48帧案例以及十二个带Alpha导出。当前透明输出和Merge存在显著差距，参见 [FUSION-REFERENCE.md](research/FUSION-REFERENCE.md)。241项测试是独立行为回归，不代表原版功能一致。
 
 节点检查点可使用 `render_fusion_frame(clip_id, output, node_id?, frame=0)` 导出 RGBA16 PNG；Fusion 页面选中节点后点击 **Save selected node PNG…**，按钮位于节点面板底部。GUI 使用当前播放头对应的片段内帧，播放头不在该片段内则保存第0帧。真实窗口与已配置MCP保存的PNG已逐字节核对相同。六组检查点对照把时间线半透明变暗与Merge节点色差进一步分开，见 [FUSION-CHECKPOINTS.md](research/FUSION-CHECKPOINTS.md)。
+
+关联Alpha合成修正已按原版26个导出任务校准：13个受控案例中9组全序列RGB逐字节相同，原先半透明背景/共享分支48帧也完全相同；MediaIn颜色与几何边缘仍有残差。当前241项回归通过，详见 [FUSION-ASSOCIATED-ALPHA.md](research/FUSION-ASSOCIATED-ALPHA.md)。代码持续推送到 [GitHub](https://github.com/zhangguitao666/gt-studio)。

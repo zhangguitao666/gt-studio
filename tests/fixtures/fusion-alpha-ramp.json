@@ -1,0 +1,275 @@
+{
+  "scope": "Synthetic static 640x360 native exported RGB/RGBA samples, not internal buffers. Tests use flat 32px generators; no media-color equivalence claim.",
+  "reference_report_sha256": "6ec97142726987c749bf8e84bdb9d27bf0d7dee1fd6737456f996d43b585efb4",
+  "probe": {
+    "path": "/Users/zgt/agent/resolve-reconstruction/scripts/probe_resolve_fusion_alpha_ramp_v2.lua",
+    "sha256": "d825afc0a554b6818c0d497e46cdc15d4085413005296115ecf90790904bd928",
+    "bytes": 7250
+  },
+  "original_version": "21.1.1.10",
+  "cases": [
+    {
+      "name": "black_a05",
+      "spec": {
+        "alpha": 0.5,
+        "lower": "black",
+        "name": "black_a05"
+      },
+      "native_rgb_center": [
+        0,
+        0,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        13,
+        65322,
+        65520
+      ],
+      "native_export_sha256": "6524a8b3aeb9bdc17870f2682e31832b422d99be34c1843b240fd2b7b287aea3"
+    },
+    {
+      "name": "gen_a05_b025",
+      "spec": {
+        "alpha": 0.5,
+        "back": "generator",
+        "blend": 0.25,
+        "name": "gen_a05_b025"
+      },
+      "native_rgb_center": [
+        219,
+        0,
+        62
+      ],
+      "native_rgba_center": [
+        57126,
+        0,
+        16398,
+        65520
+      ],
+      "native_export_sha256": "f223225eaf5e78241dd53ddd67bef2410ee10f16053c4b2a8158e754796b57ae"
+    },
+    {
+      "name": "gen_a05_b05",
+      "spec": {
+        "alpha": 0.5,
+        "back": "generator",
+        "blend": 0.5,
+        "name": "gen_a05_b05"
+      },
+      "native_rgb_center": [
+        187,
+        0,
+        126
+      ],
+      "native_rgba_center": [
+        48938,
+        0,
+        32797,
+        65520
+      ],
+      "native_export_sha256": "caea7e550f27f97fb725eb0c6f74fb7a570d9d1940177eb00b86c93e8f6dee2c"
+    },
+    {
+      "name": "gen_a05_b1",
+      "spec": {
+        "alpha": 0.5,
+        "back": "generator",
+        "blend": 1,
+        "name": "gen_a05_b1"
+      },
+      "native_rgb_center": [
+        124,
+        0,
+        252
+      ],
+      "native_rgba_center": [
+        32525,
+        9,
+        65333,
+        65520
+      ],
+      "native_export_sha256": "a8e7e37ac72d55cec21ad12958aa15aedc0b863f7d57de9294f89563ecb4daa2"
+    },
+    {
+      "name": "gen_a1_b025",
+      "spec": {
+        "alpha": 1,
+        "back": "generator",
+        "blend": 0.25,
+        "name": "gen_a1_b025"
+      },
+      "native_rgb_center": [
+        188,
+        0,
+        61
+      ],
+      "native_rgba_center": [
+        48939,
+        6,
+        16410,
+        65520
+      ],
+      "native_export_sha256": "99170de5f30bcb0c457f680cc950743a2b1e99dcbc37d5c5927e0e7a01726884"
+    },
+    {
+      "name": "gen_a1_b05",
+      "spec": {
+        "alpha": 1,
+        "back": "generator",
+        "blend": 0.5,
+        "name": "gen_a1_b05"
+      },
+      "native_rgb_center": [
+        125,
+        0,
+        125
+      ],
+      "native_rgba_center": [
+        32800,
+        1,
+        32781,
+        65520
+      ],
+      "native_export_sha256": "b16ab1c10af477b6a55bae3fc6bf374f7da825d39f67374023f1ea5bd8be0468"
+    },
+    {
+      "name": "gen_a1_b075",
+      "spec": {
+        "alpha": 1,
+        "back": "generator",
+        "blend": 0.75,
+        "name": "gen_a1_b075"
+      },
+      "native_rgb_center": [
+        61,
+        0,
+        188
+      ],
+      "native_rgba_center": [
+        16370,
+        1,
+        48911,
+        65520
+      ],
+      "native_export_sha256": "9eaafe73857866511578531b3f0db05d0681b43f33730983b77a6a88e25365fb"
+    },
+    {
+      "name": "green_a05",
+      "spec": {
+        "alpha": 0.5,
+        "lower": "green",
+        "name": "green_a05"
+      },
+      "native_rgb_center": [
+        0,
+        126,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        32543,
+        65344,
+        65520
+      ],
+      "native_export_sha256": "cec6dad6ddb761b4cf4a27f3b86042d4fda557160551fb79242595e0d4dc54ff"
+    },
+    {
+      "name": "media_a05_b05",
+      "spec": {
+        "alpha": 0.5,
+        "back": "media",
+        "blend": 0.5,
+        "name": "media_a05_b05"
+      },
+      "native_rgb_center": [
+        203,
+        0,
+        111
+      ],
+      "native_rgba_center": [
+        52736,
+        0,
+        29083,
+        65520
+      ],
+      "native_export_sha256": "ade66636c076b0be2a8102248f6538f905563f54d5efce3555b1bebaea046981"
+    },
+    {
+      "name": "plain_a0",
+      "spec": {
+        "alpha": 0,
+        "name": "plain_a0"
+      },
+      "native_rgb_center": [
+        0,
+        0,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        13,
+        65322,
+        0
+      ],
+      "native_export_sha256": "af697d0525bd4537e2fa0c220385c8c1f73dcef60a01e3c2832df6b6e984d2eb"
+    },
+    {
+      "name": "plain_a025",
+      "spec": {
+        "alpha": 0.25,
+        "name": "plain_a025"
+      },
+      "native_rgb_center": [
+        0,
+        0,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        13,
+        65322,
+        16448
+      ],
+      "native_export_sha256": "22278a75314762299bb1ea08b6812f74d1d7f1c4ecb99b46f0fe6946b76d87bf"
+    },
+    {
+      "name": "plain_a05",
+      "spec": {
+        "alpha": 0.5,
+        "name": "plain_a05"
+      },
+      "native_rgb_center": [
+        0,
+        0,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        13,
+        65322,
+        32896
+      ],
+      "native_export_sha256": "a7757e641174201e1941c1ba67d17f49ff1c6091e91cfca27e3751747e2682d8"
+    },
+    {
+      "name": "plain_a1",
+      "spec": {
+        "alpha": 1,
+        "name": "plain_a1"
+      },
+      "native_rgb_center": [
+        0,
+        0,
+        253
+      ],
+      "native_rgba_center": [
+        0,
+        13,
+        65322,
+        65520
+      ],
+      "native_export_sha256": "45140a94ab1f0e0f0e94407a298a94bbe857dd2ab52e6d713203e51a247224d3"
+    }
+  ]
+}

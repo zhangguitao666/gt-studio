@@ -157,3 +157,7 @@ RGBA16 clip intermediates and10-bit YUV422 main compositing reduce MSE30.25%–3
 ## 独立节点 RGBA 检查点
 
 已实现render_fusion_frame与Fusion页节点PNG保存入口，52个公开MCP工具，完整224项独立回归通过。六案例首帧RGBA16检查点显示背景/变换/共享分支内部接近原版带Alpha导出，但主时间线半透明输出仍显著变暗；Merge本身已经存在明显色差。原版参照仍是编码导出而非内部缓冲，Transform/Merge仍有8位处理边界，未据此更改Alpha算法。真实窗口与MCP保存同一节点/帧的PNG逐字节相同，工程未变。见FUSION-CHECKPOINTS.md。后续仍需透明/不透明下层和参数梯度对照、算法校准及其余完整功能。
+
+## 关联Alpha原版校准
+
+13组原版Alpha/Blend/下层实验、26个精确任务句柄均完成。由观察推断并实现16位整数关联over，保留Alpha=0的非零RGB，修正重复乘Alpha；移除Transform/Merge的8位RGB边界，主时间线、透明度/淡化及混合普通媒体的叠化使用相应关联路径。13组中9组全RGB序列相同，其余生成器MAE最高1.333333；媒体输入Merge仍为10.333333。旧六组48帧中的背景/分支完全相同，变换MAE从10.623762降至0.085567，Merge MSE从232.773485降至44.760979。241项独立测试通过。浮点HDR、源色彩解释、几何边缘及完整功能仍未等效，见FUSION-ASSOCIATED-ALPHA.md。

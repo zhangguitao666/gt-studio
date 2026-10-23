@@ -144,7 +144,9 @@ def test_actual_transform_merge_and_bottom_left_coordinates(tmp_path, colored_so
     raw = pixels(output)
     assert len(raw) == 12*32*32*3
     for frame in (0, 5, 11):
-        assert pixel(raw, 24, 8, frame) == pytest.approx((191, 0, 64), abs=6)
+        # Native generator evidence uses associated over: Blend scales RGB
+        # once, while alpha controls the surviving background contribution.
+        assert pixel(raw, 24, 8, frame) == pytest.approx((191, 0, 128), abs=6)
         assert pixel(raw, 8, 8, frame) == pytest.approx((253, 0, 0), abs=6)
         assert pixel(raw, 24, 24, frame) == pytest.approx((253, 0, 0), abs=6)
 
@@ -157,7 +159,7 @@ def test_shared_node_fanout_and_alpha_over(tmp_path, colored_sources):
     connect(e, clip, merge, 'Foreground', bg)
     connect(e, clip, 'MediaOut1', 'Input', merge)
     output = tmp_path/'fanout.mov'; e.dispatch('render', {'output': str(output)})
-    assert pixel(pixels(output), 16, 16) == pytest.approx((0, 0, 191), abs=6)
+    assert pixel(pixels(output), 16, 16) == pytest.approx((0, 0, 253), abs=6)
 
 
 def test_identity_and_disconnected_nodes_leave_decoded_media_exact(tmp_path, colored_sources):

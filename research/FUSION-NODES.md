@@ -26,15 +26,15 @@ Fusion 页面提供片段选择、节点画布、拖动布局、参数面板、�
 
 MediaIn 是同一片段变速/倒放/定格后的源帧，先适配项目画布；不支持选择其他媒体或原版全尺寸/代理/缓存规则。MediaOut 指定唯一图输出。
 
-Background 使用项目大小，RGBA 范围 0..1。Transform 提供统一 Size、逆时针 Angle、归一化 CenterX/CenterY，坐标原点在左下；当前缩放尺寸取偶数，暂不支持 Pivot、Aspect、边界模式、运动模糊或原版采样器。Merge 只支持普通 alpha-over、Blend 与中心位置，无效果蒙版或其他混合模式。图输出先进入原有片段调色、变换、淡化和轨道合成，再编码。音频路径保持原样。
+Background 使用项目大小，RGBA 范围 0..1。Transform 提供统一 Size、逆时针 Angle、归一化 CenterX/CenterY，坐标原点在左下；当前缩放尺寸取偶数，暂不支持 Pivot、Aspect、边界模式、运动模糊或原版采样器。Merge 只支持关联 alpha-over、Blend 与中心位置，无效果蒙版或其他混合模式。Blend同时缩放前景RGB和Alpha；图输出经过关联值对应的片段透明度、淡化与时间线合成，再编码。音频路径保持原样。
 
 编译器按输出可达子图排序，并为共享节点创建显式分支。恒等 MediaIn→MediaOut 走原先媒体处理路径，即使存在未使用节点也不额外转码滤镜；清空图后的实际解码 RGB/PCM 已与无图基准逐字节对照。
 
-## 精度诊断
+## 历史精度诊断与后续修正
 
 真实像素测试暴露：当前打包 FFmpeg 的 auto/10-bit overlay 在透明画布上将蓝色压暗。半透明纯蓝经变换后，读取 RGBA16 的蓝通道只有约 16248，预期为 65535。显式 RGB 后约 65281，alpha 约 32896；详见 fusion-alpha-diagnostic.json 及可复跑脚本 diagnose_fusion_alpha.py。
 
-因此 Transform/Merge 目前显式经过 8 位 RGB 合成边界，以保留正确的直通 alpha 行为。其它原有片段的 16 位中间格式/10 位主叠加路径未因此改动。不能将此实现描述为全 16 位合成、线性光或原版 Fusion 等效算法。
+检查点阶段因此临时使用8位RGB边界。后续原版Alpha/Blend/下层受控实验显示应保留关联RGB，包括Alpha=0的非零颜色。现已改为16位整数关联合成，Transform用pad/crop定位，Merge和Fusion主时间线显式计算背景衰减与前景相加，移除了该8位边界。仍在0..1饱和裁切，未达到浮点HDR、线性光色管或原版Fusion全算法等效。普通媒体恒等路径保持原样。详见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
 
 ## 验证
 
@@ -54,4 +54,4 @@ verify_fusion_nodes.py 使用已配置的 MCP 启动器与私有服务，实际�
 
 `render_fusion_frame` 的 frame 从0开始，按片段变速后的局部时间解释；省略 node_id 则取 MediaOut。它只计算所选节点可达分支，不经过片段调色、位置、透明度、轨道和字幕。生成器独立分支即使源媒体离线也可导出；锁定轨道允许导出，工程和撤销历史不变。失败保留既有输出，禁止覆盖源媒体和工程。
 
-Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同。新增12项回归，完整224项通过。PNG是16位存储；Transform/Merge仍有8位处理边界，不能将检查点格式等同于全16位合成。六案例测量和后续校准范围见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)。
+Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。检查点阶段真实窗口保存与已配置MCP导出同一Transform/第0帧的PNG逐字节相同，新增12项回归，当时完整224项通过。此后预乘修正新增17项，当前241项通过。PNG保存16位关联样本，普通查看器可能按直通Alpha显示；不能把查看器观感等同于数值。历史六案例检查点测量见 [FUSION-CHECKPOINTS.md](FUSION-CHECKPOINTS.md)，当前算法与受控校准见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。

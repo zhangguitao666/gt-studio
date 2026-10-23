@@ -71,7 +71,7 @@ def main():
             return list(raw[index:index+3])
         samples = [{'frame': f, 'inside': sample(f, 240, 45), 'outside': sample(f, 80, 45)} for f in (0, 23, 47)]
         for record in samples:
-            assert max(abs(a-b) for a,b in zip(record['inside'], [191,0,64])) <= 6
+            assert max(abs(a-b) for a,b in zip(record['inside'], [191,0,128])) <= 6
             assert max(abs(a-b) for a,b in zip(record['outside'], [253,0,0])) <= 6
         audio_equal = decode(baseline, True) == decode(output, True); assert audio_equal
         # Incomplete output is editable, but rendering preserves existing exports.
@@ -85,7 +85,7 @@ def main():
         connect(merge, 'Background', bg); connect(merge, 'Foreground', bg)
         fanout = workspace/'fanout.mov'; client.tool('render', output=str(fanout))
         fanraw = decode(fanout); index = (90*320+160)*3
-        assert max(abs(a-b) for a,b in zip(fanraw[index:index+3], [0,0,191])) <= 6
+        assert max(abs(a-b) for a,b in zip(fanraw[index:index+3], [0,0,253])) <= 6
         client.tool('open_project', path=str(project))
         # Deletion and reset have transactional undo/redo semantics.
         unused = add('Merge', 'Unconnected test', {}, 480, 300)
@@ -106,7 +106,7 @@ def main():
                   'identity_reset_decoded_rgb_pcm_exact': True, 'incomplete_output_rejected': rejected,
                   'existing_export_preserved_on_failure': True, 'project_roundtrip_verified': True,
                   'artifacts': [identity(p) for p in (source, baseline, output, fanout, identity_output, project, png)], 'calls': client.calls,
-                  'compositing_precision': '8-bit RGB boundary in Transform/Merge; direct path unchanged',
+                  'compositing_precision': 'RGBA16 integer associated over; saturation clips values above one; direct path unchanged',
                   'native_fusion_node_equivalence_verified': False, 'native_window_verification': 'pending', 'full_resolve_parity': False}
         target = ROOT/'research/fusion-node-verification.json'; target.write_text(json.dumps(report, indent=2, ensure_ascii=False)+'\n')
         print(json.dumps({'report': str(target), 'tools': len(tools), 'frames': 48, 'audio_equal': audio_equal, 'output': str(output)}, ensure_ascii=False))

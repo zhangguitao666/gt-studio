@@ -59,7 +59,7 @@ from fractions import Fraction
 from .subtitles import SubtitleActions, subtitle_migrate_validate, build_subtitle_filters
 from .transitions import TransitionActions, validate_transitions, window_at_cut
 from .linking import LinkingActions
-from .fusion import FusionActions, validate_graph, compile_graph
+from .fusion import FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over
 
 PROPERTY_DEFAULTS = {"exposure": 0.0, "contrast": 1.0, "saturation": 1.0, "gamma": 1.0, "volume": 1.0, "opacity": 1.0, "scale": 1.0, "x": 0.0, "y": 0.0, "rotation": 0.0, "fade_in_frames": 0, "fade_out_frames": 0}
 
@@ -972,6 +972,9 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         width = max(2,round(p['width']*props['scale']/2)*2)
         height = max(2,round(p['height']*props['scale']/2)*2)
         graph_filters = []
+        associated = has_processing(clip.get('fusion_graph'))
+        if associated:
+            padding = 'black@0'
         input_chain = f'[{source}:v]{selection}'
         if 'fusion_graph' in clip:
             compiled = compile_graph(clip['fusion_graph'], input_chain, p, clip_duration(clip), label)
@@ -992,8 +995,20 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if props['rotation']:
             angle=props['rotation']*math.pi/180
             chain += f',rotate={angle}:ow=rotw({angle}):oh=roth({angle}):c=black@0'
-        chain += f',colorchannelmixer=aa={props["opacity"]},setpts=PTS-STARTPTS'
-        if '_property_time_offset_frames' in clip:
+        if associated:
+            chain += ',format=gbrap16le,setpts=PTS-STARTPTS'
+            factors = [str(props['opacity'])]
+            offset = clip.get('_property_time_offset_frames', 0)/fps
+            original_length = clip.get('_property_duration_frames', clip_duration(clip))/fps
+            if props['fade_in_frames']:
+                factors.append(f'min(max((T+({offset}))/({props["fade_in_frames"]/fps}),0),1)')
+            if props['fade_out_frames']:
+                factors.append(f'min(max(({original_length}-T-({offset}))/({props["fade_out_frames"]/fps}),0),1)')
+            factor = '*'.join(factors)
+            chain += ',' + 'geq=' + ':'.join(f"{component}='{sample}(X,Y)*({factor})'" for component,sample in (('r','r'),('g','g'),('b','b'),('a','alpha')))
+        else:
+            chain += f',colorchannelmixer=aa={props["opacity"]},setpts=PTS-STARTPTS'
+        if not associated and '_property_time_offset_frames' in clip:
             factors=[]
             offset=clip['_property_time_offset_frames']/fps
             if props['fade_in_frames']:
@@ -1002,7 +1017,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 factors.append(f'min(max(({clip["_property_duration_frames"]/fps}-T-({offset}))/({props["fade_out_frames"]/fps}),0),1)')
             if factors:
                 chain += ",geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='alpha(X,Y)*"+'*'.join(factors)+"'"
-        else:
+        elif not associated:
             if props['fade_in_frames']:
                 chain += f',fade=t=in:st=0:d={props["fade_in_frames"]/fps}:alpha=1'
             if props['fade_out_frames']:
@@ -1011,7 +1026,18 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if not full_canvas:
             return graph_filters + [chain+f',setpts=PTS+round({clip["start_frame"]}/({rate})/TB)[{label}]']
         raw, canvas = label+'_raw',label+'_canvas'
+        if associated:
+            return graph_filters + [chain+f'[{raw}]'] + place_image(raw, label, p['width'], p['height'], props['x'], props['y'])
         return graph_filters + [chain+f'[{raw}]',f'color=c=black@0:s={p["width"]}x{p["height"]}:r={rate}:d={length},format=gbrap16le[{canvas}]',f'[{canvas}][{raw}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=auto:eof_action=pass,format=gbrap16le,premultiply=inplace=1[{label}]']
+
+    def _fusion_composite(self, background, foreground, output, p, start, duration, enable, x=0, y=0):
+        placed, aligned = output+'_placed', output+'_aligned'
+        filters = place_image(foreground, placed, p['width'], p['height'], x, y)
+        factor = enable.replace('n,', 'N,')
+        mask = ':'.join(f"{component}='{sample}(X,Y)*({factor})'" for component,sample in (('r','r'),('g','g'),('b','b'),('a','alpha')))
+        rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
+        filters.append(f'[{placed}]setpts=PTS-STARTPTS,tpad=start={start}:stop={duration}:start_mode=add:stop_mode=add:color=black@0,trim=end_frame={duration},setpts=round(N/({rate})/TB),geq={mask}[{aligned}]')
+        return filters + premultiplied_over(background, aligned, output)
 
     def render(self, output, timeline_id=None, format=None):
         p = copy.deepcopy(self._require())
@@ -1070,7 +1096,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 for transition in timeline.get('transitions',[]):
                     if clip['id'] in (transition['left_clip_id'],transition['right_clip_id']):
                         enable += f'*(1-gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]}))'
-                filters.append(f'[{video_label}][{v}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=yuv422p10:eof_action=pass:enable=\'{enable}\'[{merged}]')
+                if has_processing(clip.get('fusion_graph')):
+                    filters.extend(self._fusion_composite(video_label, v, merged, p, clip['start_frame'], duration_frames, enable, props['x'], props['y']))
+                else:
+                    filters.append(f'[{video_label}][{v}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=yuv422p10:eof_action=pass:enable=\'{enable}\'[{merged}]')
                 video_label = merged
             if audio_enabled and speed != 0:
                 a = 'a' + str(index)
@@ -1107,8 +1136,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     if transition['track_id'] != track['id']:
                         continue
                     segment_labels=[]
+                    associated_transition = False
                     for side in ('left','right'):
                         original, _ = self._clip(transition[side+'_clip_id'])
+                        associated_transition |= has_processing(original.get('fusion_graph'))
                         segment=self._transition_segment(original,transition)
                         input_index=input_indices[original['id']]
                         segment_label=transition['id']+'_'+side
@@ -1117,9 +1148,14 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     dissolved=transition['id']+'_dissolved'
                     weight=f'(N-0.5)/{transition["duration_frames"]}'
                     rate=f'{p["fps"]["num"]}/{p["fps"]["den"]}'
-                    filters.append(f'[{segment_labels[0]}][{segment_labels[1]}]blend=all_expr=\'A*(1-({weight}))+B*({weight})\',unpremultiply=inplace=1,format=rgba64le,setpts=PTS+round({transition["start_frame"]}/({rate})/TB)[{dissolved}]')
+                    conversion = '' if associated_transition else ',unpremultiply=inplace=1,format=rgba64le'
+                    filters.append(f'[{segment_labels[0]}][{segment_labels[1]}]blend=all_expr=\'A*(1-({weight}))+B*({weight})\'{conversion},setpts=PTS+round({transition["start_frame"]}/({rate})/TB)[{dissolved}]')
                     merged=transition['id']+'_composite'
-                    filters.append(f'[{video_label}][{dissolved}]overlay=format=yuv422p10:eof_action=pass:enable=\'gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]})\'[{merged}]')
+                    if associated_transition:
+                        enable = f'gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]})'
+                        filters.extend(self._fusion_composite(video_label, dissolved, merged, p, transition['start_frame'], duration_frames, enable))
+                    else:
+                        filters.append(f'[{video_label}][{dissolved}]overlay=format=yuv422p10:eof_action=pass:enable=\'gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]})\'[{merged}]')
                     video_label=merged
         filters.append(''.join('[' + x + ']' for x in audio_labels) + f'amix=inputs={len(audio_labels)}:duration=longest:normalize=0,alimiter=limit=0.95:level=0:latency=1[aout]')
         subtitle_temp = None

@@ -56,13 +56,13 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
         wait_for(app, lambda: sink.videoFrame().isValid())
         assert window.player.playbackState() == window.player.PlaybackState.PausedState
         first_pixel = sink.videoFrame().toImage().pixelColor(16, 16)
-        assert first_pixel.red() < 8 and first_pixel.green() < 8 and 120 <= first_pixel.blue() <= 136
+        assert first_pixel.red() < 8 and first_pixel.green() < 8 and first_pixel.blue() >= 245
         # Direct external node edits update both canvas properties and rendered preview.
         rpc(url, 'update_fusion_node', {'clip_id': clip_id, 'node_id': bg['id'], 'parameters': {'Blue': 0, 'Green': 1}})
         window.client.poll()
         wait_for(app, lambda: next(n for n in panel.graph['nodes'] if n['id'] == bg['id'])['parameters']['Green'] == 1)
         wait_for(app, lambda: window.preview_signature == window.state_signature, seconds=8)
-        wait_for(app, lambda: sink.videoFrame().isValid() and sink.videoFrame().toImage().pixelColor(16, 16).green() > 120)
+        wait_for(app, lambda: sink.videoFrame().isValid() and sink.videoFrame().toImage().pixelColor(16, 16).green() >= 245)
         panel.scene.clearSelection(); panel.items['MediaOut1'].setSelected(True)
         panel.disconnect_button.click()
         wait_for(app, lambda: 'Incomplete output' in panel.status.text())

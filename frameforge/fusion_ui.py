@@ -84,7 +84,7 @@ class FusionPanel(QWidget):
         side = QScrollArea(); side.setWidgetResizable(True); side.setWidget(controls)
         side.setMinimumWidth(280)
         split.addWidget(side); split.setSizes([800, 280]); layout.addWidget(split, 1)
-        hint = QLabel('Independent five-node subset · project-canvas MediaIn · normal alpha-over · Transform/Merge composite in 8-bit RGB · native equivalence unverified. Use Timeline Preview to view the output.')
+        hint = QLabel('Independent five-node subset · associated RGBA16 over · integer range clips above one · native equivalence unverified. PNG checkpoints retain associated RGB samples. Use Timeline Preview to view the output.')
         hint.setWordWrap(True); layout.addWidget(hint)
 
     def send(self, action, params=None, callback=None):
