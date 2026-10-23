@@ -60,7 +60,19 @@ def test_split_matches_native_links_and_preserves_all_decoded_frames(linked_proj
     e.dispatch('redo');assert e.get_state()==after
     project=tmp_path/'split.json';e.dispatch('save_project',{'path':str(project)});e.dispatch('open_project',{'path':str(project)})
     rendered=tmp_path/'after.mov';e.dispatch('render',{'output':str(rendered)})
-    assert rgb(baseline)==rgb(rendered)
+    baseline_rgb, rendered_rgb = rgb(baseline), rgb(rendered)
+    if baseline_rgb != rendered_rgb:
+        # Keep strict byte equality, but bound diagnostics even under pytest's
+        # CI assertion formatter (multi-megabyte difflib can take minutes).
+        first = next((i for i, (a, b) in enumerate(zip(baseline_rgb, rendered_rgb)) if a != b), None)
+        differences = [abs(a-b) for a,b in zip(baseline_rgb, rendered_rgb)]
+        pytest.fail(json.dumps({'baseline_bytes':len(baseline_rgb),'rendered_bytes':len(rendered_rgb),
+                                'first_byte':first,'first_frame':first//(160*90*3) if first is not None else None,
+                                'first_values':[baseline_rgb[first],rendered_rgb[first]] if first is not None else None,
+                                'changed_bytes':sum(d != 0 for d in differences),'max_abs':max(differences,default=0),
+                                'mae':sum(differences)/len(differences) if differences else None,
+                                'baseline_sha256':hashlib.sha256(baseline_rgb).hexdigest(),
+                                'rendered_sha256':hashlib.sha256(rendered_rgb).hexdigest()}))
     basewav=tmp_path/'before.wav'
     e.dispatch('render',{'output':str(basewav)})
     # Delete only the linked tail: prefix A/V survive, with their own group.
