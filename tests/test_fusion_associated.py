@@ -72,6 +72,9 @@ def test_cross_dissolve_preserves_glowing_rgb_and_mixed_legacy_side(tmp_path, co
     for frame, expected in ((17,(253,0,0)), (18,(244,0,10)), (24,(117,0,136)), (29,(10,0,244)), (30,(0,0,253))):
         actual = pixel(raw, 16, 16, frame)
         assert actual == pytest.approx(expected, abs=7), f'frame={frame}, actual={actual}, expected={expected}, graph_sides={(graph_on_left,graph_on_right)}'
+    for frame in (*range(18), *range(30,48)):
+        expected = (253,0,0) if frame < 18 else (0,0,253)
+        assert pixel(raw,16,16,frame) == pytest.approx(expected,abs=7), f'Outside transition at frame {frame}'
 
 
 def test_transform_and_merge_retain_more_than_eight_bit_channel_precision(tmp_path, colored_sources):

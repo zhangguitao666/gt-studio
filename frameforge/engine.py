@@ -1029,7 +1029,8 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         if associated or associated_canvas:
             if not associated:
                 chain += ',format=gbrap16le,premultiply=inplace=1'
-            return graph_filters + [chain+f'[{raw}]'] + place_image(raw, label, p['width'], p['height'], props['x'], props['y'])
+            placed = label+'_placed'
+            return graph_filters + [chain+f'[{raw}]'] + place_image(raw, placed, p['width'], p['height'], props['x'], props['y']) + [f'[{placed}]settb=expr=1/({rate}),setpts=N,fps={rate}[{label}]']
         return graph_filters + [chain+f'[{raw}]',f'color=c=black@0:s={p["width"]}x{p["height"]}:r={rate}:d={length},format=gbrap16le[{canvas}]',f'[{canvas}][{raw}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=auto:eof_action=pass,format=gbrap16le,premultiply=inplace=1[{label}]']
 
     def _fusion_composite(self, background, foreground, output, p, start, duration, enable, x=0, y=0):
@@ -1038,8 +1039,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         factor = enable.replace('n,', 'N,')
         mask = ':'.join(f"{component}='{sample}(X,Y)*({factor})'" for component,sample in (('r','r'),('g','g'),('b','b'),('a','alpha')))
         rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
-        filters.append(f'[{placed}]setpts=PTS-STARTPTS,tpad=start={start}:stop={duration}:start_mode=add:stop_mode=add:color=black@0,trim=end_frame={duration},setpts=round(N/({rate})/TB),geq={mask}[{aligned}]')
-        return filters + premultiplied_over(background, aligned, output)
+        filters.append(f'[{placed}]settb=expr=1/({rate}),setpts=N,fps={rate},tpad=start={start}:stop={duration}:start_mode=add:stop_mode=add:color=black@0,trim=end_frame={duration},setpts=N,geq={mask}[{aligned}]')
+        clocked_back = output+'_background'
+        filters.append(f'[{background}]settb=expr=1/({rate}),setpts=N,fps={rate}[{clocked_back}]')
+        return filters + premultiplied_over(clocked_back, aligned, output)
 
     def render(self, output, timeline_id=None, format=None):
         p = copy.deepcopy(self._require())
