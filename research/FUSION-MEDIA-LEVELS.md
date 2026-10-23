@@ -18,7 +18,7 @@
 
 ## 实现与操作
 
-媒体池属性`data_level`持久保存Auto、Full或Video，所有时间线实例共享，并支持一次撤销/重做。MCP新增`set_media_data_level(media_id, mode)`，公开工具共53个。桌面选择片段后，检查器的**Source data level (all uses)**及**Apply source data level**操作同一媒体属性；变化后刷新渲染预览。源检视器双击媒体仍是原文件播放。
+媒体池属性`data_level`持久保存Auto、Full或Video，所有时间线实例共享，并支持一次撤销/重做。MCP新增`set_media_data_level(media_id, mode)`，公开工具共53个。桌面选择片段后，检查器的**Source data level**（提示说明所有实例共享）及**Apply source data level**操作同一媒体属性；变化后刷新渲染预览。源检视器双击媒体仍是原文件播放。
 
 导入时记录编码与像素格式；旧工程在渲染时只读探测缺失信息，离线节点分支仍保持原错误保护。Auto对本次已验证QTRLE采用Video解释，其他格式继续使用解码器解释，不推断所有原版Auto规则已覆盖。RGB Video映射使用本组8位素材的16/235黑白电平，并在节点图内保留负值和超白值；非RGB显式Full/Video使用解码范围覆盖，其完整原版矩阵仍需专项对照。
 

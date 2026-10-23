@@ -27,7 +27,8 @@ def test_checkpoint_preserves_rgba16_and_is_independent_of_grade_and_history(tmp
     result=e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':bg,'frame':23,'output':str(path)})
     assert result['channels']=='RGBA16' and result['width']==result['height']==32
     assert len(rgba(path))==32*32*8
-    assert sample(rgba(path))==pytest.approx((8191,24575,40959,32767),abs=1)
+    actual=sample(rgba(path))
+    assert actual==pytest.approx((8191,24575,40959,32767),abs=1), f'RGBA16 checkpoint={actual}'
     assert (e.project,e._undo,e._redo)==before
     # The source is deliberately absent: the selected generator has no MediaIn dependency.
     assert not (tmp_path/'not-opened.mov').exists()
@@ -39,7 +40,8 @@ def test_selected_branch_can_render_when_the_main_output_is_incomplete(tmp_path)
     connect(e,clip,'MediaOut1','Input')
     image=tmp_path/'branch.png'
     e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':bg,'output':str(image)})
-    assert sample(rgba(image))==(0,0,65535,32768)
+    actual=sample(rgba(image))
+    assert actual==(0,0,65535,32768), f'RGBA16 branch={actual}'
     before=image.read_bytes()
     with pytest.raises(ValueError,match='Incomplete'):
         e.dispatch('render_fusion_frame',{'clip_id':clip,'output':str(image)})
