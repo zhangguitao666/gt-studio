@@ -31,7 +31,7 @@ jobs:
       - name: Select bundled FFmpeg
         run: python -c 'import imageio_ffmpeg, os; open(os.environ["GITHUB_ENV"], "a").write("FRAMEFORGE_FFMPEG=" + imageio_ffmpeg.get_ffmpeg_exe() + "\n")'
       - name: Run tests
-        run: python -m pytest -q --junitxml=test-output/results.xml
+        run: python -m pytest -vv -o faulthandler_timeout=60 --junitxml=test-output/results.xml
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
