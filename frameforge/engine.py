@@ -1069,6 +1069,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         video_label = 'base'
         audio_labels = ['silence']
         input_indices = {}
+        associated_timeline = any(track['kind'] == 'video' and track.get('enabled', True) and has_processing(clip.get('fusion_graph')) for track, clip in clips)
         for index, (track, clip) in enumerate(clips):
             media = next(m for m in p['media'] if m['id'] == clip['media_id'])
             video_enabled = track['kind'] == 'video' and track.get('enabled', True) and media['video']
@@ -1095,14 +1096,16 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
             if output_format != 'wav' and video_enabled:
                 v = 'v' + str(index)
                 rate = f'{p["fps"]["num"]}/{p["fps"]["den"]}'
-                filters.extend(self._video_filters(source,clip,p,v))
+                ordinary_associated = associated_timeline and not has_processing(clip.get('fusion_graph'))
+                filters.extend(self._video_filters(source,clip,p,v,full_canvas=ordinary_associated,associated_canvas=ordinary_associated))
                 merged = 'mix' + str(index)
                 enable = f'gte(n,{clip["start_frame"]})*lt(n,{clip["start_frame"]+clip_duration(clip)})'
                 for transition in timeline.get('transitions',[]):
                     if clip['id'] in (transition['left_clip_id'],transition['right_clip_id']):
                         enable += f'*(1-gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]}))'
-                if has_processing(clip.get('fusion_graph')):
-                    filters.extend(self._fusion_composite(video_label, v, merged, p, clip['start_frame'], duration_frames, enable, props['x'], props['y']))
+                if associated_timeline:
+                    x, y = (0, 0) if ordinary_associated else (props['x'], props['y'])
+                    filters.extend(self._fusion_composite(video_label, v, merged, p, clip['start_frame'], duration_frames, enable, x, y))
                 else:
                     filters.append(f'[{video_label}][{v}]overlay=x=(W-w)/2+{props["x"]}:y=(H-h)/2+{props["y"]}:format=yuv422p10:eof_action=pass:enable=\'{enable}\'[{merged}]')
                 video_label = merged
@@ -1142,7 +1145,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                         continue
                     segment_labels=[]
                     originals = [self._clip(transition[side+'_clip_id'])[0] for side in ('left','right')]
-                    associated_transition = any(has_processing(original.get('fusion_graph')) for original in originals)
+                    associated_transition = associated_timeline
                     for side, original in zip(('left','right'), originals):
                         segment=self._transition_segment(original,transition)
                         input_index=input_indices[original['id']]
