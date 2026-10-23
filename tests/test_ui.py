@@ -5,10 +5,21 @@ import threading
 import time
 
 import pytest
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QMessageBox
 from frameforge.service import Controller, EditorServer
 from frameforge.client import rpc
 from frameforge.ui import EditorWindow, STYLE, clips_of, fps_of, timeline_of
+
+
+@pytest.fixture(autouse=True)
+def report_unexpected_modal_errors(monkeypatch):
+    errors = []
+    def capture(parent, title, message, *args, **kwargs):
+        errors.append(str(message))
+        return QMessageBox.StandardButton.Ok
+    monkeypatch.setattr(QMessageBox, 'critical', capture)
+    yield
+    assert not errors, 'Unexpected editor error dialog:\n' + '\n'.join(errors)
 
 
 def wait_for(app, predicate, seconds=4):

@@ -25,11 +25,26 @@ jobs:
       - name: Install Qt runtime libraries
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libopengl0 libxkbcommon-x11-0 libxcb-cursor0 libpulse0 libasound2t64
+          sudo apt-get install -y libegl1 libopengl0 libxkbcommon-x11-0 libxcb-cursor0 libpulse0 libasound2t64 ffmpeg fonts-dejavu-core
       - name: Install project and test dependencies
         run: python -m pip install -e '.[test]'
-      - name: Select bundled FFmpeg
-        run: python -c 'import imageio_ffmpeg, os; open(os.environ["GITHUB_ENV"], "a").write("FRAMEFORGE_FFMPEG=" + imageio_ffmpeg.get_ffmpeg_exe() + "\n")'
+      - name: Inspect bundled filters and select system FFmpeg
+        run: |
+          python - <<'PY'
+          import imageio_ffmpeg, json, os, re, shutil, subprocess
+          bundled = imageio_ffmpeg.get_ffmpeg_exe()
+          bundled_filters = subprocess.check_output([bundled, '-hide_banner', '-filters'], text=True)
+          selected = shutil.which('ffmpeg')
+          assert selected, 'System FFmpeg is required for the complete media checks'
+          filters = subprocess.check_output([selected, '-hide_banner', '-filters'], text=True)
+          required = ('drawtext', 'overlay', 'geq', 'blend', 'premultiply', 'unpremultiply')
+          missing = [name for name in required if not re.search(r'\b' + name + r'\b', filters)]
+          print(json.dumps({'bundled': bundled, 'bundled_drawtext': bool(re.search(r'\bdrawtext\b', bundled_filters)), 'selected': selected, 'missing_filters': missing}))
+          assert not missing, 'Selected FFmpeg lacks required filters'
+          print(subprocess.check_output([selected, '-version'], text=True).splitlines()[0])
+          with open(os.environ['GITHUB_ENV'], 'a') as target:
+              target.write('FRAMEFORGE_FFMPEG=' + selected + '\n')
+          PY
       - name: Run tests
         run: python -m pytest -vv -o faulthandler_timeout=60 --junitxml=test-output/results.xml
       - name: Upload test report
