@@ -21,11 +21,13 @@ from frameforge.engine import ffmpeg_executable
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-name', required=True)
+    parser.add_argument('--fixture', type=Path, default=ROOT/'research/audio-pan-fixtures.json')
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', args.run_name):
         parser.error('Invalid run name')
-    fixture = ROOT/'research/audio-pan-fixtures.json'
+    fixture = args.fixture.resolve()
     reference = json.loads(fixture.read_text())
+    assert reference.get('sample_rate', 48000) == 48000
     jobs = {c['job']: c['native_status'] for c in reference['cases']}
     workspace = ROOT/'workspace'/('audio-pan-comparison-'+args.run_name)
     workspace.mkdir(exist_ok=True)
@@ -35,15 +37,26 @@ def main():
         tools = client.request('tools/list', {})['tools']
         pan_tool = next(t for t in tools if t['name']=='set_clip_properties')
         assert 'pan' in pan_tool['inputSchema']['properties']['properties']['properties']
-        for case in [c for c in reference['cases'] if c['bits']==24]:
+        measured = [c for c in reference['cases'] if c['bits']==24]
+        assert measured
+        for case in measured:
             assert jobs[case['job']]['JobStatus'] == 'Complete'
             client.tool('create_project', name='Native pan '+case['name'],
                         width=16, height=16, fps=24, sample_rate=48000)
             source = workspace/(case['source']+'.wav')
             values = reference['sources'][case['source']]
+            if isinstance(values, dict):
+                assert values['sample_rate'] == 48000 and values['frames'] == 96000
+                raw = zlib.decompress(base64.b64decode(values['pcm_s16le_zlib']))
+                assert hashlib.sha256(raw).hexdigest() == values['pcm_s16le_sha256']
+                channels = values['channels']
+                assert len(raw) == channels*2*96000
+            else:
+                channels = len(values)
+                raw = struct.pack('<'+'h'*channels, *values)*96000
             with wave.open(str(source), 'wb') as wav:
-                wav.setparams((len(values), 2, 48000, 96000, 'NONE', 'not compressed'))
-                wav.writeframes(struct.pack('<'+'h'*len(values), *values)*96000)
+                wav.setparams((channels, 2, 48000, 96000, 'NONE', 'not compressed'))
+                wav.writeframes(raw)
             media = client.tool('import_media', path=str(source))
             state = client.tool('get_state')
             track = next(t for t in state['timelines'][0]['tracks'] if t['kind']=='audio')
@@ -77,10 +90,10 @@ def main():
             'cases': results, 'calls': client.calls, 'full_resolve_parity': False,
             'limits': [reference['scope'],
                 'Native audio-only MOV versus independent black-video MOV: PCM equality is not container parity.',
-                '48kHz/default bus/DC and selected static pan values only. Additional waveform experiments and actual desktop pan control acceptance are pending unlock.']}
+                '48kHz/default bus and selected static pan values/sources only; automation, explicit fades, offsets and actual desktop acceptance require separate evidence.']}
         target = ROOT/'research'/('audio-pan-comparison-'+args.run_name+'.json')
         target.write_text(json.dumps(report, ensure_ascii=False, indent=2))
-        assert len(results)==14 and all(r['pcm_exact'] for r in results)
+        assert len(results)==len(measured) and all(r['pcm_exact'] for r in results)
     finally:
         client.close()
 

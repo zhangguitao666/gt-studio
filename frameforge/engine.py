@@ -1185,7 +1185,18 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 channel_mapping = 'pan=stereo|c0=c0|c1=c0' if channels == 1 else 'aformat=channel_layouts=stereo'
                 chain += f',aresample={p["sample_rate"]},{channel_mapping},apad,atrim=duration={length:.12f},volume={props["volume"]}'
                 samples = round(Fraction(clip_duration(clip)*p['fps']['den']*p['sample_rate'],p['fps']['num']))
+                ramp = max(1,round(Fraction(3*p['sample_rate'],2000)))
+                head, tail = audio_edges[clip['id']]
                 if props['pan']:
+                    # Native waveform captures distinguish the order that DC
+                    # inputs cannot: anti-click fades act on source samples
+                    # before pan. Keep afade's double coefficient, then round
+                    # the faded sample to float32 at the pan multiplication.
+                    if head and not props['fade_in_frames']:
+                        chain += f',afade=t=in:start_sample=0:nb_samples={ramp}:curve=tri'
+                    if tail and not props['fade_out_frames']:
+                        chain += f',afade=t=out:start_sample={max(0,samples-ramp)}:nb_samples={ramp}:curve=tri'
+                    head, tail = False, False
                     from .audio_pan import write_envelope, targets
                     envelope = Path(audio_temp)/(clip['id']+'.wav')
                     count = write_envelope(envelope, props['pan'], samples, p['sample_rate'])
@@ -1193,24 +1204,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     env_input = next_input
                     next_input += 1
                     filters.append(chain+f'[{a}_before_pan]')
-                    tail = '|'.join(f'if(lt(n,{count}),val({channel}),{gain!r})'
-                                    for channel, gain in enumerate(targets(props['pan'])))
-                    filters.append(f"[{env_input}:a]apad,atrim=duration={length:.12f},aeval=exprs='{tail}':channel_layout=stereo,aformat=sample_fmts=flt[{a}_pan_gain]")
+                    constant_tail = '|'.join(f'if(lt(n,{count}),val({channel}),{gain!r})'
+                                             for channel, gain in enumerate(targets(props['pan'])))
+                    filters.append(f"[{env_input}:a]apad,atrim=duration={length:.12f},aeval=exprs='{constant_tail}':channel_layout=stereo,aformat=sample_fmts=flt[{a}_pan_gain]")
                     chain = f'[{a}_before_pan][{a}_pan_gain]amultiply'
-                ramp = max(1,round(Fraction(3*p['sample_rate'],2000)))
-                head, tail = audio_edges[clip['id']]
-                if props['pan'] and ((head and not props['fade_in_frames']) or (tail and not props['fade_out_frames'])):
-                    # Preserve float32 edge coefficients after non-unit pan
-                    # gain. afade's double coefficient changes a few tail LSBs.
-                    edge = '1'
-                    if head and not props['fade_in_frames']:
-                        edge = f'min({edge},n/{ramp})'
-                    if tail and not props['fade_out_frames']:
-                        edge = f'min({edge},({samples}-n)/{ramp})'
-                    filters.append(chain+f'[{a}_before_edge]')
-                    filters.append(f"aevalsrc=exprs='{edge}|{edge}':s={p['sample_rate']}:d={length:.12f},aformat=sample_fmts=flt[{a}_edge_gain]")
-                    chain = f'[{a}_before_edge][{a}_edge_gain]amultiply'
-                    head, tail = False, False
                 if props['fade_in_frames']:
                     chain += f',afade=t=in:st=0:d={props["fade_in_frames"] / fps}'
                 elif head:

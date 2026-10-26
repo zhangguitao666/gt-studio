@@ -58,10 +58,10 @@ def test_native_pan_float_kernel_full_pcm32(tmp_path,case):
     curves=[gain_prefix(t,96000) for t in targets(case['pan'])]
     output=bytearray()
     for n in range(96000):
-        edge=f32(min(1,n/72,(96000-n)/72))
+        faded=f32(.125*min(1,n/72,(96000-n)/72))
         for curve in curves:
             gain=curve[min(n,len(curve)-1)]
-            value=f32(f32(.125*gain)*edge)
+            value=f32(faded*gain)
             output.extend(struct.pack('<i',round(value*2147483648)))
     compare(case,bytes(output))
 

@@ -136,7 +136,7 @@ Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜
 
 默认混音过载行为已按新增8组原版实验校准：移除隐式0.95限幅器后，增益、正负削波、叠加/抵消与错开重叠的完整PCM24均相同；MCP重放8组也全流相同。详见 [AUDIO-GAIN.md](research/AUDIO-GAIN.md)。
 
-片段声像已支持48kHz静态pan属性、检查器与MCP设置：14组PCM24完整流和3组PCM32内核基准相同。一般波形/自动化和真实窗口验收仍开放；可复跑分析见 [AUDIO-PAN.md](research/AUDIO-PAN.md)。
+片段声像已支持48kHz静态pan属性、检查器与MCP设置：14组直流PCM24、7组正弦/双声道波形完整流和3组PCM32内核基准相同。波形实验纠正了自动淡变与声像的计算顺序；自动化、其他采样率及真实窗口验收仍开放。见 [AUDIO-PAN.md](research/AUDIO-PAN.md) 和 [AUDIO-PAN-WAVEFORMS.md](research/AUDIO-PAN-WAVEFORMS.md)。
 
 音量检查器现在显示分贝，MCP支持`properties.volume_db`（-100至+30dB），旧`volume`线性倍率与精确静音保持兼容。8组原版PCM基准通过两种入口均全流相同，详见 [AUDIO-DB.md](research/AUDIO-DB.md)。
 
