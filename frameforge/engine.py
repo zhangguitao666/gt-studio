@@ -62,7 +62,7 @@ from .transitions import TransitionActions, validate_transitions, window_at_cut
 from .linking import LinkingActions
 from .fusion import FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over, float_to_rgba16
 
-PROPERTY_DEFAULTS = {"exposure": 0.0, "contrast": 1.0, "saturation": 1.0, "gamma": 1.0, "volume": 1.0, "opacity": 1.0, "scale": 1.0, "x": 0.0, "y": 0.0, "rotation": 0.0, "fade_in_frames": 0, "fade_out_frames": 0}
+PROPERTY_DEFAULTS = {"exposure": 0.0, "contrast": 1.0, "saturation": 1.0, "gamma": 1.0, "volume": 1.0, "pan": 0.0, "opacity": 1.0, "scale": 1.0, "x": 0.0, "y": 0.0, "rotation": 0.0, "fade_in_frames": 0, "fade_out_frames": 0}
 
 
 def clip_duration(clip):
@@ -904,7 +904,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
     def _validate_properties(values):
         if not isinstance(values, dict):
             raise ValueError('Clip properties must be an object')
-        limits = {'exposure': (-10, 10), 'contrast': (0, 10), 'saturation': (0, 10), 'gamma': (0.1, 10), 'volume': (0, 10), 'opacity': (0, 1), 'scale': (0.1, 10), 'x': (-1000000, 1000000), 'y': (-1000000, 1000000), 'rotation': (-360000, 360000)}
+        limits = {'exposure': (-10, 10), 'contrast': (0, 10), 'saturation': (0, 10), 'gamma': (0.1, 10), 'volume': (0, 10), 'pan': (-100, 100), 'opacity': (0, 1), 'scale': (0.1, 10), 'x': (-1000000, 1000000), 'y': (-1000000, 1000000), 'rotation': (-360000, 360000)}
         for key, value in values.items():
             if key in ('fade_in_frames', 'fade_out_frames'):
                 Engine._frame(value)
@@ -1080,6 +1080,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         return filters + premultiplied_over(clocked_back, aligned, output)
 
     def render(self, output, timeline_id=None, format=None):
+        with tempfile.TemporaryDirectory(prefix="gt-studio-audio-") as audio_temp:
+            return self._render(output, timeline_id, format, audio_temp)
+
+    def _render(self, output, timeline_id, format, audio_temp):
         p = copy.deepcopy(self._require())
         timeline = copy.deepcopy(self._timeline(timeline_id))
         clips = [(track, clip) for track in timeline['tracks'] for clip in sorted(track['clips'], key=lambda c: c['start_frame'])]
@@ -1104,6 +1108,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
         video_label = 'base'
         audio_labels = ['silence']
         input_indices = {}
+        next_input = 2
         from .audio_edges import automatic_edges
         audio_edges = automatic_edges(clips, {m['id']:m for m in p['media']})
         associated_timeline = any(track['kind'] == 'video' and track.get('enabled', True) and has_processing(clip.get('fusion_graph')) for track, clip in clips)
@@ -1127,7 +1132,8 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 cmd += ['-loop', '1', '-framerate', f'{p["fps"]["num"]}/{p["fps"]["den"]}', '-t', f'{max(length, float(source_high) / fps):.9f}', '-i', media['path']]
             else:
                 cmd += ['-i', media['path']]
-            source = len(input_indices) + 2
+            source = next_input
+            next_input += 1
             input_indices[clip['id']] = source
             props = {**PROPERTY_DEFAULTS, **clip['properties']}
             if output_format != 'wav' and video_enabled:
@@ -1170,8 +1176,30 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 channel_mapping = 'pan=stereo|c0=c0|c1=c0' if channels == 1 else 'aformat=channel_layouts=stereo'
                 chain += f',aresample={p["sample_rate"]},{channel_mapping},apad,atrim=duration={length:.12f},volume={props["volume"]}'
                 samples = round(Fraction(clip_duration(clip)*p['fps']['den']*p['sample_rate'],p['fps']['num']))
+                if props['pan']:
+                    from .audio_pan import write_envelope
+                    envelope = Path(audio_temp)/(clip['id']+'.wav')
+                    count = write_envelope(envelope, props['pan'], samples, p['sample_rate'])
+                    cmd += ['-i', str(envelope)]
+                    env_input = next_input
+                    next_input += 1
+                    filters.append(chain+f'[{a}_before_pan]')
+                    filters.append(f'[{env_input}:a]aloop=loop=-1:size=1:start={count-1},atrim=duration={length:.12f}[{a}_pan_gain]')
+                    chain = f'[{a}_before_pan][{a}_pan_gain]amultiply'
                 ramp = max(1,round(Fraction(3*p['sample_rate'],2000)))
                 head, tail = audio_edges[clip['id']]
+                if props['pan'] and ((head and not props['fade_in_frames']) or (tail and not props['fade_out_frames'])):
+                    # Preserve float32 edge coefficients after non-unit pan
+                    # gain. afade's double coefficient changes a few tail LSBs.
+                    edge = '1'
+                    if head and not props['fade_in_frames']:
+                        edge = f'min({edge},n/{ramp})'
+                    if tail and not props['fade_out_frames']:
+                        edge = f'min({edge},({samples}-n)/{ramp})'
+                    filters.append(chain+f'[{a}_before_edge]')
+                    filters.append(f"aevalsrc=exprs='{edge}|{edge}':s={p['sample_rate']}:d={length:.12f},aformat=sample_fmts=flt[{a}_edge_gain]")
+                    chain = f'[{a}_before_edge][{a}_edge_gain]amultiply'
+                    head, tail = False, False
                 if props['fade_in_frames']:
                     chain += f',afade=t=in:st=0:d={props["fade_in_frames"] / fps}'
                 elif head:

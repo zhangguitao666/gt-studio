@@ -171,3 +171,7 @@ Eight completed native PCM24 exports now match complete decoded output streams e
 ## Clip pan evidence, implementation still open
 
 Seventeen completed native DC exports establish selected steady-state pan gains, a unity-through-sample128 startup followed by smoothing, and byte-exact nearest-even32-to24 conversion for three matched cases. A fitted one-pole hypothesis still differs and is retained as a failed candidate. Portable owned PCM fixtures and an offline analyzer are published; no production pan control or MCP pan capability is claimed. See AUDIO-PAN.md.
+
+## Static 48kHz clip pan execution
+
+Independent float32 grouped difference-state smoothing now matches three full native PCM32 kernel streams; the engine and configured stdio MCP match fourteen complete native PCM24 streams. Project migration, property validation, inspector control and input numbering are covered by the308-test local suite. Native waveform/fractional-position probes and actual desktop acceptance remain pending a locked Mac; non48kHz pan is explicitly uncalibrated and rejected on render. Full Fairlight/general pan/automation equivalence remains unproven. See AUDIO-PAN.md for static-tool provenance and scope.

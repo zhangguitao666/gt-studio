@@ -139,9 +139,9 @@ def analyze(fixture):
     return {'cases': results, 'case_count': len(results), 'cross_precision': cross_precision,
         'candidate_transient_models': candidate_models,
         'native_jobs_complete': 17, 'full_resolve_parity': False,
-        'implementation_status': 'Native pan curve and startup smoothing remain under calibration; GT Studio pan is not implemented.',
+        'implementation_status': '48kHz static clip pan is implemented in frameforge/audio_pan.py; product tests and MCP comparison provide separate validation. General waveform/offset/rate/automation parity remains open.',
         'limitations': ['DC only, default stereo bus, 48kHz, 24fps, two-second clips, selected pan values.',
-            'A one-pole approximation leaves sample residuals; its coefficient and arithmetic are not established.',
+            'The retained scalar one-pole candidate fails; the independent float32 grouped model is validated separately against the complete native streams.',
             'Different clip starts, contiguous joins, gain changes, sine/music, multichannel and automation remain unmeasured.']}
 
 

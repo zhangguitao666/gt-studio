@@ -27,7 +27,7 @@ def automatic_edges(clips, media):
             speed=left.get('speed_percentage',100)
             if speed!=right.get('speed_percentage',100) or left.get('pitch_correction',True)!=right.get('pitch_correction',True):continue
             lp,rp=left['properties'],right['properties']
-            if lp.get('volume',1)!=rp.get('volume',1) or lp.get('fade_out_frames',0) or rp.get('fade_in_frames',0):continue
+            if lp.get('volume',1)!=rp.get('volume',1) or lp.get('pan',0)!=rp.get('pan',0) or lp.get('fade_out_frames',0) or rp.get('fade_in_frames',0):continue
             exact_span=point(left,'source_end','out_frame')-point(left,'source_start','in_frame')
             if exact_span!=duration(left)*abs(Fraction(str(speed)))/100:continue
             touching=(point(left,'source_end','out_frame')==point(right,'source_start','in_frame') if speed>0 else point(left,'source_start','in_frame')==point(right,'source_end','out_frame'))

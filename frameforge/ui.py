@@ -507,7 +507,7 @@ class EditorWindow(QMainWindow):
         speed_hint.setWordWrap(True)
         il.addWidget(speed_hint)
         self.properties = {}
-        for name, label, low, high, default, step in [('volume', 'Volume', 0, 10, 1, .1), ('exposure', 'Exposure (EV)', -10, 10, 0, .1), ('contrast', 'Contrast', 0, 10, 1, .1), ('saturation', 'Saturation', 0, 10, 1, .1), ('gamma', 'Gamma', .1, 10, 1, .1), ('opacity', 'Opacity', 0, 1, 1, .05), ('scale', 'Scale', .1, 10, 1, .1), ('x', 'Position X (px)', -1000000, 1000000, 0, 1), ('y', 'Position Y (px)', -1000000, 1000000, 0, 1), ('rotation', 'Rotation (°)', -360000, 360000, 0, 1)]:
+        for name, label, low, high, default, step in [('volume', 'Volume', 0, 10, 1, .1), ('pan', 'Pan (L/R)', -100, 100, 0, 1), ('exposure', 'Exposure (EV)', -10, 10, 0, .1), ('contrast', 'Contrast', 0, 10, 1, .1), ('saturation', 'Saturation', 0, 10, 1, .1), ('gamma', 'Gamma', .1, 10, 1, .1), ('opacity', 'Opacity', 0, 1, 1, .05), ('scale', 'Scale', .1, 10, 1, .1), ('x', 'Position X (px)', -1000000, 1000000, 0, 1), ('y', 'Position Y (px)', -1000000, 1000000, 0, 1), ('rotation', 'Rotation (°)', -360000, 360000, 0, 1)]:
             widget = QDoubleSpinBox()
             widget.setRange(low, high)
             widget.setSingleStep(step)
@@ -1371,7 +1371,7 @@ class EditorWindow(QMainWindow):
             'Edit': 'EDIT  /  Source playback · timeline changes are shared live with MCP.',
             'Fusion': 'FUSION  /  MediaIn, MediaOut, Background, Transform and Merge · clip-local graph · native equivalence unverified.',
             'Color': 'COLOR  /  Basic exposure, contrast, saturation and gamma apply on export. Advanced grading is not implemented.',
-            'Fairlight': 'FAIRLIGHT  /  Per-clip volume applies on export. Mixer, buses and plug-ins are not implemented.',
+            'Fairlight': 'FAIRLIGHT  /  Per-clip volume and 48kHz pan apply on export. Mixer, buses and plug-ins are not implemented.',
             'Deliver': 'DELIVER  /  Export MP4 H.264 / AAC, MOV ProRes HQ / PCM24, or WAV PCM16 audio.',
         }
         self.notice.setText(descriptions[page])

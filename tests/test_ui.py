@@ -116,6 +116,7 @@ def test_rendered_timeline_preview_and_invalidation(tmp_path):
         wait_for(app, lambda: window.state is not None)
         window.select_clip(clip['id'])
         window.properties['opacity'].setValue(.8)
+        window.properties['pan'].setValue(37)
         window.properties['scale'].setValue(.9)
         window.properties['x'].setValue(5)
         window.properties['fade_in_frames'].setValue(4)
@@ -124,6 +125,7 @@ def test_rendered_timeline_preview_and_invalidation(tmp_path):
         wait_for(app, lambda: clips_of(window.state)[0]['properties']['fade_in_frames'] == 4)
         assert isinstance(clips_of(window.state)[0]['properties']['fade_out_frames'], int)
         assert clips_of(window.state)[0]['properties']['opacity'] == .8
+        assert clips_of(window.state)[0]['properties']['pan'] == 37
         window.show()
         app.processEvents()
         rpc(url, 'set_playhead', {'frame': 12})
