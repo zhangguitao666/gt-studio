@@ -507,19 +507,32 @@ class EditorWindow(QMainWindow):
         speed_hint.setWordWrap(True)
         il.addWidget(speed_hint)
         self.properties = {}
-        for name, label, low, high, default, step in [('volume', 'Volume', 0, 10, 1, .1), ('pan', 'Pan (L/R)', -100, 100, 0, 1), ('exposure', 'Exposure (EV)', -10, 10, 0, .1), ('contrast', 'Contrast', 0, 10, 1, .1), ('saturation', 'Saturation', 0, 10, 1, .1), ('gamma', 'Gamma', .1, 10, 1, .1), ('opacity', 'Opacity', 0, 1, 1, .05), ('scale', 'Scale', .1, 10, 1, .1), ('x', 'Position X (px)', -1000000, 1000000, 0, 1), ('y', 'Position Y (px)', -1000000, 1000000, 0, 1), ('rotation', 'Rotation (°)', -360000, 360000, 0, 1)]:
+        self.volume_previous = {}
+        self.volume_selection = None
+        for name, label, low, high, default, step in [('volume', 'Volume (dB)', -100, 30, 0, .1), ('pan', 'Pan (L/R)', -100, 100, 0, 1), ('exposure', 'Exposure (EV)', -10, 10, 0, .1), ('contrast', 'Contrast', 0, 10, 1, .1), ('saturation', 'Saturation', 0, 10, 1, .1), ('gamma', 'Gamma', .1, 10, 1, .1), ('opacity', 'Opacity', 0, 1, 1, .05), ('scale', 'Scale', .1, 10, 1, .1), ('x', 'Position X (px)', -1000000, 1000000, 0, 1), ('y', 'Position Y (px)', -1000000, 1000000, 0, 1), ('rotation', 'Rotation (°)', -360000, 360000, 0, 1)]:
             widget = QDoubleSpinBox()
             widget.setRange(low, high)
             widget.setSingleStep(step)
             widget.setValue(default)
             self.properties[name] = widget
-            form.addRow(label, widget)
+            if name=='volume':
+                row = QWidget()
+                layout = QHBoxLayout(row)
+                layout.setContentsMargins(0, 0, 0, 0)
+                self.volume_muted = QCheckBox('Mute')
+                self.volume_muted.toggled.connect(widget.setDisabled)
+                layout.addWidget(widget, 1)
+                layout.addWidget(self.volume_muted)
+                form.addRow(label, row)
+            else:
+                form.addRow(label, widget)
         for name, label in [('fade_in_frames', 'Fade in (frames)'), ('fade_out_frames', 'Fade out (frames)')]:
             widget = QSpinBox()
             widget.setRange(0, 999999999)
             self.properties[name] = widget
             form.addRow(label, widget)
         self.property_defaults = {name: widget.value() for name, widget in self.properties.items()}
+        self.property_defaults['volume'] = 1.0
         il.addLayout(form)
         il.addWidget(self.button('Apply clip timing', self.apply_timing))
         il.addWidget(self.button('Trim start to playhead', lambda: self.trim_edge('start')))
@@ -918,6 +931,16 @@ class EditorWindow(QMainWindow):
         props = clip.get('properties', {})
         for name, widget in self.properties.items():
             value = props.get(name, clip.get(name, self.property_defaults[name]))
+            if name=='volume':
+                if value>0:
+                    self.volume_previous[clip_id] = value
+                remembered = self.volume_previous.get(clip_id, 1.0)
+                widget.setValue(20*math.log10(remembered))
+                self.volume_muted.setChecked(value==0)
+                # Preserve exact legacy linear gain when the rounded dB field
+                # was not edited, including mute/unmute within this session.
+                self.volume_selection = (clip_id, widget.value(), remembered)
+                continue
             widget.setValue(int(value) if isinstance(widget, QSpinBox) else float(value))
         if preview:
             self.seek_frame(int(clip.get('start_frame', 0)))
@@ -1139,7 +1162,14 @@ class EditorWindow(QMainWindow):
 
     def apply_properties(self):
         if self.selection:
-            self.rpc('set_clip_properties', {'clip_id': self.selection, 'properties': {name: widget.value() for name, widget in self.properties.items()}})
+            properties = {name: widget.value() for name, widget in self.properties.items()}
+            if self.volume_muted.isChecked():
+                properties['volume'] = 0
+            elif self.volume_selection and self.volume_selection[:2]==(self.selection, properties['volume']):
+                properties['volume'] = self.volume_selection[2]
+            else:
+                properties['volume_db'] = properties.pop('volume')
+            self.rpc('set_clip_properties', {'clip_id': self.selection, 'properties': properties})
 
     def split_clip(self):
         if self.selection:

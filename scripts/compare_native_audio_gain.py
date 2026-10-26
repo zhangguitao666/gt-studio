@@ -19,6 +19,7 @@ from frameforge.engine import ffmpeg_executable
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-name', required=True)
+    parser.add_argument('--gain-unit', choices=('linear','db'), default='linear')
     args = parser.parse_args()
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', args.run_name):
         parser.error('Invalid run name')
@@ -34,6 +35,9 @@ def main():
     results = []
     try:
         tools = client.request('tools/list', {})['tools']
+        if args.gain_unit=='db':
+            tool = next(t for t in tools if t['name']=='set_clip_properties')
+            assert 'volume_db' in tool['inputSchema']['properties']['properties']['properties']
         for case in reference['cases']:
             assert jobs[case['job_id']]['JobStatus'] == 'Complete'
             client.tool('create_project', name='Native gain '+case['name'],
@@ -50,7 +54,7 @@ def main():
                     track_id=tracks[item['track']-1]['id'], in_frame=0, out_frame=48,
                     start_frame=item['start'])
                 client.tool('set_clip_properties', clip_id=clip['id'],
-                            properties={'volume': 10**(item['gain']/20)})
+                            properties=({'volume_db':item['gain']} if args.gain_unit=='db' else {'volume':10**(item['gain']/20)}))
             project = workspace/(case['name']+'.json')
             client.tool('save_project', path=str(project))
             client.tool('open_project', path=str(project))
@@ -74,7 +78,7 @@ def main():
             print(json.dumps({k: result[k] for k in ('name','pcm_exact','changed_scalars','max_delta')}), flush=True)
         report = {'fixture': identity(fixture), 'driver': identity(Path(__file__)),
             'production': identity(ROOT/'frameforge/engine.py'),
-            'server': client.server_info, 'public_tools': len(tools),
+            'gain_unit': args.gain_unit, 'server': client.server_info, 'public_tools': len(tools),
             'cases': results, 'calls': client.calls, 'full_resolve_parity': False,
             'limits': [reference['scope'],
                 'Native audio-only MOV versus independent black-video MOV: PCM equality is not container parity.',

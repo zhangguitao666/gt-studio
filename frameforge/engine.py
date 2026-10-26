@@ -895,7 +895,16 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
 
     def set_clip_properties(self, clip_id, properties=None, **kwargs):
         clip, _ = self._clip(clip_id)
+        if properties is not None and not isinstance(properties, dict):
+            raise ValueError('Clip properties must be an object')
         values = {**(properties or {}), **kwargs}
+        if 'volume_db' in values:
+            if 'volume' in values:
+                raise ValueError('Specify either volume or volume_db, not both')
+            db = values.pop('volume_db')
+            if isinstance(db, bool) or not isinstance(db, (float, int)) or not -100<=db<=30 or not math.isfinite(db):
+                raise ValueError('volume_db must be between -100 and 30 dB')
+            values['volume'] = 10**(db/20)
         self._validate_properties(values)
         clip['properties'].update(values)
         return copy.deepcopy(clip)
@@ -904,7 +913,7 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
     def _validate_properties(values):
         if not isinstance(values, dict):
             raise ValueError('Clip properties must be an object')
-        limits = {'exposure': (-10, 10), 'contrast': (0, 10), 'saturation': (0, 10), 'gamma': (0.1, 10), 'volume': (0, 10), 'pan': (-100, 100), 'opacity': (0, 1), 'scale': (0.1, 10), 'x': (-1000000, 1000000), 'y': (-1000000, 1000000), 'rotation': (-360000, 360000)}
+        limits = {'exposure': (-10, 10), 'contrast': (0, 10), 'saturation': (0, 10), 'gamma': (0.1, 10), 'volume': (0, 10**(30/20)), 'pan': (-100, 100), 'opacity': (0, 1), 'scale': (0.1, 10), 'x': (-1000000, 1000000), 'y': (-1000000, 1000000), 'rotation': (-360000, 360000)}
         for key, value in values.items():
             if key in ('fade_in_frames', 'fade_out_frames'):
                 Engine._frame(value)

@@ -175,3 +175,7 @@ Seventeen completed native DC exports establish selected steady-state pan gains,
 ## Static 48kHz clip pan execution
 
 Independent float32 grouped difference-state smoothing now matches three full native PCM32 kernel streams; the engine and configured stdio MCP match fourteen complete native PCM24 streams. Project migration, property validation, inspector control and input numbering are covered by the308-test local suite. Native waveform/fractional-position probes and actual desktop acceptance remain pending a locked Mac; non48kHz pan is explicitly uncalibrated and rejected on render. Full Fairlight/general pan/automation equivalence remains unproven. See AUDIO-PAN.md for static-tool provenance and scope.
+
+## Decibel gain interface
+
+The inspector now displays dB; MCP accepts volume_db while projects keep canonical linear volume. Both inputs reproduce eight complete native PCM24 fixtures, sixteen render checks in total, plus eight configured-stdio dB replays. Precise legacy gains and exact zero mute survive unrelated inspector edits. The318-test local suite passes. The declared -100/+30dB endpoints are validated as parameter/persistence bounds, not new native waveform measurements. Actual desktop acceptance and wider audio equivalence remain open; see AUDIO-DB.md.

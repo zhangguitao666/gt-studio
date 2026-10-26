@@ -32,6 +32,53 @@ def wait_for(app, predicate, seconds=4):
     assert predicate(), 'UI did not synchronize with service'
 
 
+def test_db_inspector_preserves_precise_gain_and_mute(tmp_path):
+    import math
+    import wave
+    source=tmp_path/'source.wav'
+    with wave.open(str(source),'wb') as wav:
+        wav.setparams((1,2,48000,4800,'NONE','not compressed'));wav.writeframes(b'\0\x10'*4800)
+    app=QApplication.instance() or QApplication([])
+    controller=Controller(tmp_path)
+    controller.dispatch('create_project',{'name':'dB inspector','width':16,'height':16})
+    media=controller.dispatch('import_media',{'path':str(source)})
+    track=next(t for t in controller.engine._timeline()['tracks'] if t['kind']=='audio')
+    clip=controller.dispatch('append_clip',{'media_id':media['id'],'track_id':track['id']})
+    precise=.123456789
+    controller.dispatch('set_clip_properties',{'clip_id':clip['id'],'properties':{'volume':precise}})
+    server=EditorServer(('127.0.0.1',0),controller)
+    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    window=EditorWindow(f'http://127.0.0.1:{server.server_port}')
+    gain=lambda:controller.engine._clip(clip['id'])[0]['properties']['volume']
+    try:
+        wait_for(app,lambda:window.state is not None)
+        window.select_clip(clip['id'],preview=False)
+        assert window.properties['volume'].value()==round(20*math.log10(precise),2)
+        window.properties['opacity'].setValue(.9);window.apply_properties()
+        wait_for(app,lambda:window.selected_clip()['properties']['opacity']==.9)
+        assert gain()==precise
+        window.properties['volume'].setValue(6);window.apply_properties()
+        wait_for(app,lambda:window.selected_clip()['properties']['volume']==10**.3)
+        window.volume_muted.setChecked(True);window.apply_properties()
+        wait_for(app,lambda:window.selected_clip()['properties']['volume']==0)
+        assert not window.properties['volume'].isEnabled()
+        window.volume_muted.setChecked(False);window.apply_properties()
+        wait_for(app,lambda:window.selected_clip()['properties']['volume']==10**.3)
+        assert window.properties['volume'].isEnabled()
+        controller.dispatch('set_clip_properties',{'clip_id':clip['id'],'properties':{'volume_db':-6}})
+        window.client.poll()
+        wait_for(app,lambda:window.properties['volume'].value()==-6)
+        controller.dispatch('set_clip_properties',{'clip_id':clip['id'],'properties':{'volume':0}})
+        window.client.poll();wait_for(app,lambda:window.volume_muted.isChecked())
+        window.properties['opacity'].setValue(.8);window.apply_properties()
+        wait_for(app,lambda:window.selected_clip()['properties']['opacity']==.8)
+        assert gain()==0
+    finally:
+        window.poll_timer.stop();window.transport_timer.stop();window.render_timer.stop()
+        window.close();window.deleteLater();app.processEvents()
+        server.shutdown();server.server_close();thread.join(timeout=3)
+
+
 def test_native_editor_roundtrip(tmp_path):
     app = QApplication.instance() or QApplication([])
     app.setStyle('Fusion')
