@@ -1177,14 +1177,16 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                 chain += f',aresample={p["sample_rate"]},{channel_mapping},apad,atrim=duration={length:.12f},volume={props["volume"]}'
                 samples = round(Fraction(clip_duration(clip)*p['fps']['den']*p['sample_rate'],p['fps']['num']))
                 if props['pan']:
-                    from .audio_pan import write_envelope
+                    from .audio_pan import write_envelope, targets
                     envelope = Path(audio_temp)/(clip['id']+'.wav')
                     count = write_envelope(envelope, props['pan'], samples, p['sample_rate'])
                     cmd += ['-i', str(envelope)]
                     env_input = next_input
                     next_input += 1
                     filters.append(chain+f'[{a}_before_pan]')
-                    filters.append(f'[{env_input}:a]aloop=loop=-1:size=1:start={count-1},atrim=duration={length:.12f}[{a}_pan_gain]')
+                    tail = '|'.join(f'if(lt(n,{count}),val({channel}),{gain!r})'
+                                    for channel, gain in enumerate(targets(props['pan'])))
+                    filters.append(f"[{env_input}:a]apad,atrim=duration={length:.12f},aeval=exprs='{tail}':channel_layout=stereo,aformat=sample_fmts=flt[{a}_pan_gain]")
                     chain = f'[{a}_before_pan][{a}_pan_gain]amultiply'
                 ramp = max(1,round(Fraction(3*p['sample_rate'],2000)))
                 head, tail = audio_edges[clip['id']]

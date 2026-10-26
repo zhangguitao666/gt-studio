@@ -76,7 +76,7 @@ def gain_prefix(target, samples):
 
 
 def write_envelope(path, pan, samples, sample_rate):
-    """Write only the startup; FFmpeg loops the last constant sample afterward."""
+    """Write only the startup; the renderer fills the remaining constant tail."""
     if sample_rate!=48000:
         raise ValueError('Clip pan is currently calibrated only at 48000 Hz')
     gains = targets(pan)
