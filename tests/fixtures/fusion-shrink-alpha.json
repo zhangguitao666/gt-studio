@@ -1,0 +1,26 @@
+{
+  "scope": "One captured static native Fusion Transform; exported alpha carrier, not internal float buffer",
+  "native_version": "DaVinci Resolve 21.1.1.10 free macOS",
+  "native_file": "REA_FUSION_20261022_164830_transform_upper_right_alpha1.mov",
+  "native_sha256": "ea1f6487e441b7ebf5a7a3979694fb261fc8c7b86cf56d7674449023869c8c59",
+  "width": 640,
+  "height": 360,
+  "frame": 0,
+  "parameters": {
+    "Background": {
+      "Blue": 1,
+      "Alpha": 0.5
+    },
+    "Transform": {
+      "Size": 0.5,
+      "CenterX": 0.75,
+      "CenterY": 0.75
+    }
+  },
+  "alpha16le_frame0_sha256": "8c926c9b93b8b510af1c5bff8bff9b128d6b8a800863eb497a52e3d6aa838ecb",
+  "carrier_conversion": "(round(alpha16/65535*255)*257)&0xfff0",
+  "limits": [
+    "Default native FilterMethod was not captured.",
+    "Native behavior at other Size values and downstream off-canvas retention remains unverified."
+  ]
+}

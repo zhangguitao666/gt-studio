@@ -278,9 +278,53 @@ def transform_float_image(source, output, width, height, x=0, y=0, size=1, angle
     cx, cy = (width-1)/2+x, (height-1)/2+y
     sx = f'(({math.cos(theta)}*(X-({cx}))-{math.sin(theta)}*(Y-({cy})))/({size})+{(width-1)/2})'
     sy = f'(({math.sin(theta)}*(X-({cx}))+{math.cos(theta)}*(Y-({cy})))/({size})+{(height-1)/2})'
+    if size < 1:
+        return _minify_float_image(source, output, width, height, sx, sy, 1/size)
     inside = f'gte({sx},0)*lt({sx},{width})*gte({sy},0)*lt({sy},{height})'
     expressions = ':'.join(f"{c}='if({inside},{sample}({sx},{sy}),0)'" for c,sample in (('r','r'),('g','g'),('b','b'),('a','alpha')))
     return [f'[{source}]format=gbrapf32le,geq={expressions}:interpolation=bilinear[{output}]']
+
+
+def _minify_float_image(source, output, width, height, sx, sy, radius):
+    """Widen a triangle footprint when shrinking, with transparent black outside.
+
+    The captured native Size=.5 boundary has 1/8 and 7/8 coverage. A source
+    footprint of 1/Size reproduces those samples. Other shrink factors use
+    the same model; their native filter defaults remain unmeasured.
+
+    Eval loops keep the filter expression bounded even at Size=.01. geq
+    registers are private to each channel/thread. All channels are sampled
+    independently, retaining associated RGB, including RGB at zero alpha.
+    """
+    wx = f'max(0,1-abs(ld(4)-ld(0))/{radius!r})'
+    wy = f'max(0,1-abs(ld(5)-ld(1))/{radius!r})'
+    # 0/1: source coordinates; 2/3: first taps; 4/5: current tap;
+    # 6: sum; 7: normalization; 8: horizontal normalization; 9: vertical weight.
+    setup = f'st(0,{sx});st(1,{sy});st(2,ceil(ld(0)-{radius}));st(3,ceil(ld(1)-{radius}));'
+    denominator = (
+        f'st(4,ld(2));st(8,0);'
+        f'while(lte(ld(4),ld(0)+{radius}),st(8,ld(8)+{wx});st(4,ld(4)+1));'
+        f'st(5,ld(3));st(7,0);'
+        f'while(lte(ld(5),ld(1)+{radius}),st(7,ld(7)+{wy});st(5,ld(5)+1));'
+        'st(7,ld(7)*ld(8));'
+    )
+    gate = (f'gt(ld(0),-{radius})*lt(ld(0),{width-1}+{radius})*'
+            f'gt(ld(1),-{radius})*lt(ld(1),{height-1}+{radius})')
+    expressions = []
+    for channel, sample in (('r', 'r'), ('g', 'g'), ('b', 'b'), ('a', 'alpha')):
+        # Normalize over the entire footprint, including taps outside the
+        # source. Only the numerator clips taps; edge pixels must lose coverage.
+        total = (
+            f'st(6,0);st(5,max(0,ld(3)));'
+            f'while(lte(ld(5),min({height-1},ld(1)+{radius})),st(9,{wy});'
+            f'st(4,max(0,ld(2)));'
+            f'while(lte(ld(4),min({width-1},ld(0)+{radius})),st(6,ld(6)+'
+            f'{sample}(ld(4),ld(5))*{wx}*ld(9));st(4,ld(4)+1));'
+            'st(5,ld(5)+1));ld(6)/ld(7)'
+        )
+        expressions.append(f"{channel}='{setup}if({gate},{denominator}{total},0)'")
+    return [f'[{source}]format=gbrapf32le,geq=' + ':'.join(expressions) +
+            f':interpolation=nearest[{output}]']
 
 
 def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False, media=None):
