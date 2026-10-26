@@ -167,3 +167,7 @@ Default audio boundaries and MOV PCM24 now match eight completed controlled nati
 ## Default audio gain and overload calibration
 
 Eight completed native PCM24 exports now match complete decoded output streams exactly after removing the unconditional0.95 peak limiter. Cases cover +/-DC, sine, -6/+6dB, overlap, cancellation and staggered overlap at48kHz/default stereo bus. Configured stdio MCP reproduces all eight; previous edge fixtures remain exact, and the full local suite287 passes. This is a measured default-path correction, not general Fairlight/bus/plugin or codec equivalence; linear volume UI still differs from native dB controls. See AUDIO-GAIN.md.
+
+## Clip pan evidence, implementation still open
+
+Seventeen completed native DC exports establish selected steady-state pan gains, a unity-through-sample128 startup followed by smoothing, and byte-exact nearest-even32-to24 conversion for three matched cases. A fitted one-pole hypothesis still differs and is retained as a failed candidate. Portable owned PCM fixtures and an offline analyzer are published; no production pan control or MCP pan capability is claimed. See AUDIO-PAN.md.

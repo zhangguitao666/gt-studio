@@ -135,3 +135,5 @@ Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜
 默认音频边缘及MOV PCM24已按原版受控案例校准：八组完成案例全流PCM相同，旧六组Fusion案例PCM差异降为0；另有一个Ready任务未完成并排除，完整Fairlight仍未实现。见 [AUDIO-BOUNDARIES.md](research/AUDIO-BOUNDARIES.md)。
 
 默认混音过载行为已按新增8组原版实验校准：移除隐式0.95限幅器后，增益、正负削波、叠加/抵消与错开重叠的完整PCM24均相同；MCP重放8组也全流相同。详见 [AUDIO-GAIN.md](research/AUDIO-GAIN.md)。
+
+片段声像新增17组原版PCM基准（14组24位、3组32位）。启动平滑与参数曲线尚在校准，GT Studio尚无声像实现；可复跑分析见 [AUDIO-PAN.md](research/AUDIO-PAN.md)。

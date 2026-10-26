@@ -20,6 +20,7 @@ test-output/
 !/research/linked-split-runtime.json
 !/research/linked-move-runtime.json
 !/research/linked-trim-runtime.json
+!/research/audio-pan-fixtures.json
 .DS_Store
 .env
 .env.*
