@@ -54,7 +54,7 @@ jobs:
                   shutil.copyfileobj(stream, output)
           selected.chmod(0o755)
           filters = subprocess.check_output([str(selected), '-hide_banner', '-filters'], text=True)
-          required = ('drawtext', 'overlay', 'geq', 'blend', 'premultiply', 'unpremultiply', 'zscale', 'extractplanes', 'mergeplanes', 'afade', 'aeval', 'amix', 'alimiter')
+          required = ('drawtext', 'overlay', 'geq', 'blend', 'premultiply', 'unpremultiply', 'zscale', 'extractplanes', 'mergeplanes', 'afade', 'aeval', 'amix')
           missing = [name for name in required if not re.search(r'\b' + name + r'\b', filters)]
           print(json.dumps({'source': source, 'archive_sha256': expected_sha256, 'bundled': bundled, 'bundled_drawtext': bool(re.search(r'\bdrawtext\b', bundled_filters)), 'selected': str(selected), 'missing_filters': missing}))
           assert not missing, 'Selected FFmpeg lacks required filters'

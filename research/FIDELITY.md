@@ -163,3 +163,7 @@ RGBA16 clip intermediates and10-bit YUV422 main compositing reduce MSE30.25%–3
 13组原版Alpha/Blend/下层实验、26个精确任务句柄均完成。由观察推断并实现16位整数关联over，保留Alpha=0的非零RGB，修正重复乘Alpha；移除Transform/Merge的8位RGB边界，主时间线、透明度/淡化及混合普通媒体的叠化使用相应关联路径。13组中9组全RGB序列相同，其余生成器MAE最高1.333333；媒体输入Merge仍为10.333333。旧六组48帧中的背景/分支完全相同，变换MAE从10.623762降至0.085567，Merge MSE从232.773485降至44.760979。241项独立测试通过。浮点HDR、源色彩解释、几何边缘及完整功能仍未等效，见FUSION-ASSOCIATED-ALPHA.md。
 
 Default audio boundaries and MOV PCM24 now match eight completed controlled native cases byte-for-byte over complete decoded streams. The earlier six Fusion cases also have identical PCM; RGB residuals remain as previously recorded. One original audio render job stays Ready and unmeasured. See AUDIO-BOUNDARIES.md for exact scope, evidence and remaining Fairlight/rate/gain/limiter limitations. Local suite279 passes; full Resolve parity remains false.
+
+## Default audio gain and overload calibration
+
+Eight completed native PCM24 exports now match complete decoded output streams exactly after removing the unconditional0.95 peak limiter. Cases cover +/-DC, sine, -6/+6dB, overlap, cancellation and staggered overlap at48kHz/default stereo bus. Configured stdio MCP reproduces all eight; previous edge fixtures remain exact, and the full local suite287 passes. This is a measured default-path correction, not general Fairlight/bus/plugin or codec equivalence; linear volume UI still differs from native dB controls. See AUDIO-GAIN.md.

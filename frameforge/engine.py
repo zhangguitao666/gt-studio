@@ -28,8 +28,9 @@ uses10-bit YUV422 before final encoding. Transparent canvases use planar16-bit
 RGB; some active filters and alpha negotiation still have lower precision. This
 is not a managed HDR/ACES pipeline.
 Mono source audio duplicates to both stereo channels at unity gain. The mixer
-retains a 0.95 peak limiter with automatic gain disabled; native overload behavior
-has not been established. Cross Dissolve uses measured half-frame midpoint
+sums without normalization or an implicit limiter; integer PCM packing clips
+overload, matching the captured default-bus PCM24 cases. Configured bus effects
+and other output formats have not been calibrated. Cross Dissolve uses measured half-frame midpoint
 weights, source handles, and pair compositing before surrounding video tracks.
 Embedded audio can be detached into an independent audio-track clip without
 doubling the mix. Default import still embeds it. Explicit groups support linked
@@ -1207,7 +1208,10 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
                     else:
                         filters.append(f'[{video_label}][{dissolved}]overlay=format=yuv422p10:eof_action=pass:enable=\'gte(n,{transition["start_frame"]})*lt(n,{transition["end_frame"]})\'[{merged}]')
                     video_label=merged
-        audio_mix = ''.join('[' + x + ']' for x in audio_labels) + f'amix=inputs={len(audio_labels)}:duration=longest:normalize=0,alimiter=limit=0.95:level=0:latency=1'
+        # Captured native PCM exports retain the summed waveform above unity
+        # until integer packing clips it. An automatic limiter changes both
+        # overload peaks and neighbouring samples through its gain envelope.
+        audio_mix = ''.join('[' + x + ']' for x in audio_labels) + f'amix=inputs={len(audio_labels)}:duration=longest:normalize=0'
         if output_format == 'mov':
             # PCM24 packing drops the low S32 byte. Quantize to the target grid
             # first. Native overlap samples use nearest, ties to even.
