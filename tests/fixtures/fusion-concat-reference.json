@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "scope": "Six native static texture exports comparing default adjacent Transform concatenation and explicit FlattenTransform controls. Relational frame equality, not general color or DoD parity.",
+  "native_version": "21.1.1.10",
+  "source_recipe": "320x320 RGB: r=16+(7*x+3*y)%220, g=16+(3*x+5*y)%220, b=16+(5*x+11*y)%220; 24fps, 12 frames, QTRLE",
+  "source_mov_sha256": "5dac77bb0de84c6075fcc4b3970751bd28fcc9e96012e93142276a23ea3620d5",
+  "capture_snapshot_sha256": "8934cb2cab30d44f0cdcf0ee8a2c73d6bb2de29870b2fa45e901196f41167a3d",
+  "cases": [
+    {
+      "name": "identity",
+      "job_id": "c0bfeb9f-fd35-4a15-9ceb-3a122b4d5267",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_identity.mov",
+      "native_sha256": "248611455be3980c51d63a11087bdf1d8f4a749f218b3c74db20ee337c3e5251",
+      "native_rgb24_full_sha256": "22aab6d35e7af0e2f447afb7997eeb986fb1ce22fb122aad992a8bc84110ab7b",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": true,
+      "rgb_mae_vs_identity": 0.0,
+      "rgb_max_vs_identity": 0,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    },
+    {
+      "name": "shrink_restore",
+      "job_id": "abeba582-cff0-42d9-8eaf-609104df6f38",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_shrink_restore.mov",
+      "native_sha256": "cd93ac57ddba1e10ddbb1ecb94ffafebf80b9ea66af3943e955e4ad77176d2d1",
+      "native_rgb24_full_sha256": "22aab6d35e7af0e2f447afb7997eeb986fb1ce22fb122aad992a8bc84110ab7b",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": true,
+      "rgb_mae_vs_identity": 0.0,
+      "rgb_max_vs_identity": 0,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 0.25
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 4
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    },
+    {
+      "name": "shrink_restore_flattened",
+      "job_id": "70890018-2948-4a73-bab1-de5666034705",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_shrink_restore_flattened.mov",
+      "native_sha256": "fd10c6f881ba70800f91d0e0a2d95ada54f8ab8a4d31a3491bf40a87db74daa2",
+      "native_rgb24_full_sha256": "49f894b4bc1c98721721f87a988c70c7e2a8c720cc25daea00e660721e3f7a63",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": false,
+      "rgb_mae_vs_identity": 19.750162760416668,
+      "rgb_max_vs_identity": 222,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 1,
+            "InvertTransform": 0,
+            "Size": 0.25
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 4
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    },
+    {
+      "name": "shrink_rotate_restore",
+      "job_id": "4688b6b0-277d-4b0a-9ab5-7e175d26963b",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_shrink_rotate_restore.mov",
+      "native_sha256": "2cb185173a7051aee516be3c7ad95eb8681d1e5bc0d19f1df9b7da255a4c39e8",
+      "native_rgb24_full_sha256": "22aab6d35e7af0e2f447afb7997eeb986fb1ce22fb122aad992a8bc84110ab7b",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": true,
+      "rgb_mae_vs_identity": 0.0,
+      "rgb_max_vs_identity": 0,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 17,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 0.25
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": -17,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 4
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    },
+    {
+      "name": "translate_return",
+      "job_id": "bd039709-2949-46b1-bf43-38b3e02ea371",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_translate_return.mov",
+      "native_sha256": "ca57015c82d645e301e1ea91fe48f81001ff6d6b4d601c5ded4d88d09680b6ab",
+      "native_rgb24_full_sha256": "22aab6d35e7af0e2f447afb7997eeb986fb1ce22fb122aad992a8bc84110ab7b",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": true,
+      "rgb_mae_vs_identity": 0.0,
+      "rgb_max_vs_identity": 0,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              1.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              -0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 1
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    },
+    {
+      "name": "translate_return_flattened",
+      "job_id": "7b8e1824-0cbb-4e90-9c74-742944e500a3",
+      "status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_filename": "REA_FUSION_CONCAT_V2_20261026_163052_translate_return_flattened.mov",
+      "native_sha256": "da09ba7810b69611d9d5abdb44decc452ab56b1f7f714087bb3b8cf8ba8f60c0",
+      "native_rgb24_full_sha256": "22aab6d35e7af0e2f447afb7997eeb986fb1ce22fb122aad992a8bc84110ab7b",
+      "frames": 12,
+      "width": 320,
+      "height": 320,
+      "identity_rgb_exact": true,
+      "rgb_mae_vs_identity": 0.0,
+      "rgb_max_vs_identity": 0,
+      "native_nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              1.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 1,
+            "InvertTransform": 0,
+            "Size": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Center": [
+              -0.5,
+              0.5,
+              0
+            ],
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "InvertTransform": 0,
+            "Size": 1
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ]
+    }
+  ],
+  "full_resolve_parity": false,
+  "previous_rotation_alpha": {
+    "native_filename": "REA_FUSION_20261022_164830_rotation_90_alpha1.mov",
+    "native_sha256": "4064263aae70a208c4b38ec0d837a51cab8006f229ac2daf073abd03215696ef",
+    "width": 640,
+    "height": 360,
+    "frame": 0,
+    "alpha16le_frame0_sha256": "39fc484059349fd4c1eb5debe3db63507dc55ed3737d2daa678e928505bc5541",
+    "carrier_conversion": "(round(alpha16/65535*255)*257)&0xfff0"
+  },
+  "source_rgb24_full_sha256": "330740068960d24d59f1cfaa11d075cee009cbec009b1d9da8bcd9f449f6db04"
+}

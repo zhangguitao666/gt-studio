@@ -20,7 +20,7 @@
   "alpha16le_frame0_sha256": "8c926c9b93b8b510af1c5bff8bff9b128d6b8a800863eb497a52e3d6aa838ecb",
   "carrier_conversion": "(round(alpha16/65535*255)*257)&0xfff0",
   "limits": [
-    "Default native FilterMethod was not captured.",
+    "Native inspection captured numeric FilterMethod=2 and FlattenTransform=0; the filter's display name remains unverified.",
     "Native behavior at other Size values and downstream off-canvas retention remains unverified."
   ]
 }

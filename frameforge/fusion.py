@@ -301,13 +301,14 @@ def _minify_float_image(source, output, width, height, sx, sy, radius):
     # 0/1: source coordinates; 2/3: first taps; 4/5: current tap;
     # 6: sum; 7: normalization; 8: horizontal normalization; 9: vertical weight.
     setup = f'st(0,{sx});st(1,{sy});st(2,ceil(ld(0)-{radius}));st(3,ceil(ld(1)-{radius}));'
-    denominator = (
-        f'st(4,ld(2));st(8,0);'
-        f'while(lte(ld(4),ld(0)+{radius}),st(8,ld(8)+{wx});st(4,ld(4)+1));'
-        f'st(5,ld(3));st(7,0);'
-        f'while(lte(ld(5),ld(1)+{radius}),st(7,ld(7)+{wy});st(5,ld(5)+1));'
-        'st(7,ld(7)*ld(8));'
-    )
+    def weight_sum(center):
+        # Sum both arithmetic progressions analytically. A composed chain can
+        # shrink far below a single node's .01 limit: iterating its full black
+        # footprint would be unbounded, or stall when integer taps exceed 2^53.
+        first, middle, last = f'ceil({center}-{radius})', f'floor({center})', f'floor({center}+{radius})'
+        return (f'({middle}-{first}+1)*(1+(({first}+{middle})/2-{center})/{radius})+'
+                f'({last}-{middle})*(1-(({middle}+1+{last})/2-{center})/{radius})')
+    denominator = f'st(8,{weight_sum("ld(0)")});st(7,({weight_sum("ld(1)")})*ld(8));'
     gate = (f'gt(ld(0),-{radius})*lt(ld(0),{width-1}+{radius})*'
             f'gt(ld(1),-{radius})*lt(ld(1),{height-1}+{radius})')
     expressions = []
@@ -327,6 +328,44 @@ def _minify_float_image(source, output, width, height, sx, sy, radius):
             f':interpolation=nearest[{output}]']
 
 
+def _concatenated_order(order, output_id, width, height):
+    """Compile adjacent default Transforms into one sampling operation.
+
+    Keep the editable graph and its intermediate checkpoints intact. A branch
+    can still request an intermediate transform while a later branch samples
+    the original source with the composed coordinates. This is not general
+    off-canvas image storage across other node types.
+    """
+    nodes = {node['id']: copy.deepcopy(node) for node in order}
+    for node in nodes.values():
+        if node['type'] != 'Transform':
+            continue
+        parent = nodes[node['inputs']['Input']]
+        if parent['type'] != 'Transform':
+            continue
+        before, after = parent['parameters'], node['parameters']
+        angle = math.radians(after['Angle'])
+        px, py = (before['CenterX']-.5)*width, (.5-before['CenterY'])*height
+        x = after['Size']*(math.cos(angle)*px+math.sin(angle)*py)
+        y = after['Size']*(-math.sin(angle)*px+math.cos(angle)*py)
+        node['parameters'] = {
+            'CenterX': after['CenterX']+x/width,
+            'CenterY': after['CenterY']-y/height,
+            'Size': before['Size']*after['Size'],
+            'Angle': before['Angle']+after['Angle'],
+        }
+        node['inputs']['Input'] = parent['inputs']['Input']
+    needed = set()
+    def visit(identity):
+        if identity in needed:
+            return
+        needed.add(identity)
+        for source in nodes[identity]['inputs'].values():
+            visit(source)
+    visit(output_id)
+    return [node for identity, node in nodes.items() if identity in needed]
+
+
 def compile_graph(graph, selection, project, duration_frames, prefix, *, force_output=False, media=None):
     """Return filter statements and an output label; generate only reachable nodes."""
     order, errors = render_order(graph)
@@ -335,6 +374,7 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
     if not force_output and [n['type'] for n in order] == ['MediaIn', 'MediaOut']:
         return None  # Bit-identical legacy path, including disconnected nodes.
     width, height = project['width'], project['height']
+    order = _concatenated_order(order, graph['output_node_id'], width, height)
     rate = f'{project["fps"]["num"]}/{project["fps"]["den"]}'
     duration = duration_frames * project['fps']['den'] / project['fps']['num']
     uses = Counter(source for n in order for source in n['inputs'].values())

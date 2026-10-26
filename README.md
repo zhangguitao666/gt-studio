@@ -128,6 +128,8 @@ Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes
 
 关联Alpha合成修正已按原版26个导出任务校准：13个受控案例中9组全序列RGB逐字节相同，原先半透明背景/共享分支48帧也完全相同；MediaIn颜色与几何边缘仍有残差。当前318项回归通过，详见 [FUSION-ASSOCIATED-ALPHA.md](research/FUSION-ASSOCIATED-ALPHA.md)。代码持续推送到 [GitHub](https://github.com/zhangguitao666/gt-studio)。
 
+相邻默认Transform现在合并后采样，已按原版纹理的缩放/旋转还原实验验证，旧旋转案例的Alpha平面完全一致。最终RGB、通用画布外存储和其他节点仍有差异，见 [FUSION-CONCATENATION.md](research/FUSION-CONCATENATION.md)。
+
 Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜、意外错误框和巨大字节差异的诊断说明见 [CI-VALIDATION.md](research/CI-VALIDATION.md)。远程结果以 [GitHub Actions](https://github.com/zhangguitao666/gt-studio/actions) 为准，本机测试通过不代替远程结果或原版全功能验收。
 
 媒体电平支持Auto/Full/Video及共享源设置的MCP与检查器控制。15组原版导出中10组全序列RGB相同，媒体恒等48帧相同，Merge MSE降至0.894886；完整色管/HDR/节点等效仍未完成，见 [FUSION-MEDIA-LEVELS.md](research/FUSION-MEDIA-LEVELS.md)。
