@@ -179,3 +179,7 @@ Independent float32 grouped difference-state smoothing now matches three full na
 ## Decibel gain interface
 
 The inspector now displays dB; MCP accepts volume_db while projects keep canonical linear volume. Both inputs reproduce eight complete native PCM24 fixtures, sixteen render checks in total, plus eight configured-stdio dB replays. Precise legacy gains and exact zero mute survive unrelated inspector edits. The318-test local suite passes. The declared -100/+30dB endpoints are validated as parameter/persistence bounds, not new native waveform measurements. Actual desktop acceptance and wider audio equivalence remain open; see AUDIO-DB.md.
+
+## Pan-default static provenance
+
+Three selected FairlightPage initializer calls derive the captured float32 beta from default0.99 and exponent0.2. The model now uses that expression instead of a fitted reciprocal; its bit value is unchanged, with38 affected checks passing. REA Mach-O evidence establishes structure/identity; system disassembly supplies bounded call-site facts. Writable data and a runtime-selected legacy path prevent a sample-rate-independence claim. Other-rate exports are prepared, not measured; no additional pan capability is claimed. See AUDIO-PAN-DEFAULTS.md.

@@ -72,6 +72,7 @@ def main():
             print(json.dumps({k: result[k] for k in ('name','pcm_exact','changed_scalars','max_delta')}), flush=True)
         report = {'fixture': identity(fixture), 'driver': identity(Path(__file__)),
             'production': identity(ROOT/'frameforge/engine.py'),
+            'pan_model': identity(ROOT/'frameforge/audio_pan.py'),
             'server': client.server_info, 'public_tools': len(tools),
             'cases': results, 'calls': client.calls, 'full_resolve_parity': False,
             'limits': [reference['scope'],

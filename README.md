@@ -139,3 +139,5 @@ Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜
 片段声像已支持48kHz静态pan属性、检查器与MCP设置：14组PCM24完整流和3组PCM32内核基准相同。一般波形/自动化和真实窗口验收仍开放；可复跑分析见 [AUDIO-PAN.md](research/AUDIO-PAN.md)。
 
 音量检查器现在显示分贝，MCP支持`properties.volume_db`（-100至+30dB），旧`volume`线性倍率与精确静音保持兼容。8组原版PCM基准通过两种入口均全流相同，详见 [AUDIO-DB.md](research/AUDIO-DB.md)。
+
+声像默认平滑系数已补齐原版初始化来源，数值与既有实测一致；其他采样率和旧运行分支仍未验证，见 [AUDIO-PAN-DEFAULTS.md](research/AUDIO-PAN-DEFAULTS.md)。

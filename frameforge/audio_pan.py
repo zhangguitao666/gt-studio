@@ -14,7 +14,11 @@ def f32(value):
     return struct.unpack('<f', struct.pack('<f', value))[0]
 
 
-BETA = f32(1-1/498)
+# Selected native initializers call powf on the default float32 base .99 and
+# exponent .2. This reproduces the captured 0x3f7f7c67 value without a fitted
+# reciprocal. The base lives in writable native data; other settings/rates
+# and the separately observed legacy branch are not covered by this model.
+BETA = f32(f32(.99)**f32(.2))
 B2 = f32(BETA*BETA)
 B3 = f32(B2*BETA)
 B4 = f32(B2*B2)
