@@ -66,7 +66,7 @@ def test_noncommuting_scale_rotation_and_translation_order(tmp_path):
 
 def test_branched_intermediate_and_composed_output_remain_independent(tmp_path):
     e, clip = model(tmp_path)
-    bg = add(e, clip, 'Background', Blue=.8, Alpha=.5)
+    bg = add(e, clip, 'Background', Blue=.8, Alpha=.5, Depth=4)
     first = add(e, clip, 'Transform', Size=.5, CenterX=.75, CenterY=.75)
     second = add(e, clip, 'Transform', Angle=90)
     connect(e, clip, first, 'Input', bg); connect(e, clip, second, 'Input', first)

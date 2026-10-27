@@ -11,12 +11,13 @@ import subprocess
 import tempfile
 import uuid
 from collections import Counter
+from .fusion_precision import DEPTH_NAMES, quantize_value, quantize_image
 
 
 CATALOG = {
     'MediaIn': {'inputs': [], 'parameters': {}},
     'MediaOut': {'inputs': ['Input'], 'parameters': {}},
-    'Background': {'inputs': [], 'parameters': {k: (v, 0, 1) for k, v in [('Red', 0), ('Green', 0), ('Blue', 0), ('Alpha', 1)]}},
+    'Background': {'inputs': [], 'parameters': {**{k: (v, 0, 1) for k, v in [('Red', 0), ('Green', 0), ('Blue', 0), ('Alpha', 1)]}, 'Depth': (0, 0, 4)}},
     'Transform': {'inputs': ['Input'], 'parameters': {'CenterX': (0.5, -10, 10), 'CenterY': (0.5, -10, 10), 'Size': (1, 0.01, 8), 'Angle': (0, -3600, 3600)}},
     'Merge': {'inputs': ['Background', 'Foreground'], 'parameters': {'Blend': (1, 0, 1), 'CenterX': (0.5, -10, 10), 'CenterY': (0.5, -10, 10)}},
 }
@@ -27,8 +28,13 @@ def make_node(kind, identity, name=None, parameters=None, position=None):
         raise ValueError('Unsupported Fusion node type: ' + str(kind))
     if parameters is not None and not isinstance(parameters, dict):
         raise ValueError('Fusion parameters must be an object')
+    values = {**{k: v[0] for k, v in CATALOG[kind]['parameters'].items()}, **(parameters or {})}
+    # Implicit default depth keeps legacy files and older running clients
+    # compatible; the new inspector obtains the default from the catalogue.
+    if kind == 'Background' and 'Depth' not in (parameters or {}):
+        values.pop('Depth')
     return {'id': identity, 'type': kind, 'name': identity if name is None else name,
-            'parameters': {**{k: v[0] for k, v in CATALOG[kind]['parameters'].items()}, **(parameters or {})},
+            'parameters': values,
             'inputs': {}, 'position': {'x': 0, 'y': 0} if position is None else position}
 
 
@@ -62,10 +68,12 @@ def validate_graph(graph):
             raise ValueError('Invalid Fusion node name')
         spec = CATALOG[node['type']]
         params = node['parameters']
-        if not isinstance(params, dict) or set(params) != set(spec['parameters']):
+        required = set(spec['parameters']) - ({'Depth'} if node['type']=='Background' else set())
+        if not isinstance(params, dict) or not required <= set(params) <= set(spec['parameters']):
             raise ValueError('Invalid Fusion parameters')
-        for key, (_, low, high) in spec['parameters'].items():
-            if not finite(params[key], low, high):
+        for key, (default, low, high) in spec['parameters'].items():
+            value = params.get(key, default)
+            if not finite(value, low, high) or (key=='Depth' and value not in DEPTH_NAMES):
                 raise ValueError('Fusion parameter out of range: ' + key)
         inputs = node['inputs']
         if not isinstance(inputs, dict) or set(inputs) - set(spec['inputs']) or any(not isinstance(v, str) for v in inputs.values()):
@@ -272,6 +280,26 @@ def float_to_rgba16(source, output):
             f'[{output}_g][{output}_b][{output}_r][{output}_alpha]mergeplanes=0x00102030:format=gbrap16le[{output}]']
 
 
+def rgba8_to_rgba16(source, output, *, has_alpha=True):
+    """Expand all eight-bit channels as UNORM, including independent alpha."""
+    # Extract before converting packed RGBA: swscale's RGBA8 -> GBRAP8
+    # conversion itself can change non-opaque alpha by one eight-bit unit.
+    prepare = '' if has_alpha else 'format=rgba,'
+    filters = [f'[{source}]{prepare}extractplanes=r+g+b+a[{output}_r8][{output}_g8][{output}_b8][{output}_a8]']
+    for c in ('r','g','b','a'):
+        filters.append(f'[{output}_{c}8]zscale=rangein=full:range=full:dither=none,format=gray16le[{output}_{c}]')
+    filters.append(f'[{output}_g][{output}_b][{output}_r][{output}_a]mergeplanes=0x00102030:format=gbrap16le[{output}]')
+    return filters
+
+
+def rgba16_to_float(source, output):
+    """Normalize RGB and alpha independently, avoiding alpha range remapping."""
+    return [f'[{source}]format=gbrap16le,split=2[{output}_rgb_source][{output}_alpha_source]',
+            f'[{output}_rgb_source]zscale=dither=none,format=gbrapf32le,extractplanes=r+g+b[{output}_r][{output}_g][{output}_b]',
+            f'[{output}_alpha_source]geq=r=\'alpha(X,Y)\':g=\'alpha(X,Y)\':b=\'alpha(X,Y)\':a=65535,zscale=dither=none,format=gbrapf32le,extractplanes=r[{output}_alpha]',
+            f'[{output}_g][{output}_b][{output}_r][{output}_alpha]mergeplanes=0x00102030:format=gbrapf32le[{output}]']
+
+
 def transform_float_image(source, output, width, height, x=0, y=0, size=1, angle=0):
     """Sample a project-size float canvas without integer pad/rotate boundaries."""
     theta = angle*math.pi/180
@@ -379,7 +407,7 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
     duration = duration_frames * project['fps']['den'] / project['fps']['num']
     uses = Counter(source for n in order for source in n['inputs'].values())
     uses[graph['output_node_id']] = 1
-    labels, filters = {}, []
+    labels, filters, precision = {}, [], {}
     def take(identity):
         return labels[identity].pop()
     def canvas(label):
@@ -388,25 +416,61 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
         out = f'{prefix}_f{index}'
         params, kind = node['parameters'], node['type']
         if kind == 'MediaIn':
-            from .media_levels import level_filters
+            from .media_levels import level_filters, effective_data_level
             before, after = level_filters(media or {})
-            filters.append(selection + before + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0,format=gbrapf32le' + after + f',premultiply=inplace=1[{out}]')
+            rgb8 = (media or {}).get('pixel_format') in {'rgb24', 'bgr24', 'argb', 'abgr', 'rgba', 'bgra', 'gbrp', 'gbrap', 'rgb0', '0rgb', 'bgr0', '0bgr'}
+            # Preserve the decoded 8-bit RGB values before the integer resize.
+            # swscale's packed RGB8 -> RGB16 path is not UNORM byte expansion.
+            # Normalize channels independently, avoiding depth/range remaps
+            # in the alpha paths of the conversion filters.
+            normalized = selection + before
+            # Video code values need byte-exact normalization before the
+            # 16/235 mapping. Full/other Auto retain the separately measured
+            # decoder expansion; treating every mode as Video regresses Full.
+            if rgb8 and effective_data_level(media or {})=='Video':
+                raw = out+'_decoded'; filters.append(normalized+f'[{raw}]')
+                expanded = out+'_expanded'
+                alpha_present = (media or {}).get('pixel_format') in {'argb','abgr','rgba','bgra','gbrap'}
+                filters.extend(rgba8_to_rgba16(raw, expanded, has_alpha=alpha_present))
+                normalized = f'[{expanded}]null'
+            integer = out + '_integer_source'
+            filters.append(normalized + f',scale={width}:{height}:force_original_aspect_ratio=decrease,setsar=1,format=gbrap16le,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=black@0[{integer}]')
+            floating = out + '_float_source'
+            filters.extend(rgba16_to_float(integer, floating))
+            filters.append(f'[{floating}]null' + after + f',premultiply=inplace=1[{out}]')
+            precision[node['id']] = 4
         elif kind == 'Background':
             raw = out + '_canvas'; canvas(raw)
-            filters.append(f'[{raw}]geq=r={params["Red"]}:g={params["Green"]}:b={params["Blue"]}:a={params["Alpha"]}[{out}]')
+            depth = params.get('Depth', 0)
+            values = {key: quantize_value(params[key], depth) for key in ('Red', 'Green', 'Blue', 'Alpha')}
+            filters.append(f'[{raw}]geq=r={values["Red"]}:g={values["Green"]}:b={values["Blue"]}:a={values["Alpha"]}[{out}]')
+            precision[node['id']] = 1 if depth==0 else depth
         elif kind == 'Transform':
             source = take(node['inputs']['Input'])
-            filters.extend(transform_float_image(source, out, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height, params['Size'], params['Angle']))
+            depth = precision[node['inputs']['Input']]
+            sampled = out if depth==4 else out+'_sampled'
+            filters.extend(transform_float_image(source, sampled, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height, params['Size'], params['Angle']))
+            if depth!=4:
+                filters.extend(quantize_image(sampled, out, depth))
+            precision[node['id']] = depth
         elif kind == 'Merge':
             back, front = (take(node['inputs'][port]) for port in ('Background', 'Foreground'))
+            depth = precision[node['inputs']['Background']]
+            if depth!=precision[node['inputs']['Foreground']]:
+                converted = out+'_converted'; filters.extend(quantize_image(front, converted, depth)); front=converted
             alpha = out + '_alpha'
             blend = params['Blend']
             filters.append(f'[{front}]geq=r=\'r(X,Y)*{blend}\':g=\'g(X,Y)*{blend}\':b=\'b(X,Y)*{blend}\':a=\'alpha(X,Y)*{blend}\'[{alpha}]')
             positioned = out + '_positioned'
             filters.extend(transform_float_image(alpha, positioned, width, height, (params['CenterX']-.5)*width, (.5-params['CenterY'])*height))
-            filters.extend(premultiplied_over(back, positioned, out, floating=True))
+            merged = out if depth==4 else out+'_merged'
+            filters.extend(premultiplied_over(back, positioned, merged, floating=True))
+            if depth!=4:
+                filters.extend(quantize_image(merged, out, depth))
+            precision[node['id']] = depth
         else:  # MediaOut
             filters.append(f'[{take(node["inputs"]["Input"])}]null[{out}]')
+            precision[node['id']] = precision[node['inputs']['Input']]
         count = uses[node['id']]
         if count > 1:
             labels[node['id']] = [f'{out}_use{i}' for i in range(count)]

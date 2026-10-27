@@ -84,8 +84,8 @@ def test_cross_dissolve_preserves_glowing_rgb_and_mixed_legacy_side(tmp_path, co
 
 def test_transform_and_merge_retain_more_than_eight_bit_channel_precision(tmp_path, colored_sources):
     e, clip = real_project(tmp_path, colored_sources)
-    back = add(e, clip, 'Background', Red=.12345)
-    front = add(e, clip, 'Background', Blue=.54321, Alpha=.25)
+    back = add(e, clip, 'Background', Red=.12345, Depth=4)
+    front = add(e, clip, 'Background', Blue=.54321, Alpha=.25, Depth=4)
     transform = add(e, clip, 'Transform'); connect(e, clip, transform, 'Input', front)
     merge = add(e, clip, 'Merge', Blend=.33335)
     connect(e, clip, merge, 'Background', back); connect(e, clip, merge, 'Foreground', transform)

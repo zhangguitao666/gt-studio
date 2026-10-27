@@ -1,5 +1,8 @@
 # Fusion 节点检查点与差异定位
 
+本文保留早期检查点阶段的测量，原先8位处理边界及下列差值不是当前结果。最新节点位深、18个原版RGBA16基准及尚存最终RGB残差见 [FUSION-IMAGE-PRECISION.md](FUSION-IMAGE-PRECISION.md)。
+
+
 此文记录预乘修正前的检查点阶段，表中数值是当时的历史测量。当前算法和后续受控对照见 [FUSION-ASSOCIATED-ALPHA.md](FUSION-ASSOCIATED-ALPHA.md)。
 
 本阶段加入独立节点 RGBA16 PNG 导出，以区分节点计算、片段处理和时间线合成的差异。没有改变当前 Alpha 算法，也没有将五节点子集认定为原版等效。

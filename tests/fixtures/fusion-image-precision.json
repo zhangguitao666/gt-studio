@@ -1,0 +1,802 @@
+{
+  "schema_version": 1,
+  "scope": "Native FFV1 RGBA16 export carriers: five generator depths plus two halfway-color cases, seven depth combinations, and four existing static node graphs. Not internal float buffer or full Fusion equivalence.",
+  "native_version": "21.1.1.10",
+  "snapshots": {
+    "background": "2b30f19af0807a094516acce29fc4320ee69a1167348f232e18c31349ed511d3",
+    "merge": "bc416fd06bfbee953051f9770de6c37d4b60c900247b2265fe0103538c7caaf3",
+    "paired": "74a179b158b48ea3d41310451df1dc99de4f0e369d7df14ba0026b00187dcfaa",
+    "ties": "22a783c1934b6a0121f77602d15efd1739cd5d34c90749329f35be925a341092"
+  },
+  "graph_source": {
+    "width": 640,
+    "height": 360,
+    "frames": 48,
+    "fps": 24,
+    "rgba8": [
+      252,
+      0,
+      0,
+      255
+    ],
+    "codec": "qtrle",
+    "input_data_level": "Auto (native QTRLE Video)"
+  },
+  "cases": [
+    {
+      "kind": "background",
+      "name": "background_0",
+      "inputs": {
+        "Depth": 0,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "79dbd3ac-27ab-4a7b-bc82-3e48969d3b8b",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "a75b738f76e710a5072117d9e0287f5ad5c16c2a9900505f4dd6760138a84099",
+      "rgba16": [
+        7967,
+        24672,
+        35723,
+        7967
+      ],
+      "native_rgba64le_frame0_sha256": "68df0706bc44844375e3d6f3119a021e42488e4dfb7c1130143946f70e2d107f",
+      "native_rgba64le_full_sha256": "5178d1ef0eeb367108da37a6b6ad356895b7678b546ac7a545b7433e6bfd46e8",
+      "frames": 12
+    },
+    {
+      "kind": "background",
+      "name": "background_1",
+      "inputs": {
+        "Depth": 1,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "449732c8-9aeb-4842-8d04-1469d7bc09d0",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "374dd0c64b5d5663a10dde1707e9909887569f1c803125a80ccf55c0868896f8",
+      "rgba16": [
+        7967,
+        24672,
+        35723,
+        7967
+      ],
+      "native_rgba64le_frame0_sha256": "68df0706bc44844375e3d6f3119a021e42488e4dfb7c1130143946f70e2d107f",
+      "native_rgba64le_full_sha256": "5178d1ef0eeb367108da37a6b6ad356895b7678b546ac7a545b7433e6bfd46e8",
+      "frames": 12
+    },
+    {
+      "kind": "background",
+      "name": "background_2",
+      "inputs": {
+        "Depth": 2,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "e60e425e-15b9-4953-9abc-c90b3a7d9248",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "052d409fc65c5eb5488ab346f5c2bfc9e955edb369f03788c59668e233052c0f",
+      "rgba16": [
+        8090,
+        24576,
+        35599,
+        8090
+      ],
+      "native_rgba64le_frame0_sha256": "1dc08c289e966290de7af983e59f76484b03d59d1ca514b4c3b05e6c30f1bdce",
+      "native_rgba64le_full_sha256": "192f4b81c7579927da4921d89ea57eeb8228ecd44ccac4e3c8ae48f7d7f747e0",
+      "frames": 12
+    },
+    {
+      "kind": "background",
+      "name": "background_3",
+      "inputs": {
+        "Depth": 3,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "0e5ef29b-84c5-48b7-9247-f15b344caab1",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "5e4631b8f97c4f913dd5fe7e5d8b23486ba7717632b8a28875cf19fff8435918",
+      "rgba16": [
+        8088,
+        24576,
+        35583,
+        8088
+      ],
+      "native_rgba64le_frame0_sha256": "1994cefd79a540c2ba52b14032fcfac3016bf9a5fbb484b8f84c6a942284e36c",
+      "native_rgba64le_full_sha256": "0bcf52b15f411fa21821c1cde893cc62cfe3fe5758eaef5b1ab542999755de37",
+      "frames": 12
+    },
+    {
+      "kind": "background",
+      "name": "background_4",
+      "inputs": {
+        "Depth": 4,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "60e09363-8dc2-445e-99d5-81b20ef3b754",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "287601aebff76d9bdf5bcb407cf2db86482653ce361b283fa26e5e3c49c9e562",
+      "rgba16": [
+        8090,
+        24576,
+        35599,
+        8090
+      ],
+      "native_rgba64le_frame0_sha256": "1dc08c289e966290de7af983e59f76484b03d59d1ca514b4c3b05e6c30f1bdce",
+      "native_rgba64le_full_sha256": "192f4b81c7579927da4921d89ea57eeb8228ecd44ccac4e3c8ae48f7d7f747e0",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_0_0",
+      "inputs": {
+        "Depth": 0,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 0,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "89b0da6c-e4d7-476e-a258-793a550e6d6f",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "9a2bd149aa6a11541ba353f729926490d88ad1a338872cd60b9166aba50b032d",
+      "rgba16": [
+        9252,
+        26214,
+        38036,
+        14649
+      ],
+      "native_rgba64le_frame0_sha256": "eb29d398806ce6877c68871d6ef0112ed5574a386146127aedc4d6018134017e",
+      "native_rgba64le_full_sha256": "e9fde78c262bf92c4a39828a275c9fb9aa5ef44d0252cecece221bb51eb97a36",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_1_1",
+      "inputs": {
+        "Depth": 1,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 1,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "da788d8f-cb48-4613-96df-379af8fb954e",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "9a2bd149aa6a11541ba353f729926490d88ad1a338872cd60b9166aba50b032d",
+      "rgba16": [
+        9252,
+        26214,
+        38036,
+        14649
+      ],
+      "native_rgba64le_frame0_sha256": "eb29d398806ce6877c68871d6ef0112ed5574a386146127aedc4d6018134017e",
+      "native_rgba64le_full_sha256": "e9fde78c262bf92c4a39828a275c9fb9aa5ef44d0252cecece221bb51eb97a36",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_1_4",
+      "inputs": {
+        "Depth": 1,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 4,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "c7a05663-9a69-4875-a176-47ed2557919e",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "94afc7ef9c1d860b9e50dd81fcdf55dcf71287a91ca428bbc322522722242534",
+      "rgba16": [
+        9252,
+        26214,
+        38036,
+        14649
+      ],
+      "native_rgba64le_frame0_sha256": "eb29d398806ce6877c68871d6ef0112ed5574a386146127aedc4d6018134017e",
+      "native_rgba64le_full_sha256": "e9fde78c262bf92c4a39828a275c9fb9aa5ef44d0252cecece221bb51eb97a36",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_2_2",
+      "inputs": {
+        "Depth": 2,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 2,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "c44cf0d6-bbdd-45f7-bff2-f9788570642b",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "a317fbe83a8d5a663384dc025c24dc939e6488ce2294f6615f5a7e55011667be",
+      "rgba16": [
+        9331,
+        26078,
+        37999,
+        14792
+      ],
+      "native_rgba64le_frame0_sha256": "41aea5ba1f07c1829e86016ab39dddc3f3f4a1309af700d229558a9ba22ebd85",
+      "native_rgba64le_full_sha256": "82eba7f7303575d37092ff9706ef1e1823197ee218c7d952b714d7b835b41388",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_3_3",
+      "inputs": {
+        "Depth": 3,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 3,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "3b637e34-059b-40df-a05d-09022b4606ca",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "bced3cf0d930bb99d71362cc0dd9d072f48003085d1b1daadbd7fe7905f6d237",
+      "rgba16": [
+        9328,
+        26064,
+        37951,
+        14784
+      ],
+      "native_rgba64le_frame0_sha256": "8b4255c7be47f9160714cc43ecb9fede96590f741a43a00db8733c9276f56be2",
+      "native_rgba64le_full_sha256": "f279dc23a4934a277cb0c2571bb91d24614aa208b20530339dba26b6a0874181",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_4_1",
+      "inputs": {
+        "Depth": 4,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 1,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "7f1b86bc-10f9-4984-be31-1a69d1d1b941",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "80f212bb52a274683f7eb679d1872b6cf94fb900c94a4f2ed855c1268912de3b",
+      "rgba16": [
+        9376,
+        26086,
+        38054,
+        14774
+      ],
+      "native_rgba64le_frame0_sha256": "fd41136c6ce701911d68affd6bddb1d17410f236fb0625efa6686a7685eb4df6",
+      "native_rgba64le_full_sha256": "dee456bcdbc01ef18c19ed9ce6fd50def3f19b0a310e266459c4ee238cc97e2c",
+      "frames": 12
+    },
+    {
+      "kind": "merge",
+      "name": "merge_4_4",
+      "inputs": {
+        "Depth": 4,
+        "Height": 320,
+        "TopLeftAlpha": 0.12345,
+        "TopLeftBlue": 0.54321,
+        "TopLeftGreen": 0.375,
+        "TopLeftRed": 0.12345,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "front_inputs": {
+        "Depth": 4,
+        "Height": 320,
+        "TopLeftAlpha": 0.35,
+        "TopLeftBlue": 0.3,
+        "TopLeftGreen": 0.2,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "blend": 0.33335,
+      "native_job": "e6b1a1c5-bf7d-4583-a65c-08f542a8ce7b",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "7d92f64da97ec8e3f6e2e8ce2a4992665cb1eea5271e242c80524626c98aac9a",
+      "rgba16": [
+        9331,
+        26078,
+        38000,
+        14793
+      ],
+      "native_rgba64le_frame0_sha256": "9bb616bc449a89de1a2a1eba18fd956313167053039f0064d4275507733c1940",
+      "native_rgba64le_full_sha256": "0d28e9d88f250970676e515c0db6814efd7256af00827591f0cf7950b673e4db",
+      "frames": 12
+    },
+    {
+      "kind": "graph",
+      "name": "background_half",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "4131fbe7-69b5-444b-8a14-0915d687cfd5",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "ff54e75348ccceb6e4f2080c479811e28d207bb432f95e69235c76ab19d97531",
+      "native_rgba64le_frame0_sha256": "43b49c7c4c816d15ea7e49b848c3f36083b9522f27a17d276a14d1deec2e0918",
+      "frames": 48,
+      "native_rgba64le_full_sha256": "65e7ed8534cd8b66730e18d6b84a7356cb423d9e5892e6ccb5993d8a48fb30b9",
+      "native_static_frames_verified": 48
+    },
+    {
+      "kind": "graph",
+      "name": "merge_half",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Blend": 1,
+            "Center": [
+              0.75,
+              0.75,
+              0
+            ],
+            "CorrectEdges": 0,
+            "Edges": 0,
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "Height": 1,
+            "InvertTransform": 0,
+            "Pivot": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Size": 0.5,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Merge",
+          "inputs": {
+            "Angle": 0,
+            "Blend": 0.5,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "CorrectEdges": 0,
+            "Edges": 0,
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "Height": 1,
+            "InvertTransform": 0,
+            "Size": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Merge1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "2573d272-2bbc-44c1-9ed6-44e2244d34b5",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "71cb5c9d7d15cfc72cf653563b2b1e48985770cf4c8a6db771846f7802ba5860",
+      "native_rgba64le_frame0_sha256": "9c1a76b4c70d8737dccbdf26234d19e3763904c970f3d9ae4116ec3b2db40bc2",
+      "frames": 48,
+      "native_rgba64le_full_sha256": "9b6762128cc966707934c0545252d084db18c24ea22b17c3e3bd50578ea36317",
+      "native_static_frames_verified": 48
+    },
+    {
+      "kind": "graph",
+      "name": "rotation_90",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Height": 360,
+            "TopLeftAlpha": 1,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Blend": 1,
+            "Center": [
+              0.75,
+              0.75,
+              0
+            ],
+            "CorrectEdges": 0,
+            "Edges": 0,
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "Height": 1,
+            "InvertTransform": 0,
+            "Pivot": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Size": 0.5,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 90,
+            "Blend": 1,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "CorrectEdges": 0,
+            "Edges": 0,
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "Height": 1,
+            "InvertTransform": 0,
+            "Pivot": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Size": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Transform2"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "0a1ce9d9-30d8-4e3b-adde-e0189615e7e4",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "05c4420a3c1862df9c2dc44133a033b3146ce30e23556b04c3b42a2fe11d109b",
+      "native_rgba64le_frame0_sha256": "422f08c8be5860a98c84b80cae0b9abd2bc0dab8400cc8c986c7130f8b36a08b",
+      "frames": 48,
+      "native_rgba64le_full_sha256": "b74765bcc819c878144cc92629714f81bac623001cc8377c1d7e55b984be32f5",
+      "native_static_frames_verified": 48
+    },
+    {
+      "kind": "graph",
+      "name": "transform_upper_right",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Transform",
+          "inputs": {
+            "Angle": 0,
+            "Blend": 1,
+            "Center": [
+              0.75,
+              0.75,
+              0
+            ],
+            "CorrectEdges": 0,
+            "Edges": 0,
+            "FilterMethod": 2,
+            "FlattenTransform": 0,
+            "Height": 1,
+            "InvertTransform": 0,
+            "Pivot": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Size": 0.5,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Transform1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "9e69db32-c08a-44bb-bbde-0c3d3f307621",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "b88b742101bcb122f54a5d42686e4d1b26f8ef2081aab3ca5353afd1af30b835",
+      "native_rgba64le_frame0_sha256": "c55d0a400a089b113e5638cf5890a977731df23d304c9c4d49b37b921ca88c4f",
+      "frames": 48,
+      "native_rgba64le_full_sha256": "774217871ab083b3a3a740899110b8db3496a649aba51699fcb05c584e22a654",
+      "native_static_frames_verified": 48
+    },
+    {
+      "kind": "background",
+      "name": "background_ties_1",
+      "inputs": {
+        "Depth": 0,
+        "Height": 320,
+        "TopLeftAlpha": 0.7,
+        "TopLeftBlue": 0.5,
+        "TopLeftGreen": 0.3,
+        "TopLeftRed": 0.1,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "c58693d7-ce33-44ba-b0d8-424d8f0691d1",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "cd6ebafedaeff788857ee08dc17233db0f19ebd148be54f5b5dc44fdabf00756",
+      "rgba16": [
+        6682,
+        19789,
+        32896,
+        45746
+      ],
+      "native_rgba64le_frame0_sha256": "6a096d55fb535954ccc66ece44a7bd489d2717f5a7da1e55bd200a4f1ea606ef",
+      "native_rgba64le_full_sha256": "e49fa08a96da3ff3392ce424c9358ffdb9aa4a37e580de25765f1bc4518c5d9f",
+      "frames": 12
+    },
+    {
+      "kind": "background",
+      "name": "background_ties_2",
+      "inputs": {
+        "Depth": 0,
+        "Height": 320,
+        "TopLeftAlpha": 0.9999,
+        "TopLeftBlue": 0.50001,
+        "TopLeftGreen": 0.49999,
+        "TopLeftRed": 0.9,
+        "UseFrameFormatSettings": 0,
+        "Width": 320
+      },
+      "native_job": "daffed13-cc12-4595-b658-c129d1ee3d25",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "2fddfd7a56a4ae1659b3a0bf34e17325b4e2137dc0946e76e63ae1bdf51264a7",
+      "rgba16": [
+        58853,
+        32639,
+        32896,
+        65535
+      ],
+      "native_rgba64le_frame0_sha256": "1f24a006209ba8ee2a80c955db647c70f6a38cd6f2b42b946c653ee2b2337f9a",
+      "native_rgba64le_full_sha256": "9d8f5b535f57d8f91d0f33f599e7ec6c6adbd9549e19e60861e75c49fb9eaa95",
+      "frames": 12
+    }
+  ],
+  "limits": [
+    "Default depth resolves to 8-bit in the controlled composition settings; global preference inheritance is not implemented.",
+    "Half float subnormals/overflow and arbitrary tools/offsets remain unmeasured.",
+    "Two default-depth halfway-color samples support float32 input followed by double-scaled rounding; exhaustive halfway values and GPU/backend differences are not established."
+  ],
+  "full_resolve_parity": false
+}

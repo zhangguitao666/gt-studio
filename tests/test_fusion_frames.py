@@ -19,7 +19,7 @@ def sample(raw, x=16, y=16):
 
 def test_checkpoint_preserves_rgba16_and_is_independent_of_grade_and_history(tmp_path):
     e,clip=model(tmp_path)
-    bg=add(e,clip,'Background',Red=0.125,Green=0.375,Blue=0.625,Alpha=0.5)
+    bg=add(e,clip,'Background',Red=0.125,Green=0.375,Blue=0.625,Alpha=0.5,Depth=4)
     e.dispatch('set_clip_properties',{'clip_id':clip,'exposure':-5,'opacity':0,'scale':0.5})
     e.dispatch('set_track_state',{'track_id':e.project['timelines'][0]['tracks'][0]['id'],'locked':True})
     before=copy.deepcopy((e.project,e._undo,e._redo))
@@ -41,7 +41,7 @@ def test_selected_branch_can_render_when_the_main_output_is_incomplete(tmp_path)
     image=tmp_path/'branch.png'
     e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':bg,'output':str(image)})
     actual=sample(rgba(image))
-    assert actual==(0,0,65535,32768), f'RGBA16 branch={actual}'
+    assert actual==(0,0,65535,32896), f'RGBA16 default 8-bit branch={actual}'
     before=image.read_bytes()
     with pytest.raises(ValueError,match='Incomplete'):
         e.dispatch('render_fusion_frame',{'clip_id':clip,'output':str(image)})
@@ -92,7 +92,7 @@ def test_media_in_frame_obeys_source_mapping_after_retime(tmp_path,speed,frame,s
 @pytest.mark.parametrize('alpha',[0,.25,.75,1])
 def test_checkpoint_alpha_quantization_preserves_declared_full_range(tmp_path,alpha):
     e,clip=model(tmp_path)
-    node=add(e,clip,'Background',Red=.125,Green=.375,Blue=.625,Alpha=alpha)
+    node=add(e,clip,'Background',Red=.125,Green=.375,Blue=.625,Alpha=alpha,Depth=4)
     output=tmp_path/'alpha.png'
     e.dispatch('render_fusion_frame',{'clip_id':clip,'node_id':node,'output':str(output)})
     actual=sample(rgba(output))

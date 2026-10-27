@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
 from pathlib import Path
 
 from .fusion import CATALOG, default_graph, render_order
+from .fusion_precision import DEPTH_NAMES
 
 
 class NodeItem(QGraphicsRectItem):
@@ -156,9 +157,14 @@ class FusionPanel(QWidget):
         self.node_label.setText(node['type'] if node else 'Select a node')
         self.name_edit.setText(node['name'] if node else '')
         if node:
-            for key, value in node['parameters'].items():
-                _, low, high = CATALOG[node['type']]['parameters'][key]
-                field = QDoubleSpinBox(); field.setDecimals(4); field.setRange(low, high); field.setSingleStep(0.05); field.setValue(value)
+            for key, (default, low, high) in CATALOG[node['type']]['parameters'].items():
+                value = node['parameters'].get(key, default)
+                if key=='Depth':
+                    field = QComboBox()
+                    for depth, label in DEPTH_NAMES.items(): field.addItem(label, depth)
+                    field.setCurrentIndex(field.findData(value))
+                else:
+                    field = QDoubleSpinBox(); field.setDecimals(4); field.setRange(low, high); field.setSingleStep(0.05); field.setValue(value)
                 field.setMinimumHeight(28)
                 self.parameters[key] = field; self.parameters_form.addRow(key, field)
             self.input_choice.addItems(CATALOG[node['type']]['inputs'])
@@ -193,7 +199,7 @@ class FusionPanel(QWidget):
 
     def apply(self):
         if self.selected_id:
-            self.send('update_fusion_node', {'node_id': self.selected_id, 'name': self.name_edit.text(), 'parameters': {k: w.value() for k, w in self.parameters.items()}})
+            self.send('update_fusion_node', {'node_id': self.selected_id, 'name': self.name_edit.text(), 'parameters': {k: w.currentData() if isinstance(w,QComboBox) else w.value() for k, w in self.parameters.items()}})
 
     def connect(self):
         if self.selected_id and self.input_choice.count() and self.source_choice.currentData():

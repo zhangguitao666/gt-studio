@@ -116,23 +116,25 @@ MCP 操作的是 GT Studio 自己的项目与引擎。它没有借用安装版 R
 
 53个公开MCP工具。服务重连使用会话标识，窗口可在服务重启后重新接受低序号请求。上述专项仅证明报告中列出的操作、素材和输出，完整Resolve一致性仍未达到。
 
-当前完整测试318项通过，53个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。Fusion 页面、MCP 参数回显/界面写回及暂停第0帧已完成真实窗口验收，其余专项窗口检查仍需补齐。
+颜色精度阶段曾完成318项回归，当前仍为53个公开MCP工具。高精度中间格式使十组原版样本MSE下降约30%–32%，仍有残差；详见 [COLOR-PRECISION.md](research/COLOR-PRECISION.md)。完整色彩管理和功能一致性尚未达到。Fusion 页面、MCP 参数回显/界面写回及暂停第0帧已完成真实窗口验收，其余专项窗口检查仍需补齐。
 
 Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes", offset=0, limit=25)` 已实测本机三个模板及一个示例合成，共83个活动节点/133条显式连接；它只读结构，不导入或执行节点。详见 [FUSION-SETTINGS.md](research/FUSION-SETTINGS.md)。
 
-可编辑节点图已接入 Fusion 页面及导出：`get_fusion_graph`、`add_fusion_node`、`update_fusion_node`、`connect_fusion_nodes`、`delete_fusion_node`、`clear_fusion_graph`。当前五节点为 MediaIn、MediaOut、Background、Transform、Merge；Transform/Merge 使用float32关联合成，源缩放与时间线/PNG输出仍有整数边界，完整原版算法等效尚未验证。见 [FUSION-NODES.md](research/FUSION-NODES.md)。桌面演示单独保存到 `workspace/GT Studio Fusion Desktop Demo.json`，可复跑 MCP 验证使用独立工程和媒体。
+可编辑节点图已接入 Fusion 页面及导出：`get_fusion_graph`、`add_fusion_node`、`update_fusion_node`、`connect_fusion_nodes`、`delete_fusion_node`、`clear_fusion_graph`。当前五节点为 MediaIn、MediaOut、Background、Transform、Merge；Transform/Merge 使用float32载体并按节点图像位深量化，源缩放与时间线/PNG输出仍有整数边界，完整原版算法等效尚未验证。见 [FUSION-NODES.md](research/FUSION-NODES.md)。桌面演示单独保存到 `workspace/GT Studio Fusion Desktop Demo.json`，可复跑 MCP 验证使用独立工程和媒体。
 
 原版Fusion运行对照已建立：六组640×360/24fps/48帧案例以及十二个带Alpha导出。该早期测量保留了透明输出和Merge差距，参见 [FUSION-REFERENCE.md](research/FUSION-REFERENCE.md)。318项测试是独立行为回归，不代表原版功能一致。
 
 节点检查点可使用 `render_fusion_frame(clip_id, output, node_id?, frame=0)` 导出 RGBA16 PNG；Fusion 页面选中节点后点击 **Save selected node PNG…**，按钮位于节点面板底部。GUI 使用当前播放头对应的片段内帧，播放头不在该片段内则保存第0帧。真实窗口与已配置MCP保存的PNG已逐字节核对相同。六组检查点对照把时间线半透明变暗与Merge节点色差进一步分开，见 [FUSION-CHECKPOINTS.md](research/FUSION-CHECKPOINTS.md)。
 
-关联Alpha合成修正已按原版26个导出任务校准：13个受控案例中9组全序列RGB逐字节相同，原先半透明背景/共享分支48帧也完全相同；MediaIn颜色与几何边缘仍有残差。当前318项回归通过，详见 [FUSION-ASSOCIATED-ALPHA.md](research/FUSION-ASSOCIATED-ALPHA.md)。代码持续推送到 [GitHub](https://github.com/zhangguitao666/gt-studio)。
+关联Alpha合成修正已按原版26个导出任务校准：13个受控案例中9组全序列RGB逐字节相同，原先半透明背景/共享分支48帧也完全相同；MediaIn颜色与几何边缘仍有残差。该阶段318项回归通过，详见 [FUSION-ASSOCIATED-ALPHA.md](research/FUSION-ASSOCIATED-ALPHA.md)。代码持续推送到 [GitHub](https://github.com/zhangguitao666/gt-studio)。
 
 相邻默认Transform现在合并后采样，已按原版纹理的缩放/旋转还原实验验证，旧旋转案例的Alpha平面完全一致。最终RGB、通用画布外存储和其他节点仍有差异，见 [FUSION-CONCATENATION.md](research/FUSION-CONCATENATION.md)。
 
+Background 已增加 Depth 0..4 位深选择，Transform 继承输入精度、Merge 匹配背景精度。18个原版FFV1 RGBA16案例经配置MCP重建，首末帧共36幅完整像素摘要相同；本机363项完整回归和新增2项舍入样本通过。最终编码RGB、全局位深偏好及新版控件真实窗口验收仍未完成，见 [FUSION-IMAGE-PRECISION.md](research/FUSION-IMAGE-PRECISION.md)。
+
 Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜、意外错误框和巨大字节差异的诊断说明见 [CI-VALIDATION.md](research/CI-VALIDATION.md)。远程结果以 [GitHub Actions](https://github.com/zhangguitao666/gt-studio/actions) 为准，本机测试通过不代替远程结果或原版全功能验收。
 
-媒体电平支持Auto/Full/Video及共享源设置的MCP与检查器控制。15组原版导出中10组全序列RGB相同，媒体恒等48帧相同，Merge MSE降至0.894886；完整色管/HDR/节点等效仍未完成，见 [FUSION-MEDIA-LEVELS.md](research/FUSION-MEDIA-LEVELS.md)。
+媒体电平支持Auto/Full/Video及共享源设置的MCP与检查器控制。15组原版导出目前有12组全序列RGB相同（初期为10组），媒体恒等48帧相同；完整色管/HDR/节点等效仍未完成，见 [FUSION-MEDIA-LEVELS.md](research/FUSION-MEDIA-LEVELS.md)。
 
 默认音频边缘及MOV PCM24已按原版受控案例校准：八组完成案例全流PCM相同，旧六组Fusion案例PCM差异降为0；另有一个Ready任务未完成并排除，完整Fairlight仍未实现。见 [AUDIO-BOUNDARIES.md](research/AUDIO-BOUNDARIES.md)。
 

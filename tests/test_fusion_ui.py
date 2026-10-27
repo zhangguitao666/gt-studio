@@ -43,8 +43,12 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
         wait_for(app, lambda: next(n for n in panel.graph['nodes'] if n['id'] == bg['id'])['position'] != previous_position)
         panel.scene.clearSelection(); panel.items[bg['id']].setSelected(True)
         panel.parameters['Blue'].setValue(1); panel.parameters['Alpha'].setValue(0.5)
+        assert panel.parameters['Depth'].currentData()==0
+        panel.parameters['Depth'].setCurrentIndex(panel.parameters['Depth'].findData(2))
         panel.apply_button.click()
         wait_for(app, lambda: next(n for n in panel.graph['nodes'] if n['id'] == bg['id'])['parameters']['Blue'] == 1)
+        saved_bg=next(n for n in rpc(url,'get_fusion_graph',{'clip_id':clip_id})['graph']['nodes'] if n['id']==bg['id'])
+        assert saved_bg['parameters']['Depth']==2
         panel.scene.clearSelection(); panel.items['MediaOut1'].setSelected(True)
         panel.source_choice.setCurrentIndex(panel.source_choice.findData(bg['id']))
         panel.connect_button.click()
@@ -58,9 +62,11 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
         first_pixel = sink.videoFrame().toImage().pixelColor(16, 16)
         assert first_pixel.red() < 8 and first_pixel.green() < 8 and first_pixel.blue() >= 245
         # Direct external node edits update both canvas properties and rendered preview.
-        rpc(url, 'update_fusion_node', {'clip_id': clip_id, 'node_id': bg['id'], 'parameters': {'Blue': 0, 'Green': 1}})
+        rpc(url, 'update_fusion_node', {'clip_id': clip_id, 'node_id': bg['id'], 'parameters': {'Blue': 0, 'Green': 1, 'Depth':4}})
         window.client.poll()
         wait_for(app, lambda: next(n for n in panel.graph['nodes'] if n['id'] == bg['id'])['parameters']['Green'] == 1)
+        panel.scene.clearSelection(); panel.items[bg['id']].setSelected(True)
+        assert panel.parameters['Depth'].currentData()==4
         wait_for(app, lambda: window.preview_signature == window.state_signature, seconds=8)
         wait_for(app, lambda: sink.videoFrame().isValid() and sink.videoFrame().toImage().pixelColor(16, 16).green() >= 245)
         panel.scene.clearSelection(); panel.items['MediaOut1'].setSelected(True)
@@ -77,6 +83,7 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
         assert not panel.items[bg['id']].flags() & panel.items[bg['id']].GraphicsItemFlag.ItemIsMovable
         # Export is available on a locked track, and does not change the graph.
         panel.scene.clearSelection();panel.items[bg['id']].setSelected(True)
+        assert not panel.parameters['Depth'].isEnabled()
         before=rpc(url,'get_state')
         image=tmp_path/'locked-node.png'
         from frameforge import fusion_ui

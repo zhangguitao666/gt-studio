@@ -26,7 +26,7 @@ Fusion 页面提供片段选择、节点画布、拖动布局、参数面板、�
 
 MediaIn 是同一片段变速/倒放/定格后的源帧，先适配项目画布；不支持选择其他媒体或原版全尺寸/代理/缓存规则。MediaOut 指定唯一图输出。
 
-Background 使用项目大小，RGBA 范围 0..1。Transform 提供统一 Size、逆时针 Angle、归一化 CenterX/CenterY，坐标原点在左下；当前缩放尺寸取偶数，暂不支持 Pivot、Aspect、边界模式、运动模糊或原版采样器。Merge 只支持关联 alpha-over、Blend 与中心位置，无效果蒙版或其他混合模式。Blend同时缩放前景RGB和Alpha；图输出经过关联值对应的片段透明度、淡化与时间线合成，再编码。音频路径保持原样。
+Background 使用项目大小，RGBA 范围 0..1，并提供 Depth 0..4 图像位深选择（默认在当前模型中为8位）。Transform 提供统一 Size、逆时针 Angle、归一化 CenterX/CenterY，坐标原点在左下；当前使用逆映射浮点采样及相邻变换合并，暂不支持 Pivot、Aspect、边界模式、运动模糊或原版采样器。Merge 只支持关联 alpha-over、Blend 与中心位置，无效果蒙版或其他混合模式。Blend同时缩放前景RGB和Alpha；图输出经过关联值对应的片段透明度、淡化与时间线合成，再编码。音频路径保持原样。
 
 编译器按输出可达子图排序，并为共享节点创建显式分支。恒等 MediaIn→MediaOut 走原先媒体处理路径，即使存在未使用节点也不额外转码滤镜；清空图后的实际解码 RGB/PCM 已与无图基准逐字节对照。
 
@@ -59,3 +59,7 @@ Fusion 页面所选节点面板底部提供 **Save selected node PNG…**。检�
 Linux完整构建对照进一步发现混合叠化的普通媒体一侧仍走旧透明overlay画布；现将涉及Fusion的两侧统一为直接定位的关联画布，并在混合前确定两侧类型，补齐Fusion位于左/右两侧的回归。普通媒体对普通媒体的既有叠化路径不变。当前242项本机回归通过；远程结果见Actions。
 
 媒体电平后续阶段已使用float32节点运算及逆映射变换，添加共享媒体电平设置。源缩放和时间线/PNG仍有整数边界，具体证据与限制见 [FUSION-MEDIA-LEVELS.md](FUSION-MEDIA-LEVELS.md)。
+
+## 图像位深更新
+
+后续编译器已采用 float32 载体、按节点位深量化及默认相邻 Transform 合并采样，取代上文历史 pad/crop/统一整数边界。18个原版 FFV1 RGBA16 案例首末帧经配置 MCP 重建共36幅摘要相同；最终编码颜色仍有残差，原版偏好继承和完整 Fusion 尚未实现。详见 [FUSION-IMAGE-PRECISION.md](FUSION-IMAGE-PRECISION.md)。

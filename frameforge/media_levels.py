@@ -2,13 +2,18 @@
 MODES = ('Auto', 'Full', 'Video')
 
 
-def level_filters(media):
-    """Return pre-resize decoder overrides and post-resize RGB float mapping."""
+def effective_data_level(media):
     mode = media.get('data_level', 'Auto')
     if mode not in MODES:
         raise ValueError('Data level must be Auto, Full or Video')
     if mode == 'Auto':
         mode = 'Video' if media.get('video_codec') == 'qtrle' else 'Auto'
+    return mode
+
+
+def level_filters(media):
+    """Return pre-resize decoder overrides and post-resize RGB float mapping."""
+    mode = effective_data_level(media)
     pixel_format = media.get('pixel_format', '')
     rgb = pixel_format.startswith(('rgb', 'bgr', 'gbr', 'argb', 'abgr'))
     if rgb and mode == 'Video':
