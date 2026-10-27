@@ -130,11 +130,11 @@ Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes
 
 相邻默认Transform现在合并后采样，已按原版纹理的缩放/旋转还原实验验证，旧旋转案例的Alpha平面完全一致。最终RGB、通用画布外存储和其他节点仍有差异，见 [FUSION-CONCATENATION.md](research/FUSION-CONCATENATION.md)。
 
-Background 已增加 Depth 0..4 位深选择，Transform 继承输入精度、Merge 匹配背景精度。18个原版FFV1 RGBA16案例经配置MCP重建，首末帧共36幅完整像素摘要相同；本机与对应精度修复提交的Linux完整367项回归通过。最终编码RGB与全局位深偏好仍未完成，见 [FUSION-IMAGE-PRECISION.md](research/FUSION-IMAGE-PRECISION.md)。主服务和应用包现已加载该版本，位深双向写回、真实窗口回显及GUI/MCP节点PNG逐字节一致已验收，见 [FUSION-DEPTH-DESKTOP.md](research/FUSION-DEPTH-DESKTOP.md)。
+Background 已增加 Depth 0..4 位深选择，Transform 继承输入精度、Merge 匹配背景精度。原版FFV1 RGBA16基准已扩展到22组，配置MCP重建的首末帧共44幅完整像素摘要相同；本机完整371项回归通过；初始精度修复的367项本机/Linux记录见 [FUSION-IMAGE-PRECISION.md](research/FUSION-IMAGE-PRECISION.md)。最新统一RGB8输入与显式关联ProRes转换后，15组电平序列全部RGB相同，其他编码、矩阵、全局位深偏好及完整色管仍未完成，见 [FUSION-RGB-YUV.md](research/FUSION-RGB-YUV.md)。位深控件已在主服务和应用包完成双向写回、真实窗口回显及GUI/MCP节点PNG逐字节一致验收，见 [FUSION-DEPTH-DESKTOP.md](research/FUSION-DEPTH-DESKTOP.md)。
 
 Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜、意外错误框和巨大字节差异的诊断说明见 [CI-VALIDATION.md](research/CI-VALIDATION.md)。远程结果以 [GitHub Actions](https://github.com/zhangguitao666/gt-studio/actions) 为准，本机测试通过不代替远程结果或原版全功能验收。
 
-媒体电平支持Auto/Full/Video及共享源设置的MCP与检查器控制。15组原版导出目前有12组全序列RGB相同（初期为10组），媒体恒等48帧相同；完整色管/HDR/节点等效仍未完成，见 [FUSION-MEDIA-LEVELS.md](research/FUSION-MEDIA-LEVELS.md)。
+媒体电平支持Auto/Full/Video及共享源设置的MCP与检查器控制。15组原版导出现已全部全序列RGB相同（初期为10组，位深阶段为12组），媒体恒等48帧相同；完整色管/HDR/节点等效仍未完成，见 [FUSION-MEDIA-LEVELS.md](research/FUSION-MEDIA-LEVELS.md)。
 
 默认音频边缘及MOV PCM24已按原版受控案例校准：八组完成案例全流PCM相同，旧六组Fusion案例PCM差异降为0；另有一个Ready任务未完成并排除，完整Fairlight仍未实现。见 [AUDIO-BOUNDARIES.md](research/AUDIO-BOUNDARIES.md)。
 

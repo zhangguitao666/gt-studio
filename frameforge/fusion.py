@@ -420,7 +420,7 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
         out = f'{prefix}_f{index}'
         params, kind = node['parameters'], node['type']
         if kind == 'MediaIn':
-            from .media_levels import level_filters, effective_data_level
+            from .media_levels import level_filters
             before, after = level_filters(media or {})
             rgb8 = (media or {}).get('pixel_format') in {'rgb24', 'bgr24', 'argb', 'abgr', 'rgba', 'bgra', 'gbrp', 'gbrap', 'rgb0', '0rgb', 'bgr0', '0bgr'}
             # Preserve the decoded 8-bit RGB values before the integer resize.
@@ -428,10 +428,10 @@ def compile_graph(graph, selection, project, duration_frames, prefix, *, force_o
             # Normalize channels independently, avoiding depth/range remaps
             # in the alpha paths of the conversion filters.
             normalized = selection + before
-            # Video code values need byte-exact normalization before the
-            # 16/235 mapping. Full/other Auto retain the separately measured
-            # decoder expansion; treating every mode as Video regresses Full.
-            if rgb8 and effective_data_level(media or {})=='Video':
+            # Byte-exact normalization precedes data-level interpretation for
+            # every RGB8 source. Native Full RGBA16 carriers exposed a decoder
+            # expansion error previously hidden by the final RGB conversion.
+            if rgb8:
                 raw = out+'_decoded'; filters.append(normalized+f'[{raw}]')
                 expanded = out+'_expanded'
                 alpha_present = (media or {}).get('pixel_format') in {'argb','abgr','rgba','bgra','gbrap'}

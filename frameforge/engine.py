@@ -1267,6 +1267,14 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
             except Exception:
                 subtitle_temp.cleanup()
                 raise
+        if output_format == 'mov' and associated_timeline:
+            # Associated timelines finish in RGB16. Convert once explicitly;
+            # implicit swscale RGB->YUV differs from captured native ProRes
+            # output even when the node's RGBA16 carrier is already exact.
+            # This calibrates unmanaged SMPTE170M video-range export, not
+            # arbitrary project color management or HDR output transforms.
+            filters.append(f'[{video_label}]format=gbrp16le,zscale=matrixin=gbr:matrix=170m:rangein=full:range=limited:dither=none,format=yuv422p10le[prores_video]')
+            video_label = 'prores_video'
         # Render to a sibling temporary file so failed encodes preserve existing exports.
         handle, temporary = tempfile.mkstemp(prefix='.frameforge-', suffix='.' + output_format, dir=destination.parent)
         os.close(handle)

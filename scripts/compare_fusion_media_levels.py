@@ -40,6 +40,7 @@ def main():
             observations.append(result);print(json.dumps({k:result[k] for k in ('level','blend','rgb_mae','rgb_mse','native_center','independent_center')},ensure_ascii=False),flush=True)
         report={'status':'measured_15_native_cases_not_general_equivalence','reference':identity(reference),'driver':identity(Path(__file__)),'production':[identity(ROOT/p) for p in ('frameforge/engine.py','frameforge/fusion.py','frameforge/media_levels.py')],'public_tools':len(tools),'server':client.server_info,'cases':observations,'calls':client.calls,'full_resolve_parity':False,'limitations':['Only static red RGB24 QTRLE with blue generator, captured level settings and ProRes exports.','Native export RGB is not an internal float buffer. Other codecs, HDR, color-management and interpolation parity remain unverified.']}
         target=ROOT/'research'/('fusion-media-levels-comparison-'+args.run_name+'.json');target.write_text(json.dumps(report,ensure_ascii=False,indent=2));print(target)
+        assert len(observations)==15 and all(c['rgb_exact'] for c in observations), 'Captured native source-level RGB sequences differ'
     finally:client.close()
 
 

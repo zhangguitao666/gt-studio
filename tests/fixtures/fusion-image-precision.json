@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
-  "scope": "Native FFV1 RGBA16 export carriers: five generator depths plus two halfway-color cases, seven depth combinations, and four existing static node graphs. Not internal float buffer or full Fusion equivalence.",
+  "scope": "Native FFV1 RGBA16 export carriers: five generator depths plus two halfway-color cases, seven depth combinations, and four existing static node graphs. Not internal float buffer or full Fusion equivalence. Four additional RGB24 source-level Merge carriers include two Full cases that exposed the previous decoder-expansion error.",
   "native_version": "21.1.1.10",
   "snapshots": {
     "background": "2b30f19af0807a094516acce29fc4320ee69a1167348f232e18c31349ed511d3",
     "merge": "bc416fd06bfbee953051f9770de6c37d4b60c900247b2265fe0103538c7caaf3",
     "paired": "74a179b158b48ea3d41310451df1dc99de4f0e369d7df14ba0026b00187dcfaa",
-    "ties": "22a783c1934b6a0121f77602d15efd1739cd5d34c90749329f35be925a341092"
+    "ties": "22a783c1934b6a0121f77602d15efd1739cd5d34c90749329f35be925a341092",
+    "level_rgba": "e02902734558646e12ede06b7cde21d7cb73904b8740e1b1e4663799a339efe5"
   },
   "graph_source": {
     "width": 640,
@@ -791,6 +792,254 @@
       "native_rgba64le_frame0_sha256": "1f24a006209ba8ee2a80c955db647c70f6a38cd6f2b42b946c653ee2b2337f9a",
       "native_rgba64le_full_sha256": "9d8f5b535f57d8f91d0f33f599e7ec6c6adbd9549e19e60861e75c49fb9eaa95",
       "frames": 12
+    },
+    {
+      "kind": "graph",
+      "name": "level_auto_b1",
+      "source_pixel_format": "rgb24",
+      "data_level": "Auto",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Depth": 0,
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Merge",
+          "inputs": {
+            "Blend": 1,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Height": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Merge1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "61b30ed5-49f9-4655-9dfb-0436d1c9118d",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "175c7d5e068907f88db16bbca33dc7e1ad7375145601b973614fcad39cd1afa0",
+      "rgba16": [
+        35173,
+        0,
+        63150,
+        65535
+      ],
+      "native_rgba64le_frame0_sha256": "1d1f48be20d09fc5cf2a3a804fe300308c9db8a1ba59df59905ec77c8cc9c3d8",
+      "native_rgba64le_full_sha256": "6d9fa546b8fbbbe2091a1c42ef6043aad650f3bdcda89fd4dfed284f07747887",
+      "frames": 12
+    },
+    {
+      "kind": "graph",
+      "name": "level_full_b0p5",
+      "source_pixel_format": "rgb24",
+      "data_level": "Full",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Depth": 0,
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Merge",
+          "inputs": {
+            "Blend": 0.5,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Height": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Merge1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "9da92f3c-2671-42e1-aa24-80a10a62123a",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "38d150efa5042999d70b46f0b34280ff46280cc193a7acc1bb276fd21f17b2bb",
+      "rgba16": [
+        48510,
+        0,
+        32768,
+        65535
+      ],
+      "native_rgba64le_frame0_sha256": "3cb2aaeca166dacda7452bf53ddc8f1c3e9e8ddaecaa503c62f99f0266ba98ff",
+      "native_rgba64le_full_sha256": "a278794151dadf12fd55af6d4131e66dd291734c5f82309883dd238269001d7f",
+      "frames": 12
+    },
+    {
+      "kind": "graph",
+      "name": "level_full_b0p75",
+      "source_pixel_format": "rgb24",
+      "data_level": "Full",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Depth": 0,
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Merge",
+          "inputs": {
+            "Blend": 0.75,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Height": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Merge1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "3a31acbc-3706-4cbd-80dd-70f5ac85de45",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "f0ee6a7f17f68dbf5cdc6032d0728a9f93620534f61e6080e6b283e07a3fdd2b",
+      "rgba16": [
+        40382,
+        0,
+        49151,
+        65535
+      ],
+      "native_rgba64le_frame0_sha256": "93f59300ff77512ed27d5eef7212b80658a87de1c9cd156ae2a05a8453dd0901",
+      "native_rgba64le_full_sha256": "98c46c46fc5b42b0e0035a34e1ea6a667c7135376ae2156326db572b8f734d6d",
+      "frames": 12
+    },
+    {
+      "kind": "graph",
+      "name": "level_video_b1",
+      "source_pixel_format": "rgb24",
+      "data_level": "Video",
+      "nodes": [
+        {
+          "class": "MediaIn",
+          "inputs": {},
+          "name": "MediaIn1"
+        },
+        {
+          "class": "Background",
+          "inputs": {
+            "Depth": 0,
+            "Height": 360,
+            "TopLeftAlpha": 0.5,
+            "TopLeftBlue": 1,
+            "TopLeftGreen": 0,
+            "TopLeftRed": 0,
+            "UseFrameFormatSettings": 0,
+            "Width": 640
+          },
+          "name": "Background1"
+        },
+        {
+          "class": "Merge",
+          "inputs": {
+            "Blend": 1,
+            "Center": [
+              0.5,
+              0.5,
+              0
+            ],
+            "Height": 1,
+            "UseFrameFormatSettings": 0,
+            "Width": 1
+          },
+          "name": "Merge1"
+        },
+        {
+          "class": "MediaOut",
+          "inputs": {},
+          "name": "MediaOut1"
+        }
+      ],
+      "native_job": "8277ef2b-e0db-4c42-bc07-0cdd8be1299b",
+      "native_status": {
+        "CompletionPercentage": 100,
+        "JobStatus": "Complete"
+      },
+      "native_file_sha256": "2324218f769a40a37d2fc3c8959fb6619940887f27d62e26202ec78fe2b85cea",
+      "rgba16": [
+        35173,
+        0,
+        63150,
+        65535
+      ],
+      "native_rgba64le_frame0_sha256": "1d1f48be20d09fc5cf2a3a804fe300308c9db8a1ba59df59905ec77c8cc9c3d8",
+      "native_rgba64le_full_sha256": "6d9fa546b8fbbbe2091a1c42ef6043aad650f3bdcda89fd4dfed284f07747887",
+      "frames": 12
     }
   ],
   "limits": [
@@ -798,5 +1047,19 @@
     "Half float subnormals/overflow and arbitrary tools/offsets remain unmeasured.",
     "Two default-depth halfway-color samples support float32 input followed by double-scaled rounding; exhaustive halfway values and GPU/backend differences are not established."
   ],
-  "full_resolve_parity": false
+  "full_resolve_parity": false,
+  "source_level_graphs": {
+    "rgba8": [
+      252,
+      0,
+      0,
+      255
+    ],
+    "pixel_format": "rgb24",
+    "codec": "qtrle",
+    "width": 640,
+    "height": 360,
+    "fps": 24,
+    "clip_frames": 12
+  }
 }

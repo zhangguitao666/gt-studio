@@ -1,5 +1,6 @@
 """Captured native source-level cases and preservation of out-of-range node samples."""
 import copy
+import hashlib
 import json
 from pathlib import Path
 import struct
@@ -8,25 +9,32 @@ import subprocess
 import pytest
 from frameforge.engine import Engine, ffmpeg_executable
 from frameforge.fusion import compile_graph
-from test_fusion import real_project, add, connect, pixels, pixel
+from test_fusion import real_project, add, connect, pixels
 from test_transitions import colored_sources
+from scripts.verify_fusion_image_precision import make_source
 
 CASES=json.loads((Path(__file__).parent/'fixtures/fusion-media-levels.json').read_text())['cases']
 
 
+@pytest.fixture(scope='module')
+def native_rgb24_source(tmp_path_factory):
+    return make_source(tmp_path_factory.mktemp('native-level-source'),has_alpha=False)
+
+
 @pytest.mark.parametrize('case',CASES,ids=[c['id'] for c in CASES])
-def test_captured_native_media_levels_and_merge_blend(tmp_path,colored_sources,case):
-    e,clip=real_project(tmp_path,colored_sources)
-    media=e.project['media'][0]
+def test_captured_native_media_levels_and_merge_blend(tmp_path,native_rgb24_source,case):
+    e=Engine(tmp_path/'project')
+    e.dispatch('create_project',{'name':'Native source-level case','width':640,'height':360,'fps':24})
+    media=e.dispatch('import_media',{'path':str(native_rgb24_source)})
+    clip=e.dispatch('append_clip',{'media_id':media['id'],'out_frame':12})['id']
     assert media['video_codec']=='qtrle' and media['pixel_format']=='rgb24'
     e.dispatch('set_media_data_level',{'media_id':media['id'],'mode':case['mode']})
     blue=add(e,clip,'Background',Blue=1,Alpha=case['alpha'])
     merge=add(e,clip,'Merge',Blend=case['blend'])
     connect(e,clip,merge,'Background','MediaIn1');connect(e,clip,merge,'Foreground',blue);connect(e,clip,'MediaOut1','Input',merge)
     output=tmp_path/'levels.mov';e.dispatch('render',{'output':str(output)})
-    raw=pixels(output);assert len(raw)==12*32*32*3
-    for frame in range(12):
-        assert pixel(raw,16,16,frame)==pytest.approx(case['native_rgb_center'],abs=4), f'{case["id"]} frame {frame}'
+    raw=pixels(output);assert len(raw)==12*640*360*3
+    assert hashlib.sha256(raw).hexdigest()==case['native_decoded_sha256'], f'{case["id"]}: full native RGB sequence differs'
 
 
 def test_data_level_shared_persistence_undo_and_invalid_rollback(tmp_path,colored_sources):

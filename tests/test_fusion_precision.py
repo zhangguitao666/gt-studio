@@ -19,14 +19,15 @@ REFERENCE=json.loads(FIXTURE.read_text())
 
 @pytest.fixture(scope='module')
 def precision_source(tmp_path_factory):
-    return make_source(tmp_path_factory.mktemp('precision-source'))
+    work=tmp_path_factory.mktemp('precision-source')
+    return {'argb':make_source(work),'rgb24':make_source(work,has_alpha=False)}
 
 
 @pytest.mark.parametrize('case',REFERENCE['cases'],ids=lambda c:c['name'])
 def test_native_image_precision_entire_rgba16_planes(tmp_path,precision_source,case):
     e=Engine(tmp_path/'project')
     def call(action,**arguments):return e.dispatch(action,arguments)
-    clip=build_case(call,case,precision_source)
+    clip=build_case(call,case,precision_source[case.get('source_pixel_format','argb')])
     saved=e.dispatch('save_project')['path'];e.dispatch('open_project',{'path':saved})
     before=copy.deepcopy((e.project,e._undo,e._redo))
     for frame in (0,case['frames']-1):
