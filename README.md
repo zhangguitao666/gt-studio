@@ -130,7 +130,7 @@ Fusion 文件检查入口 `inspect_fusion_settings(path, detail="summary"/"nodes
 
 相邻默认Transform现在合并后采样，已按原版纹理的缩放/旋转还原实验验证，旧旋转案例的Alpha平面完全一致。最终RGB、通用画布外存储和其他节点仍有差异，见 [FUSION-CONCATENATION.md](research/FUSION-CONCATENATION.md)。
 
-Background 已增加 Depth 0..4 位深选择，Transform 继承输入精度、Merge 匹配背景精度。18个原版FFV1 RGBA16案例经配置MCP重建，首末帧共36幅完整像素摘要相同；本机完整367项回归通过。最终编码RGB、全局位深偏好及新版控件真实窗口验收仍未完成，见 [FUSION-IMAGE-PRECISION.md](research/FUSION-IMAGE-PRECISION.md)。
+Background 已增加 Depth 0..4 位深选择，Transform 继承输入精度、Merge 匹配背景精度。18个原版FFV1 RGBA16案例经配置MCP重建，首末帧共36幅完整像素摘要相同；本机与对应精度修复提交的Linux完整367项回归通过。最终编码RGB与全局位深偏好仍未完成，见 [FUSION-IMAGE-PRECISION.md](research/FUSION-IMAGE-PRECISION.md)。主服务和应用包现已加载该版本，位深双向写回、真实窗口回显及GUI/MCP节点PNG逐字节一致已验收，见 [FUSION-DEPTH-DESKTOP.md](research/FUSION-DEPTH-DESKTOP.md)。
 
 Linux CI使用固定摘要的完整FFmpeg构建执行全部检查；字幕滤镜、意外错误框和巨大字节差异的诊断说明见 [CI-VALIDATION.md](research/CI-VALIDATION.md)。远程结果以 [GitHub Actions](https://github.com/zhangguitao666/gt-studio/actions) 为准，本机测试通过不代替远程结果或原版全功能验收。
 

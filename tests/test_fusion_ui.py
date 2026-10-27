@@ -28,8 +28,23 @@ def test_canvas_controls_and_mcp_share_nodes_and_preview(tmp_path, colored_sourc
     try:
         window.show()
         wait_for(app, lambda: window.state is not None)
-        window.select_clip(clip_id, preview=False); window.set_page('Fusion')
+        window.set_page('Fusion')
         panel = window.fusion_panel
+        assert panel.clip_id is None
+        observed_states=[]
+        window.client.state_received.connect(observed_states.append)
+        panel.clip_choice.showPopup()
+        assert panel.clip_choice.view().isVisible()
+        window.client.poll()
+        wait_for(app,lambda:bool(observed_states))
+        assert panel.clip_choice.view().isVisible(), 'An unchanged poll closed the clip selector'
+        rpc(url,'add_marker',{'frame':0,'label':'Selector refresh'})
+        window.client.poll()
+        wait_for(app,lambda:any(m['label']=='Selector refresh' for m in window.state['timelines'][0]['markers']))
+        assert panel.clip_choice.view().isVisible(), 'An unrelated MCP edit closed the clip selector'
+        QTest.keyClick(panel.clip_choice.view(),Qt.Key.Key_Down)
+        QTest.keyClick(panel.clip_choice.view(),Qt.Key.Key_Return)
+        wait_for(app,lambda:panel.clip_id==clip_id)
         assert panel.clip_id == clip_id and len(panel.items) == 2
         panel.type_choice.setCurrentText('Background'); panel.add_button.click()
         wait_for(app, lambda: len(panel.items) == 3)
