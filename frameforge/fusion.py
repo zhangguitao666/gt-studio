@@ -287,8 +287,12 @@ def rgba8_to_rgba16(source, output, *, has_alpha=True):
     prepare = '' if has_alpha else 'format=rgba,'
     filters = [f'[{source}]{prepare}extractplanes=r+g+b+a[{output}_r8][{output}_g8][{output}_b8][{output}_a8]']
     for c in ('r','g','b','a'):
-        filters.append(f'[{output}_{c}8]zscale=rangein=full:range=full:dither=none,format=gray16le[{output}_{c}]')
-    filters.append(f'[{output}_g][{output}_b][{output}_r][{output}_a]mergeplanes=0x00102030:format=gbrap16le[{output}]')
+        # extractplanes can retain its RGB parent's matrix tag. zimg rejects
+        # RGB matrix coefficients on a grayscale carrier in newer versions.
+        # Both ends are scalar gray: select the same non-RGB matrix so only
+        # depth/range changes, then restore the RGB tag after reassembly.
+        filters.append(f'[{output}_{c}8]zscale=matrixin=709:matrix=709:rangein=full:range=full:dither=none,format=gray16le[{output}_{c}]')
+    filters.append(f'[{output}_g][{output}_b][{output}_r][{output}_a]mergeplanes=0x00102030:format=gbrap16le,setparams=colorspace=gbr[{output}]')
     return filters
 
 

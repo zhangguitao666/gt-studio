@@ -56,10 +56,12 @@ def test_legacy_implicit_depth_is_read_pure_and_survives_save_reopen(tmp_path):
 
 
 @pytest.mark.parametrize('has_alpha',[False,True])
-def test_rgb8_and_alpha_expand_as_unorm_without_channel_bias(has_alpha):
+@pytest.mark.parametrize('rgb_tagged',[False,True])
+def test_rgb8_and_alpha_expand_as_unorm_without_channel_bias(has_alpha,rgb_tagged):
     pixels=[(i,(i*7)%256,255-i,(i*13)%256) for i in range(256)]*2
     raw=bytes(v for pixel in pixels for v in (pixel if has_alpha else pixel[:3]))
-    filters=rgba8_to_rgba16('0:v','integer',has_alpha=has_alpha)
+    filters=(["[0:v]setparams=colorspace=gbr[tagged]"] if rgb_tagged else [])
+    filters+=rgba8_to_rgba16('tagged' if rgb_tagged else '0:v','integer',has_alpha=has_alpha)
     def run(graph,label,fmt):
         return subprocess.run([ffmpeg_executable(),'-v','error','-filter_complex_threads','1','-f','rawvideo',
             '-pixel_format','rgba' if has_alpha else 'rgb24','-video_size','256x2','-i','pipe:0','-filter_complex',';'.join(graph),
