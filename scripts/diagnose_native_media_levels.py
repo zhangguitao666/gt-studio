@@ -4,6 +4,7 @@ import base64
 from collections import Counter
 import hashlib
 import json
+import re
 from pathlib import Path
 import struct
 import subprocess
@@ -80,6 +81,25 @@ def diagnose(names,output):
             values=struct.unpack('<'+str(len(data)//2)+'H',data)
             return {'sha256':hashlib.sha256(data).hexdigest(),'plane_values':[Counter(part).most_common(8) for part in (values[:n],values[n:n+n//2],values[n+n//2:])]}
         stages={'pre_encoder':yuv_summary(raw_carrier)}
+        # Tap the RGB16 input to the final color conversion without changing
+        # any upstream filters; then convert that carrier independently.
+        rgb_cmd=list(lossless);at=rgb_cmd.index('-filter_complex')+1
+        upstream,last=rgb_cmd[at].rsplit(';',1)
+        before_label=re.match(r'^\[([^]]+)\]',last)[1]
+        conversion=last.split(']',1)[1].rsplit('[',1)[0]
+        rgb_cmd[at]=upstream
+        at=rgb_cmd.index('-map')+1;rgb_cmd[at]='['+before_label+']'
+        rgb_cmd[rgb_cmd.index('-pix_fmt')+1]='gbrp16le'
+        rgb_carrier=work/(name+'-pre-conversion.nut');rgb_cmd[-1]=str(rgb_carrier)
+        subprocess.run(rgb_cmd,capture_output=True,check=True)
+        data=subprocess.check_output([ffmpeg,'-v','error','-i',str(rgb_carrier),'-frames:v','1','-an','-pix_fmt','gbrp16le','-f','rawvideo','-'])
+        values=struct.unpack('<'+str(len(data)//2)+'H',data)
+        stages['pre_conversion_rgb16']={'sha256':hashlib.sha256(data).hexdigest(),'plane_values':[Counter(values[i*n:(i+1)*n]).most_common(8) for i in range(3)]}
+        for scalar in (False,True):
+            target=work/(name+'-convert-'+str(scalar)+'.nut')
+            opts=['-cpuflags','0'] if scalar else []
+            subprocess.run([ffmpeg,'-v','error','-y',*opts,'-i',str(rgb_carrier),'-an','-vf',conversion,'-c:v','rawvideo',str(target)],capture_output=True,check=True)
+            stages['isolated_conversion_scalar_'+str(scalar)]=yuv_summary(target)
         for threads in (0,1):
             recoded=work/(name+'-reencode-'+str(threads)+'.mov')
             subprocess.run([ffmpeg,'-v','error','-y','-i',str(raw_carrier),'-an','-c:v','prores_ks','-profile:v','3','-threads:v',str(threads),str(recoded)],capture_output=True,check=True)
