@@ -1,0 +1,31 @@
+"""Install and verify the single pinned Linux CI FFmpeg build."""
+import hashlib, imageio_ffmpeg, json, os, re, shutil, subprocess, tarfile
+from pathlib import Path
+from urllib.request import urlopen
+bundled = imageio_ffmpeg.get_ffmpeg_exe()
+bundled_filters = subprocess.check_output([bundled, '-hide_banner', '-filters'], text=True)
+# One immutable build for every test; never select an encoder per test.
+source = 'https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-22-13-06/ffmpeg-n8.1.3-23-g5c4f5744cd-linux64-gpl-8.1.tar.xz'
+expected_sha256 = '1aa0c5526768bf4db3e62cba954169e3e0be38327c9cbbb6c5675794df6c03df'
+directory = Path(os.environ['RUNNER_TEMP']) / 'gt-studio-ffmpeg'
+directory.mkdir(exist_ok=True)
+archive = directory / 'ffmpeg.tar.xz'
+with urlopen(source, timeout=60) as response, archive.open('wb') as output:
+    shutil.copyfileobj(response, output)
+with archive.open('rb') as stream:
+    assert hashlib.file_digest(stream, 'sha256').hexdigest() == expected_sha256, 'FFmpeg archive digest differs'
+selected = directory / 'ffmpeg'
+with tarfile.open(archive) as package:
+    matches = [m for m in package.getmembers() if m.isfile() and m.name.endswith('/bin/ffmpeg')]
+    assert len(matches) == 1, 'Expected one standalone FFmpeg executable'
+    with package.extractfile(matches[0]) as stream, selected.open('wb') as output:
+        shutil.copyfileobj(stream, output)
+selected.chmod(0o755)
+filters = subprocess.check_output([str(selected), '-hide_banner', '-filters'], text=True)
+required = ('drawtext', 'overlay', 'geq', 'blend', 'premultiply', 'unpremultiply', 'zscale', 'extractplanes', 'mergeplanes', 'afade', 'aeval', 'amix', 'aevalsrc', 'apad', 'amultiply')
+missing = [name for name in required if not re.search(r'\b' + name + r'\b', filters)]
+print(json.dumps({'source': source, 'archive_sha256': expected_sha256, 'bundled': bundled, 'bundled_drawtext': bool(re.search(r'\bdrawtext\b', bundled_filters)), 'selected': str(selected), 'missing_filters': missing}))
+assert not missing, 'Selected FFmpeg lacks required filters'
+print(subprocess.check_output([str(selected), '-version'], text=True).splitlines()[0])
+with open(os.environ['GITHUB_ENV'], 'a') as target:
+    target.write('FRAMEFORGE_FFMPEG=' + str(selected) + '\n')

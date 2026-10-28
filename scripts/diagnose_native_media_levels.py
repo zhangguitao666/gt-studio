@@ -1,0 +1,73 @@
+"""Measure native/product differences; this diagnostic is not a parity gate."""
+import argparse
+import base64
+from collections import Counter
+import hashlib
+import json
+from pathlib import Path
+import struct
+import subprocess
+import sys
+import zlib
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from frameforge.engine import Engine,ffmpeg_executable
+from scripts.verify_fusion_image_precision import make_source
+
+
+def diagnose(names,output):
+    ffmpeg=ffmpeg_executable()
+    cases=json.loads((ROOT/'tests/fixtures/fusion-media-levels.json').read_text())['cases']
+    references=json.loads((ROOT/'tests/fixtures/fusion-prores-reference.json').read_text())
+    work=output.parent/'native-color-work';work.mkdir(parents=True,exist_ok=True)
+    source=make_source(work,has_alpha=False)
+    results=[]
+    for name in names:
+        case=next(c for c in cases if c['id']==name)
+        e=Engine(work/name)
+        e.dispatch('create_project',{'width':640,'height':360,'fps':24,'name':'Color diagnostic'})
+        media=e.dispatch('import_media',{'path':str(source)})
+        e.dispatch('set_media_data_level',{'media_id':media['id'],'mode':case['mode']})
+        clip=e.dispatch('append_clip',{'media_id':media['id'],'out_frame':12})['id']
+        bg=e.dispatch('add_fusion_node',{'clip_id':clip,'type':'Background','parameters':{'Blue':1,'Alpha':case['alpha']}})['id']
+        merge=e.dispatch('add_fusion_node',{'clip_id':clip,'type':'Merge','parameters':{'Blend':case['blend']}})['id']
+        for target,port,node in [(merge,'Background','MediaIn1'),(merge,'Foreground',bg),('MediaOut1','Input',merge)]:
+            e.dispatch('connect_fusion_nodes',{'clip_id':clip,'target_node_id':target,'input':port,'source_node_id':node})
+        movie=work/(name+'.mov');e.dispatch('render',{'output':str(movie)})
+        ref=references['carriers'][references['cases'][name]['carrier_sha256']]
+        carrier=zlib.decompress(base64.b64decode(ref['base64']))
+        assert hashlib.sha256(carrier).hexdigest()==ref['sha256']
+
+        def decode(native,fmt,first=False):
+            args=[ffmpeg,'-v','error','-i','pipe:0' if native else str(movie)]
+            if first:args+=['-frames:v','1']
+            args+=['-an','-pix_fmt',fmt,'-f','rawvideo','pipe:1']
+            return subprocess.run(args,input=carrier if native else None,capture_output=True,check=True).stdout
+
+        native,own=decode(True,'rgb24'),decode(False,'rgb24');assert len(native)==len(own)==12*640*360*3
+        n=640*360;first_a=native[:n*3];first_b=own[:n*3]
+        positions=[i for i in range(n) if first_a[i*3:i*3+3]!=first_b[i*3:i*3+3]]
+        box=None if not positions else [min(i%640 for i in positions),min(i//640 for i in positions),max(i%640 for i in positions),max(i//640 for i in positions)]
+        def colors(raw):return [[list(k),v] for k,v in Counter(zip(raw[::3],raw[1::3],raw[2::3])).most_common(12)]
+        yuv={}
+        for key,native_flag in [('native',True),('own',False)]:
+            raw=decode(native_flag,'yuv422p10le',True);values=struct.unpack('<'+str(len(raw)//2)+'H',raw)
+            yuv[key]={'first':[values[0],values[n],values[n+n//2]],
+                'plane_values':[Counter(part).most_common(8) for part in (values[:n],values[n:n+n//2],values[n+n//2:])],
+                'sha256':hashlib.sha256(raw).hexdigest()}
+        row={'case':name,'rgb_exact':native==own,'first_bad_bbox':box,'first_bad_pixel':None if not positions else {'xy':[positions[0]%640,positions[0]//640],'native':list(first_a[positions[0]*3:positions[0]*3+3]),'own':list(first_b[positions[0]*3:positions[0]*3+3])},
+            'native_colors':colors(first_a),'own_colors':colors(first_b),'yuv10':yuv,
+            'native_frame_hashes':[hashlib.sha256(native[i*n*3:(i+1)*n*3]).hexdigest() for i in range(12)],
+            'own_frame_hashes':[hashlib.sha256(own[i*n*3:(i+1)*n*3]).hexdigest() for i in range(12)]}
+        results.append(row);print(json.dumps(row),flush=True)
+    report={'decoder':subprocess.check_output([ffmpeg,'-version'],text=True).splitlines()[0],
+        'cases':results,'scope':'Diagnostics only; inspect the full test job for acceptance','full_resolve_parity':False}
+    output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(report,indent=2)+'\n')
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--cases',nargs='+',default=['auto_b0','full_b0p75'])
+    parser.add_argument('--output',type=Path,required=True)
+    args=parser.parse_args();diagnose(args.cases,args.output)
