@@ -104,6 +104,22 @@ def diagnose(names,output):
             recoded=work/(name+'-reencode-'+str(threads)+'.mov')
             subprocess.run([ffmpeg,'-v','error','-y','-i',str(raw_carrier),'-an','-c:v','prores_ks','-profile:v','3','-threads:v',str(threads),str(recoded)],capture_output=True,check=True)
             stages['reencoded_threads_'+str(threads)]=yuv_summary(recoded)
+        if name=='auto_b0':
+            taps=['v0','mix0_placed','mix0_aligned','mix0_front','mix0_mask','mix0_weighted']
+            tap_cmd=list(lossless);at=tap_cmd.index('-filter_complex')+1;graph=tap_cmd[at]
+            for label in taps:
+                marker='['+label+']';assert marker in graph
+                graph=graph.replace(marker,'['+label+'_probe_source]',1)
+                graph+=';['+label+'_probe_source]split=2['+label+']['+label+'_probe]'
+            tap_cmd[at]=graph;tap_cmd[tap_cmd.index('-pix_fmt')+1]='gbrap16le'
+            target=work/(name+'-pipeline-taps.nut')
+            tap_cmd[-1:]=sum((['-map','['+label+'_probe]'] for label in taps),[])+['-frames:v','1',str(target)]
+            subprocess.run(tap_cmd,capture_output=True,check=True)
+            stages['pipeline_taps']={}
+            for i,label in enumerate(taps,1):
+                data=subprocess.check_output([ffmpeg,'-v','error','-i',str(target),'-map','0:v:'+str(i),'-frames:v','1','-pix_fmt','gbrap16le','-f','rawvideo','-'])
+                values=struct.unpack('<'+str(len(data)//2)+'H',data);assert len(values)==n*4
+                stages['pipeline_taps'][label]={'sha256':hashlib.sha256(data).hexdigest(),'plane_values':[Counter(values[j*n:(j+1)*n]).most_common(8) for j in range(4)]}
         row['stages']=stages
         results.append(row);print(json.dumps(row),flush=True)
     report={'decoder':subprocess.check_output([ffmpeg,'-version'],text=True).splitlines()[0],
