@@ -1,10 +1,12 @@
 """Captured native source-level cases and preservation of out-of-range node samples."""
 import copy
+import base64
 import hashlib
 import json
 from pathlib import Path
 import struct
 import subprocess
+import zlib
 
 import pytest
 from frameforge.engine import Engine, ffmpeg_executable
@@ -14,6 +16,7 @@ from test_transitions import colored_sources
 from scripts.verify_fusion_image_precision import make_source
 
 CASES=json.loads((Path(__file__).parent/'fixtures/fusion-media-levels.json').read_text())['cases']
+ENCODED_REFERENCE=json.loads((Path(__file__).parent/'fixtures/fusion-prores-reference.json').read_text())
 
 
 @pytest.fixture(scope='module')
@@ -21,8 +24,22 @@ def native_rgb24_source(tmp_path_factory):
     return make_source(tmp_path_factory.mktemp('native-level-source'),has_alpha=False)
 
 
+@pytest.fixture(scope='module')
+def native_reference_rgb():
+    # Decode the original native packets using the same backend as the output.
+    # An RGB hash acquired with another decoder/CPU is not a portable oracle.
+    frames={}
+    for identity,carrier in ENCODED_REFERENCE['carriers'].items():
+        data=zlib.decompress(base64.b64decode(carrier['base64']))
+        assert len(data)==carrier['bytes'] and hashlib.sha256(data).hexdigest()==identity==carrier['sha256']
+        frames[identity]=subprocess.run([ffmpeg_executable(),'-v','error','-i','pipe:0','-an',
+            '-pix_fmt','rgb24','-f','rawvideo','pipe:1'],input=data,capture_output=True,check=True).stdout
+        assert len(frames[identity])==12*640*360*3
+    return frames
+
+
 @pytest.mark.parametrize('case',CASES,ids=[c['id'] for c in CASES])
-def test_captured_native_media_levels_and_merge_blend(tmp_path,native_rgb24_source,case):
+def test_captured_native_media_levels_and_merge_blend(tmp_path,native_rgb24_source,native_reference_rgb,case):
     e=Engine(tmp_path/'project')
     e.dispatch('create_project',{'name':'Native source-level case','width':640,'height':360,'fps':24})
     media=e.dispatch('import_media',{'path':str(native_rgb24_source)})
@@ -34,7 +51,13 @@ def test_captured_native_media_levels_and_merge_blend(tmp_path,native_rgb24_sour
     connect(e,clip,merge,'Background','MediaIn1');connect(e,clip,merge,'Foreground',blue);connect(e,clip,'MediaOut1','Input',merge)
     output=tmp_path/'levels.mov';e.dispatch('render',{'output':str(output)})
     raw=pixels(output);assert len(raw)==12*640*360*3
-    assert hashlib.sha256(raw).hexdigest()==case['native_decoded_sha256'], f'{case["id"]}: full native RGB sequence differs'
+    reference=ENCODED_REFERENCE['cases'][case['id']]
+    assert reference['original_mov_sha256']==case['native_file_sha256']
+    assert reference['acquisition_rgb_sha256']==case['native_decoded_sha256']
+    expected=native_reference_rgb[reference['carrier_sha256']]
+    assert raw==expected, (f'{case["id"]}: full native RGB sequence differs; '
+        f'native_first={list(expected[:3])} own_first={list(raw[:3])}; '
+        f'native_sha256={hashlib.sha256(expected).hexdigest()} own_sha256={hashlib.sha256(raw).hexdigest()}')
 
 
 def test_data_level_shared_persistence_undo_and_invalid_rollback(tmp_path,colored_sources):
