@@ -124,23 +124,6 @@ def diagnose(names,output):
                 data=subprocess.check_output([ffmpeg,'-v','error','-i',str(target),'-map','0:v:'+str(i),'-frames:v','1','-pix_fmt','gbrap16le','-f','rawvideo','-'])
                 values=struct.unpack('<'+str(len(data)//2)+'H',data);assert len(values)==n*4
                 stages['pipeline_taps'][label]={'sha256':hashlib.sha256(data).hexdigest(),'plane_values':[Counter(values[j*n:(j+1)*n]).most_common(8) for j in range(4)]}
-        candidates={}
-        for variant in ('expression','scalar','preserve_alpha','extract_rgb'):
-            candidate=list(command);at=candidate.index('-filter_complex')+1
-            if variant=='expression':
-                candidate[at]=candidate[at].replace("[mix0_weighted][mix0_front]blend=all_mode=addition[mix0]","[mix0_weighted][mix0_front]blend=all_expr='min(A+B,65535)'[mix0]")
-                assert candidate[at]!=command[at]
-            elif variant=='scalar':candidate[1:1]=['-cpuflags','0']
-            elif variant=='preserve_alpha':
-                candidate[at]=candidate[at].replace('blend=all_mode=addition[mix0]','blend=all_mode=addition,format=gbrap16le[mix0]')
-            else:
-                candidate[at]=candidate[at].replace('[mix0]format=gbrp16le,zscale=', '[mix0]extractplanes=g+b+r[export_g][export_b][export_r];[export_g][export_b][export_r]mergeplanes=0x00102000:format=gbrp16le,zscale=')
-                assert candidate[at]!=command[at]
-            target=work/(name+'-candidate-'+variant+'.mov');candidate[-1]=str(target)
-            result=subprocess.run(candidate,capture_output=True,check=True)
-            raw=subprocess.check_output([ffmpeg,'-v','error','-i',str(target),'-an','-pix_fmt','rgb24','-f','rawvideo','-'])
-            candidates[variant]={'rgb_exact':raw==native,'rgb_sha256':hashlib.sha256(raw).hexdigest(),'first_colors':colors(raw[:n*3]),'yuv10':yuv_summary(target)}
-        stages['candidates']=candidates
         stages['filter_negotiation']=negotiation
         row['stages']=stages
         results.append(row);print(json.dumps(row),flush=True)

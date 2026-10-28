@@ -60,7 +60,7 @@ from fractions import Fraction
 from .subtitles import SubtitleActions, subtitle_migrate_validate, build_subtitle_filters
 from .transitions import TransitionActions, validate_transitions, window_at_cut
 from .linking import LinkingActions
-from .fusion import FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over, float_to_rgba16
+from .fusion import rgb16_without_alpha, FusionActions, validate_graph, compile_graph, has_processing, place_image, premultiplied_over, float_to_rgba16
 
 PROPERTY_DEFAULTS = {"exposure": 0.0, "contrast": 1.0, "saturation": 1.0, "gamma": 1.0, "volume": 1.0, "pan": 0.0, "opacity": 1.0, "scale": 1.0, "x": 0.0, "y": 0.0, "rotation": 0.0, "fade_in_frames": 0, "fade_out_frames": 0}
 
@@ -1273,7 +1273,8 @@ class Engine(SubtitleActions, TransitionActions, LinkingActions, FusionActions):
             # output even when the node's RGBA16 carrier is already exact.
             # This calibrates unmanaged SMPTE170M video-range export, not
             # arbitrary project color management or HDR output transforms.
-            filters.append(f'[{video_label}]format=gbrp16le,zscale=matrixin=gbr:matrix=170m:rangein=full:range=limited:dither=none,format=yuv422p10le[prores_video]')
+            filters.extend(rgb16_without_alpha(video_label, 'prores_rgb'))
+            filters.append('[prores_rgb]zscale=matrixin=gbr:matrix=170m:rangein=full:range=limited:dither=none,format=yuv422p10le[prores_video]')
             video_label = 'prores_video'
         # Render to a sibling temporary file so failed encodes preserve existing exports.
         handle, temporary = tempfile.mkstemp(prefix='.frameforge-', suffix='.' + output_format, dir=destination.parent)

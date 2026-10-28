@@ -272,6 +272,17 @@ def premultiplied_over(background, foreground, output, *, floating=False):
             f'[{weighted}][{front}]blend=all_mode=addition[{output}]']
 
 
+def rgb16_without_alpha(source, output):
+    """Keep RGB plane codes intact when dropping alpha before color conversion.
+
+    Explicit plane routing avoids an implicit GBRAP16 -> GBRP16 scaler. The
+    pinned Linux backend corrupts edge pixels through
+    that path; RGB extraction does not require scaling or color conversion.
+    """
+    return [f'[{source}]extractplanes=g+b+r[{output}_g][{output}_b][{output}_r]',
+            f'[{output}_g][{output}_b][{output}_r]mergeplanes=0x00102000:format=gbrp16le[{output}]']
+
+
 def float_to_rgba16(source, output):
     """Quantize color and alpha through zimg RGB planes, avoiding gray-range remaps."""
     return [f'[{source}]format=gbrapf32le,split=2[{output}_rgb_source][{output}_alpha_source]',

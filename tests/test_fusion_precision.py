@@ -8,7 +8,7 @@ import subprocess
 import pytest
 
 from frameforge.engine import Engine, ffmpeg_executable
-from frameforge.fusion import rgba8_to_rgba16, rgba16_to_float
+from frameforge.fusion import rgba8_to_rgba16, rgba16_to_float, rgb16_without_alpha
 from scripts.verify_fusion_image_precision import FIXTURE, make_source, build_case
 from test_fusion import model, add
 from test_fusion_frames import rgba
@@ -77,3 +77,18 @@ def test_rgb8_and_alpha_expand_as_unorm_without_channel_bias(has_alpha,rgb_tagge
     bits=lambda v:struct.unpack('<I',struct.pack('<f',v))[0]
     assert all(abs(bits(a)-bits(b))<=1 for a,b in zip(floats,expected_float))
     assert max(floats)==1 and min(floats)==0
+
+
+@pytest.mark.parametrize('size',[(640,360),(34,18)])
+def test_drop_alpha_preserves_each_rgb_code_at_every_pixel(size):
+    # Distinct, spatially varying planes include endpoints and non-opaque
+    # alpha, so swapping planes, rescaling codes or losing an edge is visible.
+    width,height=size;count=width*height
+    planes=[struct.pack('<'+'H'*count,*((i*step+offset)%65536 for i in range(count)))
+            for step,offset in [(257,0),(521,65535),(1031,7),(13,128)]]
+    result=subprocess.run([ffmpeg_executable(),'-v','error','-filter_complex_threads','1',
+        '-f','rawvideo','-pixel_format','gbrap16le','-video_size',f'{width}x{height}','-i','pipe:0',
+        '-filter_complex',';'.join(rgb16_without_alpha('0:v','rgb')),'-map','[rgb]',
+        '-frames:v','1','-pix_fmt','gbrp16le','-f','rawvideo','pipe:1'],
+        input=b''.join(planes),capture_output=True,check=True)
+    assert result.stdout==b''.join(planes[:3])
