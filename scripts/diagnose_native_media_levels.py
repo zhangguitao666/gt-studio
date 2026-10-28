@@ -9,6 +9,7 @@ import struct
 import subprocess
 import sys
 import zlib
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -34,7 +35,13 @@ def diagnose(names,output):
         merge=e.dispatch('add_fusion_node',{'clip_id':clip,'type':'Merge','parameters':{'Blend':case['blend']}})['id']
         for target,port,node in [(merge,'Background','MediaIn1'),(merge,'Foreground',bg),('MediaOut1','Input',merge)]:
             e.dispatch('connect_fusion_nodes',{'clip_id':clip,'target_node_id':target,'input':port,'source_node_id':node})
-        movie=work/(name+'.mov');e.dispatch('render',{'output':str(movie)})
+        movie=work/(name+'.mov');commands=[];run=subprocess.run
+        def record(command,*args,**kwargs):
+            if '-filter_complex' in command and 'prores_ks' in command:commands.append(list(command))
+            return run(command,*args,**kwargs)
+        with patch('frameforge.engine.subprocess.run',side_effect=record):
+            e.dispatch('render',{'output':str(movie)})
+        assert len(commands)==1
         ref=references['carriers'][references['cases'][name]['carrier_sha256']]
         carrier=zlib.decompress(base64.b64decode(ref['base64']))
         assert hashlib.sha256(carrier).hexdigest()==ref['sha256']
@@ -60,6 +67,24 @@ def diagnose(names,output):
             'native_colors':colors(first_a),'own_colors':colors(first_b),'yuv10':yuv,
             'native_frame_hashes':[hashlib.sha256(native[i*n*3:(i+1)*n*3]).hexdigest() for i in range(12)],
             'own_frame_hashes':[hashlib.sha256(own[i*n*3:(i+1)*n*3]).hexdigest() for i in range(12)]}
+        # Replay the exact filter graph into a lossless carrier to distinguish
+        # pre-encoder edge pixels from ProRes encode/decode edge handling.
+        command=commands[0];lossless=list(command)
+        at=lossless.index('-profile:v');del lossless[at:at+2]
+        at=lossless.index('-movflags');del lossless[at:at+2]
+        lossless[lossless.index('prores_ks')]='rawvideo'
+        raw_carrier=work/(name+'-pre-encoder.nut');lossless[-1]=str(raw_carrier)
+        subprocess.run(lossless,capture_output=True,check=True)
+        def yuv_summary(path):
+            data=subprocess.check_output([ffmpeg,'-v','error','-i',str(path),'-frames:v','1','-an','-pix_fmt','yuv422p10le','-f','rawvideo','-'])
+            values=struct.unpack('<'+str(len(data)//2)+'H',data)
+            return {'sha256':hashlib.sha256(data).hexdigest(),'plane_values':[Counter(part).most_common(8) for part in (values[:n],values[n:n+n//2],values[n+n//2:])]}
+        stages={'pre_encoder':yuv_summary(raw_carrier)}
+        for threads in (0,1):
+            recoded=work/(name+'-reencode-'+str(threads)+'.mov')
+            subprocess.run([ffmpeg,'-v','error','-y','-i',str(raw_carrier),'-an','-c:v','prores_ks','-profile:v','3','-threads:v',str(threads),str(recoded)],capture_output=True,check=True)
+            stages['reencoded_threads_'+str(threads)]=yuv_summary(recoded)
+        row['stages']=stages
         results.append(row);print(json.dumps(row),flush=True)
     report={'decoder':subprocess.check_output([ffmpeg,'-version'],text=True).splitlines()[0],
         'cases':results,'scope':'Diagnostics only; inspect the full test job for acceptance','full_resolve_parity':False}
